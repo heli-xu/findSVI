@@ -1,0 +1,11 @@
+Package: findSVI
+Title: Calculate CDC/ATSDR Social Vulnerability Index
+Version: 0.1.0
+Authors@R: person("Heli", "Xu", email = "xuheli91@gmail.com",
+  role = c("aut", "cre"))
+Description: Retrieve variables from US census data and calculate SVI in a given geographic area based on CDC/ATSDR SVI documentation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
