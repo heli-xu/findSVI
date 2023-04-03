@@ -1,14 +1,16 @@
+##code to prepare 2019-2021 census_variables and variable_e_ep_calculation datasets(.rda)
 ## https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 #documentation was downloaded as pdf, with the dictionary table manually imported in xlsx.
-
+##use 2020 to prepare, then minor modify for 2019, 2021
 
 library(tidyverse)
 library(readxl)
+library(skimr)
 library(janitor)
 library(stringr)
 
 
-# Import dictionary -------------------------------------------------------
+# Import 2020 dictionary -------------------------------------------------------
 
 svi_var <- read_xlsx("xls/2020svi_dictionary.xlsx") %>%
   clean_names()
@@ -86,3 +88,25 @@ names(census_variables_2020) <- c("t0","t1","t2","t3","t4","t5")
 
 usethis::use_data(variable_e_ep_calculation_2020, overwrite = TRUE)
 usethis::use_data(census_variables_2020, overwrite = TRUE)
+
+
+# Modify datasets for 2019 ------------------------------------------------
+variable_e_ep_calculation_2019 <- variable_e_ep_calculation_2020 %>%
+  rename(x2019_variable_name = x2020_variable_name,
+    x2019_table_field_calculation = x2020_table_field_calculation)
+
+census_variables_2019 <- census_variables_2020
+
+usethis::use_data(variable_e_ep_calculation_2019, overwrite = TRUE)
+usethis::use_data(census_variables_2019, overwrite = TRUE)
+
+
+# Modify datasets for 2021 ------------------------------------------------
+variable_e_ep_calculation_2021 <- variable_e_ep_calculation_2020 %>%
+  rename(x2021_variable_name = x2020_variable_name,
+    x2021_table_field_calculation = x2020_table_field_calculation)
+
+census_variables_2021 <- census_variables_2020
+
+usethis::use_data(variable_e_ep_calculation_2021, overwrite = TRUE)
+usethis::use_data(census_variables_2021, overwrite = TRUE)
