@@ -78,7 +78,7 @@ variable_e_ep_calculation_2018 <- var_cal2 %>%
 theme_var_df <- function(n){
   var_cal2 %>%
     filter(theme == n) %>%
-    select(x2018_variable_name, census_var) %>%
+    select(1, census_var) %>%  #first column is the var_name
     separate_rows(census_var, sep = " ")  %>%
     filter(!str_starts(census_var, "E_"),
       !census_var%in%c("","100")) %>%
@@ -95,7 +95,7 @@ usethis::use_data(variable_e_ep_calculation_2018, overwrite = TRUE)
 usethis::use_data(census_variables_2018, overwrite = TRUE)
 
 
-# Modify for 2017 ---------------------------------------------------------
+# Modify for 2017 (same as 2018) ---------------------------------------------
 variable_e_ep_calculation_2017 <- variable_e_ep_calculation_2018 %>%
   rename(x2017_variable_name = x2018_variable_name,
     x2017_table_field_calculation = x2018_table_field_calculation)
@@ -106,7 +106,7 @@ usethis::use_data(variable_e_ep_calculation_2017, overwrite = TRUE)
 usethis::use_data(census_variables_2017, overwrite = TRUE)
 
 
-# Modify for 2016 ---------------------------------------------------------
+# Modify for 2016 (based on 2018)----------------------------------------------
 variable_e_ep_calculation_2016 <- variable_e_ep_calculation_2018 %>%
   rename(x2016_variable_name = x2018_variable_name,
   x2016_table_field_calculation = x2018_table_field_calculation)
@@ -115,5 +115,57 @@ variable_e_ep_calculation_2016 <- variable_e_ep_calculation_2018 %>%
 #no count data from census, the label "total estimate" is actually a percentage
 # we calculate count from percentage
 variable_e_ep_calculation_2016$x2016_table_field_calculation[8] <- "S0101_C01_028E * E_TOTPOP / 100"
-
 variable_e_ep_calculation_2016$x2016_table_field_calculation[23] <- "S0101_C01_028E"
+
+#this will overwrite var_cal2 from above for 2018
+var_cal2 <- variable_e_ep_calculation_2016 %>%
+  mutate(census_var = str_replace_all(x2016_table_field_calculation,
+    "[^[:alnum:][:blank:]_]",
+    " "))
+
+census_variables_2016 <- map(0:5, theme_var_df)
+#using same function as above for 2018
+names(census_variables_2016) <- c("t0","t1","t2","t3","t4","t5")
+
+usethis::use_data(variable_e_ep_calculation_2016, overwrite = TRUE)
+usethis::use_data(census_variables_2016, overwrite = TRUE)
+
+
+# Modify for 2015 (same as 2016)------------------------------------------------
+variable_e_ep_calculation_2015 <- variable_e_ep_calculation_2016 %>%
+  rename(x2015_variable_name = x2016_variable_name,
+    x2015_table_field_calculation = x2016_table_field_calculation)
+
+census_variables_2015 <- census_variables_2016
+
+usethis::use_data(variable_e_ep_calculation_2015, overwrite = TRUE)
+usethis::use_data(census_variables_2015, overwrite = TRUE)
+
+
+# Modify for 2014 (based on 2016)-----------------------------------------------
+variable_e_ep_calculation_2014 <- variable_e_ep_calculation_2016 %>%
+  rename(x2014_variable_name = x2016_variable_name,
+    x2014_table_field_calculation = x2016_table_field_calculation)
+
+#E_CROWD
+variable_e_ep_calculation_2014$x2014_table_field_calculation[16] <- "DP04_0077E +DP04_0078E"
+#E_NOVEH
+variable_e_ep_calculation_2014$x2014_table_field_calculation[17] <- "DP04_0057E"
+#remember to check the EP_ value too!!! sometimes it's also pulled from census
+#EP_CROWD no need to adjust
+#EP_NOVEH
+variable_e_ep_calculation_2014$x2014_table_field_calculation[32] <- "DP04_0057PE"
+
+#check calculation column for line break (make sure there's none)
+
+#assign var_cal2 again for theme_var_df function
+var_cal2 <- variable_e_ep_calculation_2014 %>%
+  mutate(census_var = str_replace_all(x2014_table_field_calculation,
+    "[^[:alnum:][:blank:]_]",
+    " "))
+
+census_variables_2014 <- map(0:5, theme_var_df)
+names(census_variables_2014) <- c("t0","t1","t2","t3","t4","t5")
+
+usethis::use_data(variable_e_ep_calculation_2014, overwrite = TRUE)
+usethis::use_data(census_variables_2014, overwrite = TRUE)
