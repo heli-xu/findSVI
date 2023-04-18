@@ -11,20 +11,27 @@ get_census_data(year, geography, state = NULL, county = NULL, key = NULL, ...)
 
 \item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 
-\item{state}{(Optional) Specify the state of interest. If data for multiple states are retrieved together, ranking for SVI calculation will be performed among all states.}
+\item{state}{(Optional) Specify the state of interest. If data for multiple
+states are retrieved together, ranking for SVI calculation will be performed
+among all states.}
 
-\item{county}{(Optional) Specify the county(s) of interest, must be combined with a value supplied to "state".}
+\item{county}{(Optional) Specify the county(s) of interest, must be combined
+with a value supplied to "state".}
 
 \item{key}{Your Census API key.}
 
-\item{...}{Other arguments; more details please see \code{?get_acs()}}
+\item{...}{Other arguments; more details please see \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}}
 }
 \value{
-A tibble of ACS data with each row represents an enumeration unit and each column represents the variables ("wide" form).
+A tibble of ACS data with each row represents an enumeration unit and
+each column represents the variables ("wide" form).
 }
 \description{
-This function uses \code{get_acs()}from \href{https://cran.r-project.org/web/packages/tidycensus/index.html}{Tidycensus} with a pre-defined list of variables to retrieves ACS data for SVI calculation.
-Note that a Census API key is required for this function to work, which can be obtained at \url{https://api.census.gov/data/key_signup.html}. To set up your key, use \code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.
+This function uses \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} with a pre-defined
+list of variables to retrieves ACS data for SVI calculation. Note that a
+Census API key is required for this function to work, which can be obtained
+at \url{https://api.census.gov/data/key_signup.html}. To set up your key, use
+\code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.
 }
 \examples{
 \dontrun{

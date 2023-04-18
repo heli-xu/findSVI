@@ -1,17 +1,24 @@
 #' Retrieve census data for American Community Survey (with Tidycensus)
 #'
-#'@description This function uses `get_acs()`from [Tidycensus](https://cran.r-project.org/web/packages/tidycensus/index.html) with a pre-defined list of variables to retrieves ACS data for SVI calculation.
-#'Note that a Census API key is required for this function to work, which can be obtained at <https://api.census.gov/data/key_signup.html>. To set up your key, use `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
+#'@description This function uses [tidycensus::get_acs()] with a pre-defined
+#'  list of variables to retrieves ACS data for SVI calculation. Note that a
+#'  Census API key is required for this function to work, which can be obtained
+#'  at <https://api.census.gov/data/key_signup.html>. To set up your key, use
+#'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
 #'
-#' @param year The year of interest (available 2014-2021)
-#' @param geography The geography of interest (eg. state, county, zcta, tract)
-#' @param state (Optional) Specify the state of interest. If data for multiple states are retrieved together, ranking for SVI calculation will be performed among all states.
-#' @param county (Optional) Specify the county(s) of interest, must be combined with a value supplied to "state".
-#' @param key Your Census API key.
-#' @param ... Other arguments; more details please see `?get_acs()`
+#'@param year The year of interest (available 2014-2021)
+#'@param geography The geography of interest (eg. state, county, zcta, tract)
+#'@param state (Optional) Specify the state of interest. If data for multiple
+#'  states are retrieved together, ranking for SVI calculation will be performed
+#'  among all states.
+#'@param county (Optional) Specify the county(s) of interest, must be combined
+#'  with a value supplied to "state".
+#'@param key Your Census API key.
+#'@param ... Other arguments; more details please see [tidycensus::get_acs()]
 #'
-#' @return A tibble of ACS data with each row represents an enumeration unit and each column represents the variables ("wide" form).
-#' @export
+#'@return A tibble of ACS data with each row represents an enumeration unit and
+#'  each column represents the variables ("wide" form).
+#'@export
 #'
 #' @examples
 #' \dontrun{
