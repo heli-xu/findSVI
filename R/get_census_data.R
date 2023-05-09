@@ -33,7 +33,7 @@ get_census_data <- function(year,
   ...)
 {
   var_list <-
-    load(paste0("../data/census_variables_", year, ".rda")) %>%
+    load(paste0("data/census_variables_", year, ".rda")) %>%
     get() %>%
     unlist() %>%
     unname()
