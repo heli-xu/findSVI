@@ -1,3 +1,28 @@
+#'Calculate Social Vulnerability Index (SVI) for a Region from Census Data
+#'
+#'@description This function calculates and constructs an SVI table for a
+#'  geographic level of interest based on [CDC/ATSDR SVI
+#'  documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
+#'  Briefly, SVI includes 4 themes of variables that represent different aspects
+#'  of socioeconomic challenges, and uses percentile ranking within a geographic
+#'  level to indicate the relative social vulnerability of subunits in that
+#'  geographic level.
+#'
+#'@param year The year of interest (available 2014-2021), must match the year
+#'  specified in retrieving census data.
+#'@param data The census data retrieved by `get_census_data()`.
+#'
+#'@return A tibble of SVI with rows representing geographic subunits, and
+#'  columns indicating variable names (first two columns containing geographic
+#'  information).
+#'@export
+#'
+#' @examples
+#' \dontrun{
+#' census_api_key("YOUR KEY GOES HERE")
+#' pa2018 <- get_census_data(2018, "county", "PA")
+#' get_svi(2018, pa2018)}
+
 get_svi <- function(year, data){
 
 
