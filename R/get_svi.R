@@ -64,7 +64,7 @@ get_svi <- function(year, data){
     purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr){
       data %>%
         dplyr::transmute(
-          !!all_of(var_0_name) := eval(str2lang(var_0_expr))
+          !!tidyselect::all_of(var_0_name) := eval(str2lang(var_0_expr))
         )
     }) %>%
     dplyr::bind_cols(data, .)
@@ -73,7 +73,7 @@ get_svi <- function(year, data){
     purrr::map2_dfc(E_var_name, E_var_expr, function(E_var_name, E_var_expr){
       svi0 %>%
         dplyr::transmute(
-          !!all_of(E_var_name) := eval(str2lang(E_var_expr))
+          !!tidyselect::all_of(E_var_name) := eval(str2lang(E_var_expr))
         )
     }) %>%
     dplyr::bind_cols(svi0, .)
@@ -83,13 +83,13 @@ get_svi <- function(year, data){
     purrr::map2(EP_var_name, EP_var_expr, function(EP_var_name, EP_var_expr){
       svi_e %>%
         dplyr::transmute(
-          !!all_of(EP_var_name) := eval(str2lang(EP_var_expr))
+          !!tidyselect::all_of(EP_var_name) := eval(str2lang(EP_var_expr))
         )
     }) %>%
     dplyr::bind_cols(svi_e, .) %>%
     #keep the new columns, GEOID, NAME
-    dplyr::select(GEOID, NAME, all_of(var_0_name), all_of(E_var_name), all_of(EP_var_name)) %>%
-    dplyr::mutate(across(all_of(EP_var_name), ~ round(.x, 1)),
+    dplyr::select(GEOID, NAME, tidyselect::all_of(var_0_name), tidyselect::all_of(E_var_name), tidyselect::all_of(EP_var_name)) %>%
+    dplyr::mutate(across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
       E_AGE65 = case_when(year >= 2017 ~ E_AGE65,
         TRUE ~ round(E_AGE65, 0)))
 
@@ -99,7 +99,7 @@ get_svi <- function(year, data){
   svi_epl <-
     svi_e_ep %>%
     dplyr::filter(E_TOTPOP > 0) %>%  #added according to documentation (removed from ranking, but kept in table)
-    dplyr::select(GEOID, NAME, all_of(EP_var_name)) %>%   #tidyselect, column or external vector
+    dplyr::select(GEOID, NAME, tidyselect::all_of(EP_var_name)) %>%   #tidyselect, column or external vector
     tidyr::pivot_longer(!c(GEOID, NAME),   #all but GEOID and NAME - no need to know total columns
       names_to = "svi_var",
       values_to = "value") %>%

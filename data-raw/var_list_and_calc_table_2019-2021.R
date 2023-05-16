@@ -12,7 +12,7 @@ library(stringr)
 
 # Import 2020 dictionary -------------------------------------------------------
 
-svi_var <- read_xlsx("xls/2020svi_dictionary.xlsx") %>%
+svi_var <- read_xlsx("data-raw/xls/2020svi_dictionary.xlsx") %>%
   clean_names()
 
 skim(svi_var)
