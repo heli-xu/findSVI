@@ -28,8 +28,9 @@ get_svi <- function(year, data){
 
   # E_&EP_
 
-  var_cal_table <- load(paste0("data/variable_e_ep_calculation_", year, ".rda")) %>%
-    get()
+  filename <- paste0("variable_e_ep_calculation_", year)
+
+  var_cal_table <- get(filename)
 
   ## set up theme 0 vector, because sometimes other E_var calculation refer to them
   var_0 <- var_cal_table %>%
