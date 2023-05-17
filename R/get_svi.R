@@ -91,7 +91,7 @@ get_svi <- function(year, data){
     #keep the new columns, GEOID, NAME
     dplyr::select(GEOID, NAME, tidyselect::all_of(var_0_name), tidyselect::all_of(E_var_name), tidyselect::all_of(EP_var_name)) %>%
     dplyr::mutate(across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
-      E_AGE65 = case_when(year >= 2017 ~ E_AGE65,
+      E_AGE65 = dplyr::case_when(year >= 2017 ~ E_AGE65,
         TRUE ~ round(E_AGE65, 0)))
 
 
@@ -109,7 +109,7 @@ get_svi <- function(year, data){
     dplyr::mutate(rank =  rank(value, ties.method = "min")) %>%
     #check out count() "wt" arg, if NULL, count rows
     dplyr::add_count(svi_var) %>%
-    dplyr::mutate(EPL_var = case_when(
+    dplyr::mutate(EPL_var = dplyr::case_when(
       year >= 2019 ~(rank - 1) / (n - 1),
       svi_var == "EP_PCI"~ 1 - ((rank - 1) / (n - 1)),
       TRUE ~ (rank - 1) / (n - 1)),
@@ -164,7 +164,7 @@ get_svi <- function(year, data){
 
   EPL_var <-
     svi_epl %>%
-    dplyr::mutate(EPL_var_name = paste0("EPL_", str_remove(svi_var, "EP_")),
+    dplyr::mutate(EPL_var_name = paste0("EPL_", stringr::str_remove(svi_var, "EP_")),
       .before = EPL_var) %>%
     dplyr::select(-c(svi_var, value, rank, n)) %>%
     tidyr::pivot_wider(names_from = EPL_var_name,
@@ -186,7 +186,7 @@ get_svi <- function(year, data){
     dplyr::select(-c(n, rank_themes))
 
   svi_complete <- list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
-    purrr::reduce(left_join, by = c("GEOID", "NAME"))
+    purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
 
   return(svi_complete)
 }

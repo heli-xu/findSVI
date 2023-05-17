@@ -21,7 +21,7 @@ test_that("2020 svi calculation works", {
           RPL_theme3,
           RPL_theme4)) %>%
     tidyr::drop_na() %>%   ## remove NA rows
-    dplyr::filter_all(all_vars(. >= 0)) #-999 in cdc data
+    dplyr::filter_all(dplyr::all_vars(. >= 0)) #-999 in cdc data
 
     check <- join_RPL %>%
       dplyr::transmute(overall = cor(cdc_RPL_themes, RPL_themes),
@@ -58,7 +58,7 @@ test_that("2018 svi calculation works", {
           RPL_theme3,
           RPL_theme4)) %>%
     tidyr::drop_na() %>%   ## remove NA rows
-    dplyr::filter_all(all_vars(. >= 0)) #-999 in cdc data
+    dplyr::filter_all(dplyr::all_vars(. >= 0)) #-999 in cdc data
 
   check <- join_RPL %>%
     dplyr::transmute(overall = cor(cdc_RPL_themes, RPL_themes),
