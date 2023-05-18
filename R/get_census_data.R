@@ -32,12 +32,12 @@ get_census_data <- function(year,
   key = NULL,
   ...)
 {
-  var_list <-
-    load(paste0("data/census_variables_", year, ".rda")) %>%
-    get() %>%
+
+  filename <- paste0("census_variables_", year)
+
+  var_list <- get(filename) %>%
     unlist() %>%
     unname()
-
 
   tidycensus::get_acs(
     geography = geography,
