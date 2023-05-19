@@ -44,6 +44,7 @@ devtools::install_github("heli-xu/findSVI")
 ```{r get_census_data, eval=FALSE}
 library(findSVI)
 data <- get_census_data(2020, "county", "PA")
+data[1:10, 1:10]
 ```
 
 ```{r censusdata, echo=FALSE}
@@ -54,6 +55,7 @@ pa_cty_raw2020[1:10, 1:10]
 
 ```{r get_svi, eval = FALSE}
 result <- get_svi(2020, data)
+restult[1:10, 1:10]
 ```
 
 ```{r svi, echo=FALSE}

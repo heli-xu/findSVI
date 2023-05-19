@@ -45,6 +45,7 @@ devtools::install_github("heli-xu/findSVI")
 ``` r
 library(findSVI)
 data <- get_census_data(2020, "county", "PA")
+data[1:10, 1:10]
 ```
 
     #>    GEOID                           NAME B06009_002E B06009_002M B09001_001E
@@ -74,6 +75,7 @@ data <- get_census_data(2020, "county", "PA")
 
 ``` r
 result <- get_svi(2020, data)
+restult[1:10, 1:10]
 ```
 
     #>    GEOID                           NAME E_TOTPOP   E_HU   E_HH E_POV150 E_UNEMP
