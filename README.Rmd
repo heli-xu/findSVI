@@ -1,0 +1,59 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# findSVI
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+The goal of findSVI is to calculate regional [CDC/ATSDR Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html) at a geographic level of interest using US census data from American Community Survey. 
+
+
+## Overview
+
+findSVI includes two major steps: 
+- `get_census_data()`: retrieving US census data (Census API key required)
+- `get_svi()`: calculating SVI based on [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)  
+CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2014-2021) and geographic levels (eg. ZCTA/places, combining multiple states). 
+
+## Installation
+
+You can install the development version of findSVI from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("heli-xu/findSVI")
+```
+
+## Usage
+```{r get_census_data, eval=FALSE}
+library(findSVI)
+data <- get_census_data(2020, "county", "PA")
+```
+
+```{r censusdata, echo=FALSE}
+load(system.file("testdata","pa_cty_raw2020.rda",package = "findSVI"))
+head(pa_cty_raw2020, 10)
+```
+
+```{r get_svi, eval = FALSE}
+result <- get_svi(2020, data)
+```
+
+```{r svi, echo=FALSE}
+load(system.file("testdata", "pa_cty_result2020.rda", package = "findSVI"))
+head(pa_cty_result2020, 10)
+```
