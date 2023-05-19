@@ -1,0 +1,77 @@
+---
+title: "Introduction to findSVI"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to findSVI}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(findSVI)
+
+```
+
+# What is SVI
+
+First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level (percentile) by ranking a geographic unit against others within a region. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+
+# Why we might need to calculate SVI
+
+CDC/ATSDR releases SVI biannually [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) in both shapefile and csv format, at the counties/census tracts level within an individual state or in the US. While the SVI database is very useful, sometimes we would prefer more up-to-date census data or different geographic levels. For example, if we'd like to address questions about ZCTA-level SVI of Pennsylvania in 2021, or census tract-level SVI within a few counties in Pennsylvania in 2020, we might need to calculate SVI from the census data ourselves.
+
+findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2014-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
+
+This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
+
+# Data: census variables
+To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a series of lists and tables containing census variables information are included in the package. 
+
+* census_variables_(2014-2021): Each list contains the year-specific census variables needed for SVI calculation.
+* variable_ep_calculation_(2014-2021): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
+
+These datasets are documented in `?census_variables` and `?variable_calculation`.
+
+# Retrieve census data with `get_census_data()`
+`get_census_data()` uses [tidycensus::get_acs()] with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with [tidycensus::get_acs()], including year, geography and state.
+
+For example, we can retrieve ZCTA-level data for Rhode Island for 2018:
+```{r get_census_data, eval=FALSE}
+library(findSVI)
+data <- get_census_data(2018, "zcta", "RI")
+data[1:10, 1:10]
+```
+
+```{r RI_2018raw, echo=FALSE}
+load(system.file("extdata", "ri_zcta_raw2018.rda", package = "findSVI"))
+ri_zcta_raw2018[1:10, 1:10]
+```
+(only first 10 rows and columns are shown)
+
+Note that for ZCTA-level after 2018, data retrieving by state is not supported by Census API/tidycensus yet. Therefore the workaround at this point is to retrieve data for all US, and select the ZCTAs in the state of interest. To get the ZCTAs in the state of interest:
+* Download any ZCTA-level data for the state of interest from [Census Data Portal](data.census.gov). Last five digits of either the first or second column cotains the ZCTAs in that state. More recommended. 
+* Use ZCTA to County Relationship File from [Census Relationship Files](https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html#:~:text=These%20text%20files%20describe%20geographic,for%20the%20same%20time%20period.) for the year/decade of choice, and select the ZCTAs associated with the counties in the state of interest (a list of counties can be obtained by CDC/ATSDR-released SVI table or elsewhere). 
+
+# Compute SVI with `get_svi()`
+`get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for each theme and overall SVI. 
+
+For example, to obtain ZCTA-level SVI for Rhode Island for 2018:
+```{r get_svi, eval=FALSE}
+result <- get_svi(2018, data)
+result[1:10, 1:10]
+```
+
+```{r RI_result2018, echo=FALSE}
+load(system.file("extdata", "ri_zcta_svi2018.rda", package = "findSVI"))
+ri_zcta_svi2018[1:10, 1:10]
+```
+(only first 10 rows and columns are shown)
+
+
