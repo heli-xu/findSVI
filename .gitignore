@@ -7,3 +7,8 @@
 .DS_Store
 inst/doc
 docs
+data-raw/xls/all-geocodes-v2019.xlsx
+data-raw/xls/all-geocodes-v2020.xlsx
+data-raw/xls/all-geocodes-v2021.xlsx
+data-raw/xls/tab20_zcta520_county20_natl.txt
+data-raw/xls/zcta_county_rel_10.txt
