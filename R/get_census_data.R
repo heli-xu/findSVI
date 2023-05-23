@@ -39,6 +39,27 @@ get_census_data <- function(year,
     unlist() %>%
     unname()
 
+if(geography == "zcta"&& year >= 2019) {
+  us_data <- tidycensus::get_acs(
+    geography = geography,
+    state = NULL,
+    year = year,
+    variables = var_list,
+    output = "wide"
+  )
+  xwalk_name <- paste0("zcta_state_xwalk", year)
+  st_input <- state
+
+  zcta_by_state <- get(xwalk_name) %>%
+    filter(state == st_input | st_code == st_input | st_abb == st_input) %>%
+    pull(ZCTA)
+
+  state_data <- us_data %>%
+    filter(GEOID %in% tidyselect::all_of(zcta_by_state))
+
+  return(state_data)
+}
+
   tidycensus::get_acs(
     geography = geography,
     state = state,
