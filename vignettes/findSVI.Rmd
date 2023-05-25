@@ -32,12 +32,16 @@ findSVI aims to support more flexible and specific SVI analysis in these cases w
 This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
 
 # Data: census variables
+## Census variables and calculation table
 To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a series of lists and tables containing census variables information are included in the package. 
 
 * census_variables_(2014-2021): Each list contains the year-specific census variables needed for SVI calculation.
 * variable_ep_calculation_(2014-2021): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
 
 These datasets are documented in `?census_variables` and `?variable_calculation`.
+
+## ZCTA-state relationship file (crosswalk)
+As Census Bureau changes how [TIGER/Line shapefiles](https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/file-availability.2010.html#list-tab-2064248757) are released, state-based ZCTA data are no longer available since 2011, while nation-based data remain available. In turn, this affect obtaining data from ACS at the ZCTA level for a specific state using [tidycensus]((https://walker-data.com/tidycensus/), which uses Census shapefiles to request geometry. According to a relevant [github issue](https://github.com/walkerke/tidycensus/issues/78), [tidycensus]uses 2010 ZCTA file (from [tigris package](https://cran.r-project.org/web/packages/tigris/index.html)) to obtain state-specific ZCTA-level data in the ACS for 2011-2018. Starting 2019, using [tidycensus::get_acs()] to retrieve state-specific ZCTA-level data will produce an error. The 3 datasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.    
 
 # Retrieve census data with `get_census_data()`
 `get_census_data()` uses [tidycensus::get_acs()] with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with [tidycensus::get_acs()], including year, geography and state.
