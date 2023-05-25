@@ -51,11 +51,11 @@ if(geography == "zcta"&& year >= 2019) {
   st_input <- state
 
   zcta_by_state <- get(xwalk_name) %>%
-    filter(state == st_input | st_code == st_input | st_abb == st_input) %>%
-    pull(ZCTA)
+    dplyr::filter(state == st_input | st_code == st_input | st_abb == st_input) %>%
+    dplyr::pull(ZCTA)
 
   state_data <- us_data %>%
-    filter(GEOID %in% tidyselect::all_of(zcta_by_state))
+    dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
 
   return(state_data)
 }
