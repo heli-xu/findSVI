@@ -10,7 +10,7 @@ library(stringr)
 # zcta_state_xwalk2021 ----------------------------------------------------
 
 #zcta to county relationship file(2020)
-#https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2010.html#list-tab-1709067297
+#
 #zcta_cty20  <- read.table("xls/zcta_county_2020.txt", sep = "|", header = T)
 #only has 9695 rows (ZCTAs), matching to 19 states only
 #use Geocorr2022 data instead:
@@ -128,7 +128,7 @@ usethis::use_data(zcta_state_xwalk2020, overwrite = TRUE)
 # zcta_state_xwalk2019 ----------------------------------------------------
 
 #zcta to county relationship file(2010)
-#
+#https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2010.html#list-tab-1709067297
 zcta_cty10 <-
   read.table(paste0("xls/zcta_county_2010.txt"),
     sep = ",",

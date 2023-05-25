@@ -13,7 +13,7 @@
 \alias{variable_e_ep_calculation_2021}
 \title{Table of census variables and formula for SVI calculation}
 \format{
-\subsection{A data frame with 3 columns and variable number of rows, depending on the year:}{
+\subsection{A data frame with 3 columns and various number of rows, depending on the year:}{
 
 \describe{
 \item{_variable_name}{With a prefix x_year, eg. x2018_variable_name,

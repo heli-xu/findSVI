@@ -8,7 +8,7 @@
 #' times one or more census variable(s) are included to derive an SVI variable.
 #'
 #' @name variable_calculation
-#' @format ## A data frame with 3 columns and variable number of rows, depending on the year:
+#' @format ## A data frame with 3 columns and various number of rows, depending on the year:
 #' \describe{
 #'   \item{_variable_name}{With a prefix x_year, eg. x2018_variable_name,
 #'   this column is the SVI variable name}
