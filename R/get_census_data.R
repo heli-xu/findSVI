@@ -40,6 +40,10 @@ get_census_data <- function(year,
     unname()
 
 if(geography == "zcta"&& year >= 2019) {
+  message(
+    sprintf("State-specific ZCTA-level data for %s is currently not supported by Census API. \nGetting Nation-based data and selecting ZCTAs in %s...(it might take a bit longer)", year, state)
+    )
+
   us_data <- tidycensus::get_acs(
     geography = geography,
     state = NULL,
