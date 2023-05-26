@@ -41,7 +41,10 @@ To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a se
 These datasets are documented in `?census_variables` and `?variable_calculation`.
 
 ## ZCTA-state relationship file (crosswalk)
-As Census Bureau changes how [TIGER/Line shapefiles](https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/file-availability.2010.html#list-tab-2064248757) are released, state-based ZCTA data are no longer available since 2011, while nation-based data remain available. In turn, this affect obtaining data from ACS at the ZCTA level for a specific state using [tidycensus]((https://walker-data.com/tidycensus/), which uses Census shapefiles to request geometry. According to a relevant [github issue](https://github.com/walkerke/tidycensus/issues/78), [tidycensus]uses 2010 ZCTA file (from [tigris package](https://cran.r-project.org/web/packages/tigris/index.html)) to obtain state-specific ZCTA-level data in the ACS for 2011-2018. Starting 2019, using [tidycensus::get_acs()] to retrieve state-specific ZCTA-level data will produce an error. The 3 datasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.    
+Currently, [tidycensus::get_acs()](https://walker-data.com/tidycensus/) does not support requests for state-specific ZCTA-level data starting 2019(subject table)/2020(all tables). This is likely due to changes in Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross state boundaries). 
+To obtain state-specific ZCTA-level data, three atasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.    
+
+These crosswalk files are documented in `?zcta_state_xwalk`.
 
 # Retrieve census data with `get_census_data()`
 `get_census_data()` uses [tidycensus::get_acs()] with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with [tidycensus::get_acs()], including year, geography and state.
@@ -59,9 +62,7 @@ ri_zcta_raw2018[1:10, 1:10]
 ```
 (only first 10 rows and columns are shown)
 
-Note that for ZCTA-level after 2018, data retrieving by state is not supported by Census API/tidycensus yet. Therefore the workaround at this point is to retrieve data for all US, and select the ZCTAs in the state of interest. To get the ZCTAs in the state of interest:
-* Download any ZCTA-level data for the state of interest from [Census Data Portal](data.census.gov). Last five digits of either the first or second column cotains the ZCTAs in that state. More recommended. 
-* Use ZCTA to County Relationship File from [Census Relationship Files](https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html#:~:text=These%20text%20files%20describe%20geographic,for%20the%20same%20time%20period.) for the year/decade of choice, and select the ZCTAs associated with the counties in the state of interest (a list of counties can be obtained by CDC/ATSDR-released SVI table or elsewhere). 
+Note that for ZCTA-level after 2018, data retrieving by state is not supported by Census API/tidycensus. For such requests, `get_census_data()` first retrieves ZCTA-level data for the whole country, and then uses the ZCTA-to-state relationship file (crosswalk) to select the ZCTAs in the state(s) of interest. This results in a longer running time for these requests.
 
 # Compute SVI with `get_svi()`
 `get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for each theme and overall SVI. 
