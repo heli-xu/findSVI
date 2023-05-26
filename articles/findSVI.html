@@ -130,19 +130,16 @@ and calculation formula.</li>
 <div class="section level3">
 <h3 id="zcta-state-relationship-file-crosswalk">ZCTA-state relationship file (crosswalk)<a class="anchor" aria-label="anchor" href="#zcta-state-relationship-file-crosswalk"></a>
 </h3>
-<p>As Census Bureau changes how <a href="https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/file-availability.2010.html#list-tab-2064248757" class="external-link">TIGER/Line
-shapefiles</a> are released, state-based ZCTA data are no longer
-available since 2011, while nation-based data remain available. In turn,
-this affect obtaining data from ACS at the ZCTA level for a specific
-state using [tidycensus]((<a href="https://walker-data.com/tidycensus/" class="external-link uri">https://walker-data.com/tidycensus/</a>), which uses Census
-shapefiles to request geometry. According to a relevant <a href="https://github.com/walkerke/tidycensus/issues/78" class="external-link">github
-issue</a>, [tidycensus]uses 2010 ZCTA file (from <a href="https://cran.r-project.org/web/packages/tigris/index.html" class="external-link">tigris
-package</a>) to obtain state-specific ZCTA-level data in the ACS for
-2011-2018. Starting 2019, using [tidycensus::get_acs()] to retrieve
-state-specific ZCTA-level data will produce an error. The 3 datasets of
-ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the
-state(s) of interest after retrieving the ZCTA data at the national
-level.</p>
+<p>Currently, <a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus::get_acs()</a>
+does not support requests for state-specific ZCTA-level data starting
+2019(subject table)/2020(all tables). This is likely due to changes in
+Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross
+state boundaries). To obtain state-specific ZCTA-level data, three
+atasets of ZCTA-to-state crosswalks are included to help selecting the
+ZCTAs in the state(s) of interest after retrieving the ZCTA data at the
+national level.</p>
+<p>These crosswalk files are documented in
+<code><a href="../reference/zcta_state_xwalk.html">?zcta_state_xwalk</a></code>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -186,16 +183,11 @@ and state.</p>
 <span><span class="co">#&gt; 10           0          13          74         113</span></span></code></pre>
 <p>(only first 10 rows and columns are shown)</p>
 <p>Note that for ZCTA-level after 2018, data retrieving by state is not
-supported by Census API/tidycensus yet. Therefore the workaround at this
-point is to retrieve data for all US, and select the ZCTAs in the state
-of interest. To get the ZCTAs in the state of interest: * Download any
-ZCTA-level data for the state of interest from <a href="data.census.gov">Census Data Portal</a>. Last five digits of
-either the first or second column cotains the ZCTAs in that state. More
-recommended. * Use ZCTA to County Relationship File from <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html#:~:text=These%20text%20files%20describe%20geographic,for%20the%20same%20time%20period." class="external-link">Census
-Relationship Files</a> for the year/decade of choice, and select the
-ZCTAs associated with the counties in the state of interest (a list of
-counties can be obtained by CDC/ATSDR-released SVI table or
-elsewhere).</p>
+supported by Census API/tidycensus. For such requests,
+<code><a href="../reference/get_census_data.html">get_census_data()</a></code> first retrieves ZCTA-level data for the
+whole country, and then uses the ZCTA-to-state relationship file
+(crosswalk) to select the ZCTAs in the state(s) of interest. This
+results in a longer running time for these requests.</p>
 </div>
 <div class="section level2">
 <h2 id="compute-svi-with-get_svi">Compute SVI with <code>get_svi()</code><a class="anchor" aria-label="anchor" href="#compute-svi-with-get_svi"></a>
