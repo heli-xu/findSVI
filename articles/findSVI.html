@@ -111,6 +111,9 @@ findSVI for census data retrieval and SVI calculation.</p>
 <div class="section level2">
 <h2 id="data-census-variables">Data: census variables<a class="anchor" aria-label="anchor" href="#data-census-variables"></a>
 </h2>
+<div class="section level3">
+<h3 id="census-variables-and-calculation-table">Census variables and calculation table<a class="anchor" aria-label="anchor" href="#census-variables-and-calculation-table"></a>
+</h3>
 <p>To retrieve census data and calculate SVI based on CDC/ATSDR
 documentation, a series of lists and tables containing census variables
 information are included in the package.</p>
@@ -123,6 +126,24 @@ and calculation formula.</li>
 </ul>
 <p>These datasets are documented in <code><a href="../reference/census_variables.html">?census_variables</a></code> and
 <code><a href="../reference/variable_calculation.html">?variable_calculation</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="zcta-state-relationship-file-crosswalk">ZCTA-state relationship file (crosswalk)<a class="anchor" aria-label="anchor" href="#zcta-state-relationship-file-crosswalk"></a>
+</h3>
+<p>As Census Bureau changes how <a href="https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/file-availability.2010.html#list-tab-2064248757" class="external-link">TIGER/Line
+shapefiles</a> are released, state-based ZCTA data are no longer
+available since 2011, while nation-based data remain available. In turn,
+this affect obtaining data from ACS at the ZCTA level for a specific
+state using [tidycensus]((<a href="https://walker-data.com/tidycensus/" class="external-link uri">https://walker-data.com/tidycensus/</a>), which uses Census
+shapefiles to request geometry. According to a relevant <a href="https://github.com/walkerke/tidycensus/issues/78" class="external-link">github
+issue</a>, [tidycensus]uses 2010 ZCTA file (from <a href="https://cran.r-project.org/web/packages/tigris/index.html" class="external-link">tigris
+package</a>) to obtain state-specific ZCTA-level data in the ACS for
+2011-2018. Starting 2019, using [tidycensus::get_acs()] to retrieve
+state-specific ZCTA-level data will produce an error. The 3 datasets of
+ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the
+state(s) of interest after retrieving the ZCTA data at the national
+level.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="retrieve-census-data-with-get_census_data">Retrieve census data with <code>get_census_data()</code><a class="anchor" aria-label="anchor" href="#retrieve-census-data-with-get_census_data"></a>
