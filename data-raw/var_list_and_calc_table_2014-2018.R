@@ -169,3 +169,27 @@ names(census_variables_2014) <- c("t0","t1","t2","t3","t4","t5")
 
 usethis::use_data(variable_e_ep_calculation_2014, overwrite = TRUE)
 usethis::use_data(census_variables_2014, overwrite = TRUE)
+
+
+# Modify for 2013 (same as 2014) ------------------------------------------
+#after checking for variables between years, 2014 and 2013 the same.
+variable_e_ep_calculation_2013 <- variable_e_ep_calculation_2014 %>%
+  rename(x2013_variable_name = x2014_variable_name,
+    x2013_table_field_calculation = x2014_table_field_calculation)
+
+census_variables_2013 <- census_variables_2014
+
+usethis::use_data(variable_e_ep_calculation_2013, overwrite = TRUE)
+usethis::use_data(census_variables_2013, overwrite = TRUE)
+
+# Modify for 2012 (same as 2014, no UNINSUR variable in census) -----------
+#checked variables, S2701_C04_001 for uninsured population not include in census
+variable_e_ep_calculation_2012 <- variable_e_ep_calculation_2013 %>%
+  rename(x2012_variable_name = x2013_variable_name,
+    x2012_table_field_calculation = x2013_table_field_calculation) %>%
+  filter(!theme == 5)
+
+census_variables_2012 <- census_variables_2013[1:5] # no theme 5
+
+usethis::use_data(variable_e_ep_calculation_2012, overwrite = TRUE)
+usethis::use_data(census_variables_2012, overwrite = TRUE)
