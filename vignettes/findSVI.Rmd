@@ -32,22 +32,22 @@ findSVI aims to support more flexible and specific SVI analysis in these cases w
 This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
 
 # Data: census variables
-## Census variables and calculation table
+### Census variables and calculation table
 To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a series of lists and tables containing census variables information are included in the package. 
 
-* census_variables_(2014-2021): Each list contains the year-specific census variables needed for SVI calculation.
-* variable_ep_calculation_(2014-2021): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
+* census_variables_(2012-2021): Each list contains the year-specific census variables needed for SVI calculation.
+* variable_ep_calculation_(2012-2021): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
 
 These datasets are documented in `?census_variables` and `?variable_calculation`.
 
-## ZCTA-state relationship file (crosswalk)
-Currently, [tidycensus::get_acs()](https://walker-data.com/tidycensus/) does not support requests for state-specific ZCTA-level data starting 2019(subject table)/2020(all tables). This is likely due to changes in Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross state boundaries). 
+### ZCTA-state relationship file (crosswalk)
+Currently, `tidycensus::get_acs()` does not support requests for state-specific ZCTA-level data starting 2019(subject table)/2020(all tables). This is likely due to changes in Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross state boundaries). 
 To obtain state-specific ZCTA-level data, three atasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.    
 
 These crosswalk files are documented in `?zcta_state_xwalk`.
 
 # Retrieve census data with `get_census_data()`
-`get_census_data()` uses [tidycensus::get_acs()] with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with [tidycensus::get_acs()], including year, geography and state.
+`get_census_data()` uses `tidycensus::get_acs()` with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with [tidycensus::get_acs()], including year, geography and state.
 
 For example, we can retrieve ZCTA-level data for Rhode Island for 2018:
 ```{r get_census_data, eval=FALSE}
