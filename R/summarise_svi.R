@@ -84,8 +84,13 @@ summarise_svi  <- function(
     data_tmp <- findSVI::get_census_data(year, state, geography = geography)
     cli::cli_alert_success("Finished retrieving census data")
     results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
-    results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"))
+    results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"), year, state)
     cli::cli_alert_success("Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'")
+
+    if (full.table == TRUE) {
+      return(results)
+    }
+    return(results_RPL)
   }
 
   if (length(year) > 1) {
