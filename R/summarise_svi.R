@@ -21,27 +21,69 @@
 #'@param key Your Census API key. Obtain one at
 #'  <https://api.census.gov/data/key_signup.html>. To set up, use
 #'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
-#'@param full.table De
-#'@param ...
+#'@param full.table Default as `FALSE`, returning SVI table with only "GEOID",
+#'  and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
+#'  with individual SVI variables and intermediate ranking calculations are also
+#'  included in addition to the theme-related SVIs (similar style to tables from
+#'  [CDC/ATSDR
+#'  database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 #'
-#'@return
+#'@return A tibble of summarised SVI for one or multiple year-state combination
+#'  of interest. Rows represent the geographic units, and columns represent its
+#'  SVI for each theme and all themes. Additional two columns at the end
+#'  indicate the corresponding state and year information. For `full.table =
+#'  TRUE`, estimated count and percentage values for individual SVI variables
+#'  are also included. For description of variable names (column names), please
+#'  refer to [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'@export
 #'
 #' @examples
+#' \dontrun{
+#' census_api_key("YOUR KEY GOES HERE")
 #'
+#' # Use with vectors for year and state
+#' ## for one year-state information (all ZCTAs of PA in 2019)
+#' summarise_svi(
+#'       year = 2019,
+#'       state = "PA",
+#'       geography = "tract"
+#'    )
+#'
+#'
+#' ## for multiple year-state combination (all ZCTAs of RI in 2017 and PA in 2018)
+#' summarise_svi(
+#'       year = c(2017, 2018),
+#'       state = c("RI", "PA"),
+#'       geography = "zcta"
+#'    )
+#'
+#'# Use with a table of year-state information
+#' info <- tribble(
+#'     ~state, ~year,
+#'     "AZ", 2015,
+#'     "AZ", 2016,
+#'     "PA", 2020,
+#'     "RI", 2018)
+#'
+#' summarise_svi(
+#'     year = info$year,
+#'     state = info$state,
+#'     geography = "county"
+#'    )
+#' }
 #'
 summarise_svi  <- function(
   year,
-  geography,
   state = NULL,
+  geography,
   key = NULL,
-  full.table = FALSE,
-  ...)
+  full.table = FALSE
+  )
 {
   if (length(year) == 1 && length(state) <= 1) {
-    data_tmp <- findSVI::get_census_data(year, geography = geography, state)
+    data_tmp <- findSVI::get_census_data(year, state, geography = geography)
     cli::cli_alert_success("Finished retrieving census data")
-    results <- findSVI::get_svi(year, data_tmp)
+    results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
     results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"))
     cli::cli_alert_success("Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'")
   }
@@ -55,14 +97,22 @@ summarise_svi  <- function(
       stop("year-state pairing error")
     }
 
-    data_tmp <-
-      purrr::map2(year,
-        state,
-        \(x, y) findSVI::get_census_data(x, y, geography = geography))
-    cli::cli_alert_success("Finished retriving census data")
-    results <-  purrr::map2_dfr(year, data_tmp, get_svi)
-    results_RPL <-
-      results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"))
+    results <- purrr::map2_dfr(
+      year,state,
+      function(year_tmp, state_tmp){
+
+        ## Get Census Data
+        census_tmp <- findSVI::get_census_data(year_tmp, state_tmp, geography = geography)
+        cli::cli_alert_success("Finished retriving census data for {year_tmp} {state_tmp}")
+
+        ## Calculate SVI
+        svi_tmp <- findSVI::get_svi(year_tmp, census_tmp) %>%
+          dplyr::mutate(year = year_tmp, state = state_tmp)
+        return(svi_tmp)
+      })
+
+    results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
+
     cli::cli_alert_success(
       "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
     )

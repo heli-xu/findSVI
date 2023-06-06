@@ -3,4 +3,5 @@
 export("%>%")
 export(get_census_data)
 export(get_svi)
+export(summarise_svi)
 importFrom(magrittr,"%>%")
