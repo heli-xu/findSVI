@@ -15,7 +15,8 @@ specified in retrieving census data.}
 \value{
 A tibble of SVI with rows representing geographic subunits, and
 columns indicating variable names (first two columns containing geographic
-information).
+information). For detailed description of the variable names (column names),
+please refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
 }
 \description{
 This function calculates and constructs an SVI table for a
