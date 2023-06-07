@@ -79,4 +79,7 @@ ri_zcta_svi2018[1:10, 1:10]
 ```
 (only first 10 rows and columns are shown)
 
+# 2-in-1 and more: `summarise_svi()`
+To retrieve census data and compute SVI in one step, we could use `summarise_svi()`. While `get_census_data()` only accepts a single year for `year` (and multiple states for `state`) just like `tidycensus::get_acs()`, `summarise_svi()` accepts pairing vectors of `year` and `state` for the SAME geography level. This allows processing multiple year-state combinations in one function, with separate data retrieval and SVI calculation for every year-state entry and returning a summarised SVI table for all pairs of year-state values. 
+
 
