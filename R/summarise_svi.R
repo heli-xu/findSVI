@@ -108,7 +108,7 @@ summarise_svi  <- function(
 
         ## Get Census Data
         census_tmp <- findSVI::get_census_data(year_tmp, state_tmp, geography = geography)
-        cli::cli_alert_success("Finished retriving census data for {year_tmp} {state_tmp}")
+        cli::cli_alert_success("Finished retrieving census data for {year_tmp} {state_tmp}")
 
         ## Calculate SVI
         svi_tmp <- findSVI::get_svi(year_tmp, census_tmp) %>%
