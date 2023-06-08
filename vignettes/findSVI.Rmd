@@ -52,6 +52,7 @@ These crosswalk files are documented in `?zcta_state_xwalk`.
 For example, we can retrieve ZCTA-level data for Rhode Island for 2018:
 ```{r get_census_data, eval=FALSE}
 library(findSVI)
+library(tidyverse)
 data <- get_census_data(2018, "zcta", "RI")
 data[1:10, 1:10]
 ```
@@ -82,4 +83,19 @@ ri_zcta_svi2018[1:10, 1:10]
 # 2-in-1 and more: `summarise_svi()`
 To retrieve census data and compute SVI in one step, we could use `summarise_svi()`. While `get_census_data()` only accepts a single year for `year` (and multiple states for `state`) just like `tidycensus::get_acs()`, `summarise_svi()` accepts pairing vectors of `year` and `state` for the SAME geography level. This allows processing multiple year-state combinations in one function, with separate data retrieval and SVI calculation for every year-state entry and returning a summarised SVI table for all pairs of year-state values. 
 
+One important difference in data retrieval between `summarise_svi()` and `get_census_data()` is that the year-state combinations will always be evaluated as "one year and one state" -- that is, the option to get census data for multiple states at once (for one year) in `get_census_data()` will be disabled in `summarise_svi()`. There is an exception to this one-on-one rule, when a single year is supplied into `year`, you can set the `state = NULL` as default to perform nation-level data retrieval and SVI calculation.
 
+For SVI table output, `summarise_svi()` has options to either return a full SVI table with every SVI variable and intermediate ranking values (as `get_svi()`), or return a summarised SVI table with only the GEOID, theme-specific SVIs and SVI for all 4 themes for each year-state combinations. For both options, corresponding year and state information will be included as two separate columns in the table.
+
+Using the same example as above, to obtain ZCTA-level census data and calculate SVI for Rhode Island for 2018 in one step:
+```{r summarise_svi, eval=FALSE}
+onestep_result <- summarise_svi(2018, "RI", "zcta")
+onestep_result %>% head(10)
+```
+
+```{r RI_result_RPL, echo=FALSE}
+ri_zcta_svi2018 %>% 
+  select(GEOID, contains("RPL_theme")) %>% 
+  mutate(year = 2018,
+    state = "RI") %>% 
+  head(10)
