@@ -94,7 +94,7 @@ onestep_result %>% head(10)
 ```
 
 ```{r RI_result_RPL, echo=FALSE, warning=FALSE}
-library(tidyverse)
+library(dplyr)
 ri_zcta_svi2018 %>% 
   select(GEOID, contains("RPL_theme")) %>% 
   mutate(year = 2018,
