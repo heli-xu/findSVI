@@ -23,11 +23,15 @@ findSVI includes two major steps:
 - `get_svi()`: calculating SVI based on [CDC/ATSDR SVI
   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 
+In addition, there’s a 2-in-1 wrapper with extra features: \*
+`summarise_svi()`: retrieving US census data and calculate SVI for one
+or multiple year-state pair(s) at the same geography level.
+
 CDC/ATSDR releases SVI biannually at the counties/census tracts level
 for US or an individual state (which can be downloaded
 [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 findSVI aims to support more flexible and specific SVI analysis with
-additional options for years (2014-2021) and geographic levels (eg.
+additional options for years (2012-2021) and geographic levels (eg.
 ZCTA/places, combining multiple states).
 
 ## Installation
@@ -102,3 +106,33 @@ restult[1:10, 1:10]
     #> 10   15043     6118      6151
 
 (first ten rows and columns shown)
+
+``` r
+summarise_results <- summarise_svi(
+  year = c(2017, 2018),
+  state = c("NJ", "PA"),
+  geography = "county"
+)
+```
+
+    #> 
+    #> Attaching package: 'dplyr'
+    #> The following objects are masked from 'package:stats':
+    #> 
+    #>     filter, lag
+    #> The following objects are masked from 'package:base':
+    #> 
+    #>     intersect, setdiff, setequal, union
+    #> # A tibble: 10 × 8
+    #>    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state
+    #>    <chr>      <dbl>      <dbl>      <dbl>      <dbl>      <dbl> <dbl> <chr>
+    #>  1 34001       0.95       0.8        0.65       1          0.95  2017 NJ   
+    #>  2 34003       0.2        0.3        0.55       0.45       0.25  2017 NJ   
+    #>  3 34005       0.3        0.5        0.35       0.4        0.3   2017 NJ   
+    #>  4 34007       0.7        0.9        0.55       0.6        0.75  2017 NJ   
+    #>  5 34009       0.65       0.6        0.1        0.55       0.45  2017 NJ   
+    #>  6 34011       1          0.95       0.75       0.95       1     2017 NJ   
+    #>  7 34013       0.9        0.75       0.85       0.85       0.9   2017 NJ   
+    #>  8 34015       0.35       0.7        0.15       0.15       0.35  2017 NJ   
+    #>  9 34017       0.75       0          1          0.75       0.7   2017 NJ   
+    #> 10 34019       0          0.05       0.05       0.1        0     2017 NJ
