@@ -14,7 +14,8 @@
 #'
 #'@return A tibble of SVI with rows representing geographic subunits, and
 #'  columns indicating variable names (first two columns containing geographic
-#'  information).
+#'  information). For detailed description of the variable names (column names),
+#'  please refer to [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'@export
 #'
 #' @examples

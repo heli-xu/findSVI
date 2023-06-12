@@ -21,7 +21,7 @@ library(findSVI)
 
 # What is SVI
 
-First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level (percentile) by ranking a geographic unit against others within a region. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level using percentile ranks for each geographic unit within a region. Communities with higher SVI are considered more vulnerable in public health crisis. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 
 # Why we might need to calculate SVI
 
@@ -77,6 +77,69 @@ result[1:10, 1:10]
 load(system.file("extdata", "ri_zcta_svi2018.rda", package = "findSVI"))
 ri_zcta_svi2018[1:10, 1:10]
 ```
-(only first 10 rows and columns are shown)
+(Only first 10 rows and columns are shown. The columns included are some of the individual SVI variables.)
 
+# Wrapper and more: `summarise_svi()`
+To retrieve census data and compute SVI in one step, we could use `summarise_svi()`. While `get_census_data()` only accepts a single year for `year` (and multiple states for `state`) just like `tidycensus::get_acs()`, `summarise_svi()` accepts pairing vectors of `year` and `state` for the SAME geography level. This allows processing multiple year-state combinations in one function, with separate data retrieval and SVI calculation for every year-state entry and returning a summarised SVI table for all pairs of year-state values. 
 
+One important difference in data retrieval between `summarise_svi()` and `get_census_data()` is that the year-state combinations will always be evaluated as "one year and one state" -- that is, the option to get census data for multiple states at once (for one year) in `get_census_data()` will be disabled in `summarise_svi()`. There is an exception to this one-on-one rule, when a single year is supplied into `year`, you can set the `state = NULL` as default to perform nation-level data retrieval and SVI calculation.
+
+For SVI table output, `summarise_svi()` by default returns a summarised SVI table with only the GEOID, theme-specific SVIs and SVI for all 4 themes for each year-state combination. Alternatively, there's an option to return a full SVI table with every SVI variable and intermediate ranking values (as `get_svi()`) by setting `full.table = TRUE`. For both options, corresponding year and state information will be included as two separate columns in the table.
+
+### Single year-state entry
+Using the same example as above, to obtain ZCTA-level census data and calculate SVI for Rhode Island for 2018 in one step:
+```{r summarise_svi, eval=FALSE}
+onestep_result <- summarise_svi(2018, "RI", "zcta")
+onestep_result %>% head(10)
+```
+
+```{r RI_result_RPL, echo=FALSE, warning=FALSE}
+library(dplyr)
+ri_zcta_svi2018 %>% 
+  select(GEOID, contains("RPL_theme")) %>% 
+  mutate(year = 2018,
+    state = "RI") %>% 
+  head(10)
+```
+This is a glimpse of the first 10 rows of the summarised SVI table (with only GEOID and SVIs), with additional columns indicating the year and state information.
+
+### Multiple year-state entries
+For multiple year-state combinations, we could supply two vectors to `year` and `state` arguments and they'll be treated as pairs. For example, to obtain county-level SVI of New Jersey and Pennsylvania for 2017 and 2018, respectively: 
+```{r summarise_svi_vector, eval=FALSE}
+summarise_results <- summarise_svi(
+  year = c(2017, 2018),
+  state = c("NJ", "PA"),
+  geography = "county"
+) 
+
+```
+```{r summarise_results_RPL, echo=FALSE}
+load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
+summarise_results %>% head(10)
+```
+As a result, we have (first 10 rows of) a table summarising the county-level SVI of New Jersey for 2017 and that of Pennsylvania for 2018, after retrieving census data for these two year-state pairs. Again, here data retrieval and SVI calculation (percentile ranking) are performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are combined into a summarised table.   
+
+As other R functions that accepts vectors in their arguments, another way to supply `year` and `state` pairs is to extract columns from a table. Suppose we have a table called `info_table` containing the year-state information we'd like to include in the analysis:
+```{r info_table, echo=FALSE}
+info_table <- tribble(
+  ~year, ~state,
+  2017, "AZ",
+  2018, "FL",
+  2014, "FL",
+  2018, "PA",
+  2013, "MA",
+  2020, "KY"
+  )
+info_table
+```
+
+We could extract specific columns of interest from `info_table` for the `year` and `state` arguments:
+```{r column_summarise_svi, eval=FALSE}
+all_results <- summarise_svi(
+  year = info_table$year,
+  state = info_table$state,
+  geography = "county"
+)
+
+```
+This will likely make things easier especially for a long list of year-state combinations.
