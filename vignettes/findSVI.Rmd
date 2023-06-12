@@ -21,7 +21,7 @@ library(findSVI)
 
 # What is SVI
 
-First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level (percentile) by ranking a geographic unit against others within a region. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level using percentile ranks for each geographic unit within a region. Communities with higher SVI are considered more vulnerable in public health crisis. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 
 # Why we might need to calculate SVI
 
@@ -117,7 +117,7 @@ summarise_results <- summarise_svi(
 load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
 summarise_results %>% head(10)
 ```
-As a result, we have (first 10 rows of) a table summarising the county-level SVI of New Jersey for 2017 and that of Pennsylvania for 2018, after retrieving census data for these two year-state pairs. Again, here data retrieval and SVI calculation (ranking percentiles) are performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are combined into a summarised table.   
+As a result, we have (first 10 rows of) a table summarising the county-level SVI of New Jersey for 2017 and that of Pennsylvania for 2018, after retrieving census data for these two year-state pairs. Again, here data retrieval and SVI calculation (percentile ranking) are performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are combined into a summarised table.   
 
 As other R functions that accepts vectors in their arguments, another way to supply `year` and `state` pairs is to extract columns from a table. Suppose we have a table called `info_table` containing the year-state information we'd like to include in the analysis:
 ```{r info_table, echo=FALSE}
