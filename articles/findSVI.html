@@ -87,8 +87,9 @@ crucial role in preparing for and managing public health emergencies, as
 it enables effective planning of social services and public assistance.
 The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16
 U.S. census variables grouped into 4 domains/themes, and obtains a
-relative vulnerability level (percentile) by ranking a geographic unit
-against others within a region. For more details, please refer to <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" class="external-link">CDC/ATSDR
+relative vulnerability level using percentile ranks for each geographic
+unit within a region. Communities with higher SVI are considered more
+vulnerable in public health crisis. For more details, please refer to <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" class="external-link">CDC/ATSDR
 SVI website</a>.</p>
 </div>
 <div class="section level2">
@@ -218,7 +219,130 @@ ranking again as the SVI for each theme and overall SVI.</p>
 <span><span class="co">#&gt; 8  02813 ZCTA5 02813     7780 5173 3200   605     330 42612      411    1733</span></span>
 <span><span class="co">#&gt; 9  02814 ZCTA5 02814     7673 3350 2903   722     167 37750      381    1207</span></span>
 <span><span class="co">#&gt; 10 02815 ZCTA5 02815      208   76   76    13       0 71975        0      16</span></span></code></pre>
-<p>(only first 10 rows and columns are shown)</p>
+<p>(Only first 10 rows and columns are shown. The columns included are
+some of the individual SVI variables.)</p>
+</div>
+<div class="section level2">
+<h2 id="wrapper-and-more-summarise_svi">Wrapper and more: <code>summarise_svi()</code><a class="anchor" aria-label="anchor" href="#wrapper-and-more-summarise_svi"></a>
+</h2>
+<p>To retrieve census data and compute SVI in one step, we could use
+<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code>. While <code><a href="../reference/get_census_data.html">get_census_data()</a></code> only
+accepts a single year for <code>year</code> (and multiple states for
+<code>state</code>) just like <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>,
+<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> accepts pairing vectors of
+<code>year</code> and <code>state</code> for the SAME geography level.
+This allows processing multiple year-state combinations in one function,
+with separate data retrieval and SVI calculation for every year-state
+entry and returning a summarised SVI table for all pairs of year-state
+values.</p>
+<p>One important difference in data retrieval between
+<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> and <code><a href="../reference/get_census_data.html">get_census_data()</a></code> is that
+the year-state combinations will always be evaluated as “one year and
+one state” – that is, the option to get census data for multiple states
+at once (for one year) in <code><a href="../reference/get_census_data.html">get_census_data()</a></code> will be
+disabled in <code><a href="../reference/summarise_svi.html">summarise_svi()</a></code>. There is an exception to this
+one-on-one rule, when a single year is supplied into <code>year</code>,
+you can set the <code>state = NULL</code> as default to perform
+nation-level data retrieval and SVI calculation.</p>
+<p>For SVI table output, <code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> by default returns
+a summarised SVI table with only the GEOID, theme-specific SVIs and SVI
+for all 4 themes for each year-state combination. Alternatively, there’s
+an option to return a full SVI table with every SVI variable and
+intermediate ranking values (as <code><a href="../reference/get_svi.html">get_svi()</a></code>) by setting
+<code>full.table = TRUE</code>. For both options, corresponding year and
+state information will be included as two separate columns in the
+table.</p>
+<div class="section level4">
+<h4 id="single-year-state-entry">Single year-state entry<a class="anchor" aria-label="anchor" href="#single-year-state-entry"></a>
+</h4>
+<p>Using the same example as above, to obtain ZCTA-level census data and
+calculate SVI for Rhode Island for 2018 in one step:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">onestep_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"RI"</span>, <span class="st">"zcta"</span><span class="op">)</span></span>
+<span><span class="va">onestep_result</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span></span>
+<span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02802     0.921       1          0.803      0.447     0.855   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02804     0.224       0.171      0          0.158     0.118   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02806     0.039<span style="text-decoration: underline;">5</span>      0.342      0.487      0.224     0.158   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02807     0.316       0.724      0.145      0.816     0.526   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02808     0.829       0.210      0.276      0         0.224   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02809     0.645       0.263      0.592      0.474     0.553   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02812     0.447       0.316      0.316      0         0.145   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02813     0.618       0.382      0.171      0.632     0.460   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02814     0.5         0.487      0.224      0.342     0.382   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02815     0.026<span style="text-decoration: underline;">3</span>      0.513      0.342      0         0.078<span style="text-decoration: underline;">9</span>  <span style="text-decoration: underline;">2</span>018 RI</span></span></code></pre>
+<p>This is a glimpse of the first 10 rows of the summarised SVI table
+(with only GEOID and SVIs), with additional columns indicating the year
+and state information.</p>
+</div>
+<div class="section level4">
+<h4 id="multiple-year-state-entries">Multiple year-state entries<a class="anchor" aria-label="anchor" href="#multiple-year-state-entries"></a>
+</h4>
+<p>For multiple year-state combinations, we could supply two vectors to
+<code>year</code> and <code>state</code> arguments and they’ll be
+treated as pairs. For example, to obtain county-level SVI of New Jersey
+and Pennsylvania for 2017 and 2018, respectively:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">summarise_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">2018</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NJ"</span>, <span class="st">"PA"</span><span class="op">)</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
+<span><span class="op">)</span> </span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span></span>
+<span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 34001       0.95       0.8        0.65       1          0.95  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 34003       0.2        0.3        0.55       0.45       0.25  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 34005       0.3        0.5        0.35       0.4        0.3   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 34007       0.7        0.9        0.55       0.6        0.75  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 34009       0.65       0.6        0.1        0.55       0.45  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 34011       1          0.95       0.75       0.95       1     <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 34013       0.9        0.75       0.85       0.85       0.9   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 34015       0.35       0.7        0.15       0.15       0.35  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 34017       0.75       0          1          0.75       0.7   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 34019       0          0.05       0.05       0.1        0     <span style="text-decoration: underline;">2</span>017 NJ</span></span></code></pre>
+<p>As a result, we have (first 10 rows of) a table summarising the
+county-level SVI of New Jersey for 2017 and that of Pennsylvania for
+2018, after retrieving census data for these two year-state pairs.
+Again, here data retrieval and SVI calculation (percentile ranking) are
+performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are
+combined into a summarised table.</p>
+<p>As other R functions that accepts vectors in their arguments, another
+way to supply <code>year</code> and <code>state</code> pairs is to
+extract columns from a table. Suppose we have a table called
+<code>info_table</code> containing the year-state information we’d like
+to include in the analysis:</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
+<span><span class="co">#&gt;    year state</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>017 AZ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>018 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">2</span>014 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">2</span>013 MA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">2</span>020 KY</span></span></code></pre>
+<p>We could extract specific columns of interest from
+<code>info_table</code> for the <code>year</code> and <code>state</code>
+arguments:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">year</span>,</span>
+<span>  state <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">state</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>This will likely make things easier especially for a long list of
+year-state combinations.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
