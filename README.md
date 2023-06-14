@@ -1,11 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# findSVI
+# findSVI <a href="https://heli-xu.github.io/findSVI/"><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
 The goal of findSVI is to calculate regional [CDC/ATSDR Social
@@ -23,9 +24,10 @@ findSVI includes two major steps:
 - `get_svi()`: calculating SVI based on [CDC/ATSDR SVI
   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 
-In addition, there’s a 2-in-1 wrapper with extra features: \*
-`summarise_svi()`: retrieving US census data and calculate SVI for one
-or multiple year-state pair(s) at the same geography level.
+In addition, there’s a 2-in-1 wrapper with extra features:
+
+- `summarise_svi()`: retrieving US census data and calculate SVI for one
+  or multiple year-state pair(s) at the same geography level.
 
 CDC/ATSDR releases SVI biannually at the counties/census tracts level
 for US or an individual state (which can be downloaded
