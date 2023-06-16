@@ -15,7 +15,7 @@
 #'@param geography One geography level of interest for all year-state
 #'  combination (e.g."county", "zcta", "tract").
 #'@param state A vector containing states of interest. Length >=0. Length 0
-#'  (`state = NULL`), or `state = 'US` must be used with single year argument, when SVI is
+#'  (`state = NULL`), or `state = 'US'` must be used with single year argument, when SVI is
 #'  calculated from nation-level census data. In other cases, `state` must have
 #'  the same elements as `year` (same length).
 #'@param key Your Census API key. Obtain one at
