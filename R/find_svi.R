@@ -147,7 +147,7 @@ find_svi  <- function(
       cli::cli_alert_warning(
         "You inputted {length(year)} years for nation-level data."
       )
-      cli::alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
+      cli::cli_alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
       stop("year-state pairing error")
     }
 
@@ -158,7 +158,7 @@ find_svi  <- function(
         cli::cli_alert_warning(
           "You inputted {length(year)} years for nation-level data."
         )
-        cli::alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
+        cli::cli_alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
         stop("year-state pairing error")
       }
 
