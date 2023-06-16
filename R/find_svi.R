@@ -15,7 +15,7 @@
 #'@param geography One geography level of interest for all year-state
 #'  combination (e.g."county", "zcta", "tract").
 #'@param state A vector containing states of interest. Length >=0. Length 0
-#'  (`state = NULL`) must be used with single year argument, when SVI is
+#'  (`state = NULL`), or `state = 'US` must be used with single year argument, when SVI is
 #'  calculated from nation-level census data. In other cases, `state` must have
 #'  the same elements as `year` (same length).
 #'@param key Your Census API key. Obtain one at
@@ -80,24 +80,104 @@ find_svi  <- function(
   full.table = FALSE
   )
 {
-  if (length(year) == 1 && length(state) <= 1) {
-    data_tmp <- findSVI::get_census_data(year, state, geography = geography)
-    cli::cli_alert_success("Finished retrieving census data")
-    results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
-    results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"), year, state)
-    cli::cli_alert_success("Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'")
+  if (length(year) == 1) {
+
+    if (length(state) == 0) {
+      data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
+      cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
+      results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"), year, state)
+      cli::cli_alert_success(
+        "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
+      )
+
+      if (full.table == TRUE) {
+        return(results)
+      }
+      return(results_RPL)
+    }
+
+      if(length(state) == 1) {
+        if(state == "US") {
+      data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
+      cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
+      results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"), year, state)
+      cli::cli_alert_success(
+        "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
+      )
+
+      if (full.table == TRUE) {
+        return(results)
+      }
+      return(results_RPL)
+        }
+
+      #length =1, not US
+      data_tmp <- findSVI::get_census_data(year, state, geography = geography)
+      cli::cli_alert_success("Finished retrieving census data for {year} {state}")
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
+      results_RPL <- results %>% dplyr::select(GEOID, contains("RPL_theme"), year, state)
+      cli::cli_alert_success(
+        "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
+        )
 
     if (full.table == TRUE) {
       return(results)
     }
     return(results_RPL)
+    }
+
+
+    if (length(state) > 1) {
+      cli::cli_alert_warning(
+        "You inputted 1 year but {length(state)} states. find_svi() requires year and state to be of the same length."
+        )
+      cli::cli_alert(
+        "If you'd like to find SVI of multiple states for the same year, try `rep({year}, length(state))` in `year` argument."
+        )
+      stop("year-state pairing error")
+    }
   }
 
+
   if (length(year) > 1) {
-    if (length(year) != length(state)) {
-      cli::cli_alert_warning("The number of years and states requested are not the same.")
+
+    if (length(state) == 0) {
+      cli::cli_alert_warning(
+        "You inputted {length(year)} years for nation-level data."
+      )
+      cli::alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
+      stop("year-state pairing error")
+    }
+
+
+    if (length(state) == 1) {
+
+      if (state == "US") {
+        cli::cli_alert_warning(
+          "You inputted {length(year)} years for nation-level data."
+        )
+        cli::alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
+        stop("year-state pairing error")
+      }
+
+      #length = 1, not US
+      cli::cli_alert_warning(
+        "You inputted {length(year)} years but only 1 state. find_svi() requires year and state to be of the same length."
+      )
       cli::cli_alert(
-        "Consider using pairs of year and state. For nation level data ('state = NULL'), use single year argument."
+        "If you'd like to find SVI of the same state for multiple years, try `rep({state}, length(year))` in `state` argument."
+      )
+      stop("year-state pairing error")
+    }
+
+    if (length(state) > 1 & length(year) != length(state)) {
+      cli::cli_alert_warning(
+        "You inputted {length(year)} years and {length(state)} states. find_svi() requires year and state to be of the same length."
+      )
+      cli::cli_alert(
+        "Consider using pairs of `year` and `state`. For nation-level data (`state = NULL` or `state = 'US`), use single year argument. "
       )
       stop("year-state pairing error")
     }

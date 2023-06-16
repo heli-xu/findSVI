@@ -15,7 +15,7 @@ state of interest, \code{state} can also be set as \code{NULL}, in which case na
 level data is retrieved and processed to obtain SVI.}
 
 \item{state}{A vector containing states of interest. Length >=0. Length 0
-(\code{state = NULL}) must be used with single year argument, when SVI is
+(\code{state = NULL}), or \verb{state = 'US} must be used with single year argument, when SVI is
 calculated from nation-level census data. In other cases, \code{state} must have
 the same elements as \code{year} (same length).}
 
