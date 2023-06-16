@@ -130,13 +130,11 @@ find_svi  <- function(
 
 
     if (length(state) > 1) {
-      cli::cli_alert_warning(
-        "You inputted 1 year but {length(state)} states. find_svi() requires year and state to be of the same length."
-        )
-      cli::cli_alert(
-        "If you'd like to find SVI of multiple states for the same year, try `rep({year}, length(state))` in `year` argument."
-        )
-      stop("year-state pairing error")
+      cli::cli_abort(c(
+        "!" = "You inputted 1 year but {length(state)} states. find_svi() requires `year` and `state` to be of the same length.",
+        "i" = "If you'd like to find SVI of multiple states for the same year, try `rep({year}, length(state))` in `year` argument."
+        ))
+
     }
   }
 
@@ -144,42 +142,34 @@ find_svi  <- function(
   if (length(year) > 1) {
 
     if (length(state) == 0) {
-      cli::cli_alert_warning(
-        "You inputted {length(year)} years for nation-level data."
-      )
-      cli::cli_alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
-      stop("year-state pairing error")
+      cli::cli_abort(c(
+        "!" = "You inputted {length(year)} years for nation-level data.",
+        "i" = "For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument."
+      ))
     }
 
 
     if (length(state) == 1) {
 
       if (state == "US") {
-        cli::cli_alert_warning(
-          "You inputted {length(year)} years for nation-level data."
-        )
-        cli::cli_alert("For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument.")
-        stop("year-state pairing error")
+        cli::cli_abort(c(
+          "!" = "You inputted {length(year)} years for nation-level data.",
+          "i" = "For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument."
+        ))
       }
 
       #length = 1, not US
-      cli::cli_alert_warning(
-        "You inputted {length(year)} years but only 1 state. find_svi() requires year and state to be of the same length."
-      )
-      cli::cli_alert(
-        "If you'd like to find SVI of the same state for multiple years, try `rep({state}, length(year))` in `state` argument."
-      )
-      stop("year-state pairing error")
+      cli::cli_abort(c(
+        "!" = "You inputted {length(year)} years but only 1 state. find_svi() requires `year` and `state` to be of the same length.",
+        "i" = "If you'd like to find SVI of the same state for multiple years, try `rep({state}, length(year))` in `state` argument."
+      ))
     }
 
     if (length(state) > 1 & length(year) != length(state)) {
-      cli::cli_alert_warning(
-        "You inputted {length(year)} years and {length(state)} states. find_svi() requires year and state to be of the same length."
-      )
-      cli::cli_alert(
-        "Consider using pairs of `year` and `state`. For nation-level data (`state = NULL` or `state = 'US`), use single year argument. "
-      )
-      stop("year-state pairing error")
+      cli::cli_abort(c(
+        "!" = "You inputted {length(year)} years and {length(state)} states. find_svi() requires `year` and `state` to be of the same length.",
+        "i" = "Consider using pairs of `year` and `state`. For nation-level data (`state = NULL` or `state = 'US'`), use single year argument. "
+      ))
     }
 
     results <- purrr::map2_dfr(
