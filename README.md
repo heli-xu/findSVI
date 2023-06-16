@@ -26,8 +26,8 @@ findSVI includes two major steps:
 
 In addition, there’s a 2-in-1 wrapper with extra features:
 
-- `summarise_svi()`: retrieving US census data and calculate SVI for one
-  or multiple year-state pair(s) at the same geography level.
+- `find_svi()`: retrieving US census data and calculate SVI for one or
+  multiple year-state pair(s) at the same geography level.
 
 CDC/ATSDR releases SVI biannually at the counties/census tracts level
 for US or an individual state (which can be downloaded
@@ -110,7 +110,7 @@ restult[1:10, 1:10]
 (first ten rows and columns shown)
 
 ``` r
-summarise_results <- summarise_svi(
+summarise_results <- find_svi(
   year = c(2017, 2018),
   state = c("NJ", "PA"),
   geography = "county"

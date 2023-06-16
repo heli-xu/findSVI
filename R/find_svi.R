@@ -43,7 +43,7 @@
 #'
 #' # Use with vectors for year and state
 #' ## for one year-state information (all ZCTAs of PA in 2019)
-#' summarise_svi(
+#' find_svi(
 #'       year = 2019,
 #'       state = "PA",
 #'       geography = "tract"
@@ -51,7 +51,7 @@
 #'
 #'
 #' ## for multiple year-state combination (all ZCTAs of RI in 2017 and PA in 2018)
-#' summarise_svi(
+#' find_svi(
 #'       year = c(2017, 2018),
 #'       state = c("RI", "PA"),
 #'       geography = "zcta"
@@ -65,14 +65,14 @@
 #'     "PA", 2020,
 #'     "RI", 2018)
 #'
-#' summarise_svi(
+#' find_svi(
 #'     year = info$year,
 #'     state = info$state,
 #'     geography = "county"
 #'    )
 #' }
 #'
-summarise_svi  <- function(
+find_svi  <- function(
   year,
   state = NULL,
   geography,

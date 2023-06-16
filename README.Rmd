@@ -32,7 +32,7 @@ findSVI includes two major steps:
 
 In addition, there's a 2-in-1 wrapper with extra features:
 
--   `summarise_svi()`: retrieving US census data and calculate SVI for one or multiple year-state pair(s) at the same geography level.
+-   `find_svi()`: retrieving US census data and calculate SVI for one or multiple year-state pair(s) at the same geography level.
 
 CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
 
@@ -72,8 +72,8 @@ pa_cty_result2020[1:10, 1:10]
 
 (first ten rows and columns shown)
 
-```{r summarise_svi, eval=FALSE}
-summarise_results <- summarise_svi(
+```{r find_svi, eval=FALSE}
+summarise_results <- find_svi(
   year = c(2017, 2018),
   state = c("NJ", "PA"),
   geography = "county"
