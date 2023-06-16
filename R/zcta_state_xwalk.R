@@ -10,7 +10,7 @@
 #' @format ## A data frame with 5 columns and various number of rows, depending on the year:
 #' \describe{
 #'   \item{ZCTA}{5 digit ZCTA code.}
-#'   \item{st_code}{2 digit Federal Information Processing System (FIPS) Codes for States.}
+#'   \item{st_code}{Federal Information Processing System (FIPS) Codes for States.}
 #'   \item{county}{County name within the state that the ZCTA intersects/corresponds to.}
 #'   \item{state}{State full name corresponding to the FIPS code.}
 #'   \item{st_abb}{Two-letter state abbreviation.}

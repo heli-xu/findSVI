@@ -61,6 +61,9 @@ zcta_state_xwalk2021 <- zcta_cty20 %>%
   select(ZCTA, st_code, county, state, st_abb)
   #not selecting GEOID to avoid confusion, pulled data(for zcta) GEOID is ZCTA
 
+zcta_state_xwalk2021 <- zcta_state_xwalk2021 %>%
+  mutate(st_code = as.numeric(st_code))
+
 #check how many states
 z <- zcta_state_xwalk2021 %>% group_by(state) %>% count()
 
@@ -117,6 +120,9 @@ zcta_state_xwalk2020 <- zcta_cty20 %>%
   select(ZCTA, st_code, county, state, st_abb)
   #not selecting GEOID to avoid confusion, pulled data(for zcta) GEOID is ZCTA
   #ZCTA padded with 0 already
+
+zcta_state_xwalk2020 <- zcta_state_xwalk2020 %>%
+  mutate(st_code = as.numeric(st_code))
 
 #checking how many states included (52)
 y2 <- zcta_state_xwalk2020 %>% group_by(state) %>% count()
@@ -175,6 +181,8 @@ zcta_state_xwalk2019 <- zcta_cty10 %>%
   select(ZCTA = ZCTA5, st_code, county, state, st_abb) %>%
   mutate(ZCTA = str_pad(ZCTA, width = 5, side = "left", pad = "0"))
 
+zcta_state_xwalk2019 <- zcta_state_xwalk2019 %>%
+  mutate(st_code = as.numeric(st_code))
 
 #check how many states
 x <- zcta_state_xwalk2019 %>% group_by(state) %>% count()
