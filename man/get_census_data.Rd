@@ -13,7 +13,7 @@ get_census_data(year, geography, state = NULL, county = NULL, key = NULL, ...)
 
 \item{state}{(Optional) Specify the state of interest. If data for multiple
 states are retrieved together, ranking for SVI calculation will be performed
-among all states.}
+among all states. \code{state = NULL} as default, or \code{state = 'US'} return nation-level data.}
 
 \item{county}{(Optional) Specify the county(s) of interest, must be combined
 with a value supplied to "state".}

@@ -10,7 +10,7 @@
 #'@param geography The geography of interest (eg. state, county, zcta, tract)
 #'@param state (Optional) Specify the state of interest. If data for multiple
 #'  states are retrieved together, ranking for SVI calculation will be performed
-#'  among all states.
+#'  among all states. `state = NULL` as default, or `state = 'US'` return nation-level data.
 #'@param county (Optional) Specify the county(s) of interest, must be combined
 #'  with a value supplied to "state".
 #'@param key Your Census API key.
@@ -39,9 +39,24 @@ get_census_data <- function(year,
     unlist() %>%
     unname()
 
-if(geography == "zcta"&& year >= 2019) {
-  cli::cli_alert_info("State-specific ZCTA-level data for {year} is currently not supported by Census API.
-Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit longer)")
+if (state == "US") {
+  raw_data <- tidycensus::get_acs(
+    geography = geography,
+    state = NULL,
+    year = year,
+    variables = var_list,
+    output = "wide"
+  )
+ return(raw_data)
+}
+
+if (state != "US") {
+
+  if(geography == "zcta"&& year >= 2019) {
+    cli::cli_alert_info(
+      "State-specific ZCTA-level data for {year} is currently not supported by Census API.
+Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit longer)"
+      )
 
   us_data <- tidycensus::get_acs(
     geography = geography,
@@ -61,13 +76,16 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
 
   return(state_data)
+  }
+
+    raw_data <- tidycensus::get_acs(
+      geography = geography,
+      state = state,
+      year = year,
+      variables = var_list,
+      output = "wide"
+    )
+    return(raw_data)
+  }
 }
 
-  tidycensus::get_acs(
-    geography = geography,
-    state = state,
-    year = year,
-    variables = var_list,
-    output = "wide"
-  )
-}
