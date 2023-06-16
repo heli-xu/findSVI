@@ -230,29 +230,28 @@ ranking again as the SVI for each theme and overall SVI.</p>
 some of the individual SVI variables.)</p>
 </div>
 <div class="section level2">
-<h2 id="wrapper-and-more-summarise_svi">Wrapper and more: <code>summarise_svi()</code><a class="anchor" aria-label="anchor" href="#wrapper-and-more-summarise_svi"></a>
+<h2 id="wrapper-and-more-find_svi">Wrapper and more: <code>find_svi()</code><a class="anchor" aria-label="anchor" href="#wrapper-and-more-find_svi"></a>
 </h2>
 <p>To retrieve census data and compute SVI in one step, we could use
-<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code>. While <code><a href="../reference/get_census_data.html">get_census_data()</a></code> only
+<code><a href="../reference/find_svi.html">find_svi()</a></code>. While <code><a href="../reference/get_census_data.html">get_census_data()</a></code> only
 accepts a single year for <code>year</code> (and multiple states for
 <code>state</code>) just like <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>,
-<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> accepts pairing vectors of
-<code>year</code> and <code>state</code> for the SAME geography level.
-This allows processing multiple year-state combinations in one function,
-with separate data retrieval and SVI calculation for every year-state
-entry and returning a summarised SVI table for all pairs of year-state
-values.</p>
+<code><a href="../reference/find_svi.html">find_svi()</a></code> accepts pairing vectors of <code>year</code> and
+<code>state</code> for the SAME geography level. This allows processing
+multiple year-state combinations in one function, with separate data
+retrieval and SVI calculation for every year-state entry and returning a
+summarised SVI table for all pairs of year-state values.</p>
 <p>One important difference in data retrieval between
-<code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> and <code><a href="../reference/get_census_data.html">get_census_data()</a></code> is that
-the year-state combinations will always be evaluated as “one year and
-one state” – that is, the option to get census data for multiple states
-at once (for one year) in <code><a href="../reference/get_census_data.html">get_census_data()</a></code> will be
-disabled in <code><a href="../reference/summarise_svi.html">summarise_svi()</a></code>. There is an exception to this
-one-on-one rule, when a single year is supplied into <code>year</code>,
-you can set the <code>state = NULL</code> as default to perform
-nation-level data retrieval and SVI calculation.</p>
-<p>For SVI table output, <code><a href="../reference/summarise_svi.html">summarise_svi()</a></code> by default returns
-a summarised SVI table with only the GEOID, theme-specific SVIs and SVI
+<code><a href="../reference/find_svi.html">find_svi()</a></code> and <code><a href="../reference/get_census_data.html">get_census_data()</a></code> is that the
+year-state combinations will always be evaluated as “one year and one
+state” – that is, the option to get census data for multiple states at
+once (for one year) in <code><a href="../reference/get_census_data.html">get_census_data()</a></code> will be disabled
+in <code><a href="../reference/find_svi.html">find_svi()</a></code>. There is an exception to this one-on-one
+rule, when a single year is supplied into <code>year</code>, you can set
+the <code>state = NULL</code> as default to perform nation-level data
+retrieval and SVI calculation.</p>
+<p>For SVI table output, <code><a href="../reference/find_svi.html">find_svi()</a></code> by default returns a
+summarised SVI table with only the GEOID, theme-specific SVIs and SVI
 for all 4 themes for each year-state combination. Alternatively, there’s
 an option to return a full SVI table with every SVI variable and
 intermediate ranking values (as <code><a href="../reference/get_svi.html">get_svi()</a></code>) by setting
@@ -265,7 +264,7 @@ table.</p>
 <p>Using the same example as above, to obtain ZCTA-level census data and
 calculate SVI for Rhode Island for 2018 in one step:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">onestep_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"RI"</span>, <span class="st">"zcta"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">onestep_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi.html">find_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"RI"</span>, <span class="st">"zcta"</span><span class="op">)</span></span>
 <span><span class="va">onestep_result</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
@@ -300,7 +299,7 @@ and state information.</p>
 treated as pairs. For example, to obtain county-level SVI of New Jersey
 and Pennsylvania for 2017 and 2018, respectively:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">summarise_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">summarise_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi.html">find_svi</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">2018</span><span class="op">)</span>,</span>
 <span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NJ"</span>, <span class="st">"PA"</span><span class="op">)</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
@@ -342,7 +341,7 @@ to include in the analysis:</p>
 <code>info_table</code> for the <code>year</code> and <code>state</code>
 arguments:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_svi.html">summarise_svi</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi.html">find_svi</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">year</span>,</span>
 <span>  state <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">state</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
