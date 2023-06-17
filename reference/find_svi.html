@@ -72,18 +72,18 @@ table.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>year</dt>
-<dd><p>A vector containing years of interest. Length &gt;=1. Acting as pairs
+<dd><p>A vector containing years of interest (available 2012-2021). Length &gt;=1. Acting as pairs
 with <code>state</code>, <code>year</code> should be of the same length as <code>state</code>. The exception
-is when it's a single year entry (length 1), other than providing a single
-state of interest, <code>state</code> can also be set as <code>NULL</code>, in which case nation
-level data is retrieved and processed to obtain SVI.</p></dd>
+is when it's a single year entry (length 1), other than providing one state
+of interest, supply <code>state = NULL</code> as default or <code>state = 'US'</code> retrieves
+and processes nation level data to obtain SVI.</p></dd>
 
 
 <dt>state</dt>
 <dd><p>A vector containing states of interest. Length &gt;=0. Length 0
-(<code>state = NULL</code>), or <code>state = 'US'</code> must be used with single year argument, when SVI is
-calculated from nation-level census data. In other cases, <code>state</code> must have
-the same elements as <code>year</code> (same length).</p></dd>
+(<code>state = NULL</code>), or <code>state = 'US'</code> must be used with single year argument,
+when SVI is calculated from nation-level census data. In other cases,
+<code>state</code> must have the same elements as <code>year</code> (same length).</p></dd>
 
 
 <dt>geography</dt>
