@@ -7,17 +7,17 @@
 #'  obtained from entry-specific percentile ranking and summarised into one
 #'  table.
 #'
-#'@param year A vector containing years of interest. Length >=1. Acting as pairs
+#'@param year A vector containing years of interest (available 2012-2021). Length >=1. Acting as pairs
 #'  with `state`, `year` should be of the same length as `state`. The exception
-#'  is when it's a single year entry (length 1), other than providing a single
-#'  state of interest, `state` can also be set as `NULL`, in which case nation
-#'  level data is retrieved and processed to obtain SVI.
+#'  is when it's a single year entry (length 1), other than providing one state
+#'  of interest, supply `state = NULL` as default or `state = 'US'` retrieves
+#'  and processes nation level data to obtain SVI.
+#'@param state A vector containing states of interest. Length >=0. Length 0
+#'  (`state = NULL`), or `state = 'US'` must be used with single year argument,
+#'  when SVI is calculated from nation-level census data. In other cases,
+#'  `state` must have the same elements as `year` (same length).
 #'@param geography One geography level of interest for all year-state
 #'  combination (e.g."county", "zcta", "tract").
-#'@param state A vector containing states of interest. Length >=0. Length 0
-#'  (`state = NULL`), or `state = 'US'` must be used with single year argument, when SVI is
-#'  calculated from nation-level census data. In other cases, `state` must have
-#'  the same elements as `year` (same length).
 #'@param key Your Census API key. Obtain one at
 #'  <https://api.census.gov/data/key_signup.html>. To set up, use
 #'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
@@ -34,7 +34,8 @@
 #'  indicate the corresponding state and year information. For `full.table =
 #'  TRUE`, estimated count and percentage values for individual SVI variables
 #'  are also included. For description of variable names (column names), please
-#'  refer to [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#'  refer to [CDC/ATSDR
+#'  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'@export
 #'
 #' @examples

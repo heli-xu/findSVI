@@ -8,16 +8,16 @@ Multiple Year(s)/State(s)}
 find_svi(year, state = NULL, geography, key = NULL, full.table = FALSE)
 }
 \arguments{
-\item{year}{A vector containing years of interest. Length >=1. Acting as pairs
+\item{year}{A vector containing years of interest (available 2012-2021). Length >=1. Acting as pairs
 with \code{state}, \code{year} should be of the same length as \code{state}. The exception
-is when it's a single year entry (length 1), other than providing a single
-state of interest, \code{state} can also be set as \code{NULL}, in which case nation
-level data is retrieved and processed to obtain SVI.}
+is when it's a single year entry (length 1), other than providing one state
+of interest, supply \code{state = NULL} as default or \code{state = 'US'} retrieves
+and processes nation level data to obtain SVI.}
 
 \item{state}{A vector containing states of interest. Length >=0. Length 0
-(\code{state = NULL}), or \code{state = 'US'} must be used with single year argument, when SVI is
-calculated from nation-level census data. In other cases, \code{state} must have
-the same elements as \code{year} (same length).}
+(\code{state = NULL}), or \code{state = 'US'} must be used with single year argument,
+when SVI is calculated from nation-level census data. In other cases,
+\code{state} must have the same elements as \code{year} (same length).}
 
 \item{geography}{One geography level of interest for all year-state
 combination (e.g."county", "zcta", "tract").}
