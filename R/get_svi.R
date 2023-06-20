@@ -91,7 +91,7 @@ get_svi <- function(year, data){
     dplyr::bind_cols(svi_e, .) %>%
     #keep the new columns, GEOID, NAME
     dplyr::select(GEOID, NAME, tidyselect::all_of(var_0_name), tidyselect::all_of(E_var_name), tidyselect::all_of(EP_var_name)) %>%
-    dplyr::mutate(across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
+    dplyr::mutate(dplyr::across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
       E_AGE65 = dplyr::case_when(year >= 2017 ~ E_AGE65,
         TRUE ~ round(E_AGE65, 0)))
 
