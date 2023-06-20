@@ -51,14 +51,14 @@ get_census_data <- function(year,
       ))
   }
 
-  if (length(year) == 1 && !(year %in% year_valid)) {
+  if (length(year) == 1) {
+
+    if (!(year %in% year_valid)) {
     cli::cli_abort(c(
       "x" = "{year} is not a valid input for `year`.",
       "i" = "Years available for census data retrieval: 2012-2021."
       ))
-  }
-
-
+    }
 
   if (inherits(state, "numeric")) {
   if (any(!(state %in% state_valid_dbl))) {
@@ -85,8 +85,10 @@ get_census_data <- function(year,
     unlist() %>%
     unname()
 
+#state = 1
 if (length(state) == 1) {
 
+  ##US
   if (state == "US") {
     raw_data <- tidycensus::get_acs(
       geography = geography,
@@ -98,6 +100,7 @@ if (length(state) == 1) {
     return(raw_data)
   }
 
+  ##zcta >=2019
   if(geography == "zcta"&& year >= 2019) {
     cli::cli_alert_info(
       "State-specific ZCTA-level data for {year} is currently not supported by Census API.
@@ -125,6 +128,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
   return(state_data)
   }
 
+    ##not >=2019 zcta
     raw_data <- tidycensus::get_acs(
       geography = geography,
       state = state,
@@ -135,13 +139,15 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     return(raw_data)
 }
 
+#state >1
 if (length(state) > 1) {
 
-  if(geography == "zcta"&& year >= 2019) {
-    cli::cli_alert_info(
+   ##zcta >=2019
+    if(geography == "zcta"&& year >= 2019) {
+      cli::cli_alert_info(
       "State-specific ZCTA-level data for {year} is currently not supported by Census API.
 Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit longer)"
-    )
+      )
 
     us_data <- tidycensus::get_acs(
       geography = geography,
@@ -164,6 +170,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     return(state_data)
   }
 
+  ##not >=2019 zcta data
   raw_data <- tidycensus::get_acs(
     geography = geography,
     state = state,
@@ -173,6 +180,17 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
   )
   return(raw_data)
   }
+}
+
+#state not >1, not =1, so = NULL, or default
+  raw_data <- tidycensus::get_acs(
+    geography = geography,
+    state = state,
+    year = year,
+    variables = var_list,
+    output = "wide"
+  )
+  return(raw_data)
 
 }
 
