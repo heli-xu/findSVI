@@ -81,6 +81,34 @@ find_svi  <- function(
   full.table = FALSE
   )
 {
+  state_valid_chr <- state_valid %>%
+    dplyr::select(st_abbr, st_name) %>%
+    unlist(use.names = FALSE)
+  state_valid_chr_us <- c("US", state_valid_chr)
+
+  state_valid_dbl <- state_valid %>%
+    dplyr::select(fips_code) %>%
+    unlist(use.names = FALSE)
+
+  if (inherits(state, "numeric")) {
+    if (any(!(state %in% state_valid_dbl))) {
+      cli::cli_abort(c(
+        "x" = "One or more elements of {state} is not a valid input for `state`.",
+        "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
+      ))
+    }
+  }
+
+  if(inherits(state, "character")) {
+    if (any(!(state %in% state_valid_chr_us))) {
+      cli::cli_abort(c(
+        "x" = "One or more elements of {state} is not a valid input for `state`.",
+        "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
+      ))
+    }
+  }
+
+
   if (length(year) == 1) {
 
     if (length(state) == 0) {
@@ -173,6 +201,7 @@ find_svi  <- function(
         "i" = "If you'd like to find SVI of the same state for multiple years, try `rep({state}, length(year))` in `state` argument."
       ))
     }
+
 
     if (length(state) > 1 & length(year) != length(state)) {
       cli::cli_abort(c(
