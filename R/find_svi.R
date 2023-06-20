@@ -114,7 +114,7 @@ find_svi  <- function(
     if (length(state) == 0) {
       data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
       cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
-      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = "US")
       results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
       cli::cli_alert_success(
         "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
@@ -130,7 +130,7 @@ find_svi  <- function(
         if(state == "US") {
       data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
       cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
-      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = "US")
       results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
       cli::cli_alert_success(
         "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
