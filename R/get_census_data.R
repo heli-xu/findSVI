@@ -44,13 +44,21 @@ get_census_data <- function(year,
     dplyr::distinct(st_code) %>%
     unlist(use.names = FALSE)
 
-if (!(year %in% year_valid)) {
-  cli::cli_abort(c(
-    "x" = "{year} is not a valid input for `year`.",
-    "i" = "Years available for census data retrieval: 2012-2021."
-  )
-  )
-}
+  if (length(year) > 1) {
+    cli::cli_abort(c(
+      "x" = "`year` contains {length(year)} years.",
+      "i" = "Data retrieval is performed one year at a time. To retrieve data (and compute SVI) for multiple years separately, use `find_svi()`."
+      ))
+  }
+
+  if (length(year) == 1 && !(year %in% year_valid)) {
+    cli::cli_abort(c(
+      "x" = "{year} is not a valid input for `year`.",
+      "i" = "Years available for census data retrieval: 2012-2021."
+      ))
+  }
+
+
 
   if (is(state, "numeric")) {
   if (any(!(state %in% state_valid_dbl))) {
