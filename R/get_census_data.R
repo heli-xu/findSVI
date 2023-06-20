@@ -60,7 +60,7 @@ get_census_data <- function(year,
 
 
 
-  if (is(state, "numeric")) {
+  if (inherits(state, "numeric")) {
   if (any(!(state %in% state_valid_dbl))) {
     cli::cli_abort(c(
       "x" = "One or more elements of {state} is not a valid input for `state`.",
@@ -69,7 +69,7 @@ get_census_data <- function(year,
   }
 }
 
-  if(is(state, "character")) {
+  if(inherits(state, "character")) {
     if (any(!(state %in% state_valid_chr_us))) {
       cli::cli_abort(c(
         "x" = "One or more elements of {state} is not a valid input for `state`.",
