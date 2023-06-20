@@ -190,3 +190,13 @@ x <- zcta_state_xwalk2019 %>% group_by(state) %>% count()
 usethis::use_data(zcta_state_xwalk2019, overwrite = TRUE)
 
 
+
+# Extra: valid state table ----------------------------------------------
+
+state_valid <- zcta_state_xwalk2020 %>%
+  distinct(st_abb, state, st_code) %>%
+  rename(st_name = state,
+    st_abbr = st_abb,
+    fips_code = st_code)
+
+usethis::use_data(state_valid, overwrite = TRUE)
