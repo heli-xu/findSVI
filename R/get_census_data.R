@@ -35,13 +35,13 @@ get_census_data <- function(year,
   #predicate
   year_valid <- 2012:2021
 
-  state_valid_chr <- zcta_state_xwalk2020 %>%
-    dplyr::distinct(st_abb, state) %>%
+  state_valid_chr <- state_valid %>%
+    dplyr::select(st_abbr, st_name) %>%
     unlist(use.names = FALSE)
   state_valid_chr_us <- c("US", state_valid_chr)
 
-  state_valid_dbl <- zcta_state_xwalk2020 %>%
-    dplyr::distinct(st_code) %>%
+  state_valid_dbl <- state_valid %>%
+    dplyr::select(fips_code) %>%
     unlist(use.names = FALSE)
 
   if (length(year) > 1) {
