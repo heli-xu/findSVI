@@ -80,7 +80,7 @@ summarise_results <- find_svi(
 )
 ```
 
-```{r summarise_results, echo=FALSE, warning=FALSE}
+```{r summarise_results, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
 load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
 summarise_results %>% head(10)

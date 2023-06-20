@@ -117,14 +117,6 @@ summarise_results <- find_svi(
 )
 ```
 
-    #> 
-    #> Attaching package: 'dplyr'
-    #> The following objects are masked from 'package:stats':
-    #> 
-    #>     filter, lag
-    #> The following objects are masked from 'package:base':
-    #> 
-    #>     intersect, setdiff, setequal, union
     #> # A tibble: 10 × 8
     #>    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state
     #>    <chr>      <dbl>      <dbl>      <dbl>      <dbl>      <dbl> <dbl> <chr>
