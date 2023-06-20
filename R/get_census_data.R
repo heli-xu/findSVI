@@ -56,7 +56,7 @@ if (!(year %in% year_valid)) {
   if (any(!(state %in% state_valid_dbl))) {
     cli::cli_abort(c(
       "x" = "One or more elements of {state} is not a valid input for `state`.",
-      "i" = "Make sure your `state` input is of the correct data type: state full names and 2-letter abbreviations are characters; FIPS codes are numbers."
+      "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
     ))
   }
 }
@@ -65,7 +65,7 @@ if (!(year %in% year_valid)) {
     if (any(!(state %in% state_valid_chr_us))) {
       cli::cli_abort(c(
         "x" = "One or more elements of {state} is not a valid input for `state`.",
-        "i" = "Make sure your `state` input is of the correct data type: state full names and 2-letter abbreviations are characters; FIPS codes are numbers."
+        "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
       ))
     }
   }
