@@ -25,16 +25,18 @@ The goal of findSVI is to calculate regional [CDC/ATSDR Social Vulnerability Ind
 
 ## Overview
 
-findSVI includes two major steps:
+CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (e.g., ZCTA/places, combining multiple states).
 
--   `get_census_data()`: retrieving US census data (Census API key required);
--   `get_svi()`: calculating SVI based on [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+To find SVI for one or multiple year-state pair(s):
 
-In addition, there's a 2-in-1 wrapper with extra features:
+-   `find_svi()`: retrieves US census data (Census API key required) and calculates SVI based on [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) for each year-state pair at the same geography level.
 
--   `find_svi()`: retrieving US census data and calculate SVI for one or multiple year-state pair(s) at the same geography level.
+In most cases, `find_svi()` would be the easiest option. If you have more customized requests for census data retrieval (e.g., different geography level for each year-state pair, multiple states for one year), you can process individual entry using the following:
 
-CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
+-   `get_census_data()`: retrieves US census data (Census API key required);
+-   `get_svi()`: calculates SVI from the census data supplied.
+
+Essentially, `find_svi()` is a wrapper function for `get_census_data()` and `get_svi()` that also supports iteration over 1-year-and-1-state pairs at the same geography level.
 
 ## Installation
 
@@ -46,6 +48,23 @@ devtools::install_github("heli-xu/findSVI")
 ```
 
 ## Usage
+
+```{r find_svi, eval=FALSE}
+summarise_results <- find_svi(
+  year = c(2017, 2018),
+  state = c("NJ", "PA"),
+  geography = "county"
+)
+summarise_results %>% head(10)
+```
+
+```{r summarise_results, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
+summarise_results %>% head(10)
+```
+
+(first ten rows shown)
 
 ```{r get_census_data, eval=FALSE}
 library(findSVI)
@@ -71,17 +90,3 @@ pa_cty_result2020[1:10, 1:10]
 ```
 
 (first ten rows and columns shown)
-
-```{r find_svi, eval=FALSE}
-summarise_results <- find_svi(
-  year = c(2017, 2018),
-  state = c("NJ", "PA"),
-  geography = "county"
-)
-```
-
-```{r summarise_results, echo=FALSE, warning=FALSE, message=FALSE}
-library(dplyr)
-load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
-summarise_results %>% head(10)
-```

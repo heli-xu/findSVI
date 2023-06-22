@@ -17,24 +17,32 @@ Community Survey.
 
 ## Overview
 
-findSVI includes two major steps:
-
-- `get_census_data()`: retrieving US census data (Census API key
-  required);
-- `get_svi()`: calculating SVI based on [CDC/ATSDR SVI
-  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
-
-In addition, there’s a 2-in-1 wrapper with extra features:
-
-- `find_svi()`: retrieving US census data and calculate SVI for one or
-  multiple year-state pair(s) at the same geography level.
-
 CDC/ATSDR releases SVI biannually at the counties/census tracts level
 for US or an individual state (which can be downloaded
 [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 findSVI aims to support more flexible and specific SVI analysis with
-additional options for years (2012-2021) and geographic levels (eg.
+additional options for years (2012-2021) and geographic levels (e.g.,
 ZCTA/places, combining multiple states).
+
+To find SVI for one or multiple year-state pair(s):
+
+- `find_svi()`: retrieves US census data (Census API key required) and
+  calculates SVI based on [CDC/ATSDR SVI
+  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)
+  for each year-state pair at the same geography level.
+
+In most cases, `find_svi()` would be the easiest option. If you have
+more customized requests for census data retrieval (e.g., different
+geography level for each year-state pair, multiple states for one year),
+you can process individual entry using the following:
+
+- `get_census_data()`: retrieves US census data (Census API key
+  required);
+- `get_svi()`: calculates SVI from the census data supplied.
+
+Essentially, `find_svi()` is a wrapper function for `get_census_data()`
+and `get_svi()` that also supports iteration over 1-year-and-1-state
+pairs at the same geography level.
 
 ## Installation
 
@@ -49,72 +57,12 @@ devtools::install_github("heli-xu/findSVI")
 ## Usage
 
 ``` r
-library(findSVI)
-data <- get_census_data(2020, "county", "PA")
-data[1:10, 1:10]
-```
-
-    #>    GEOID                           NAME B06009_002E B06009_002M B09001_001E
-    #> 1  42001     Adams County, Pennsylvania        7788         602       20663
-    #> 2  42003 Allegheny County, Pennsylvania       45708        1713      228296
-    #> 3  42005 Armstrong County, Pennsylvania        3973         305       12516
-    #> 4  42007    Beaver County, Pennsylvania        7546         640       31915
-    #> 5  42009   Bedford County, Pennsylvania        3996         317        9386
-    #> 6  42011     Berks County, Pennsylvania       36488        1356       93714
-    #> 7  42013     Blair County, Pennsylvania        7292         679       24920
-    #> 8  42015  Bradford County, Pennsylvania        4395         362       13358
-    #> 9  42017     Bucks County, Pennsylvania       25651        1306      128008
-    #> 10 42019    Butler County, Pennsylvania        6118         468       37577
-    #>    B09001_001M B11012_010E B11012_010M B11012_015E B11012_015M
-    #> 1           NA        1237         215         482         171
-    #> 2           49       24311        1147        5378         525
-    #> 3            9         912         161         247          85
-    #> 4           NA        3380         380         787         174
-    #> 5           11         468          99         213          50
-    #> 6           44        8812         662        1695         304
-    #> 7           19        2552         363         544         169
-    #> 8           NA         969         177         428         117
-    #> 9           53        8222         749        3174         581
-    #> 10          NA        2121         337         813         198
-
-(first ten rows and columns shown)
-
-``` r
-result <- get_svi(2020, data)
-restult[1:10, 1:10]
-```
-
-    #>    GEOID                           NAME E_TOTPOP   E_HU   E_HH E_POV150 E_UNEMP
-    #> 1  42001     Adams County, Pennsylvania   102627  42525  39628    13573    2049
-    #> 2  42003 Allegheny County, Pennsylvania  1218380 602416 545695   212117   32041
-    #> 3  42005 Armstrong County, Pennsylvania    65356  32852  28035    13566    1735
-    #> 4  42007    Beaver County, Pennsylvania   164781  79587  72086    28766    4249
-    #> 5  42009   Bedford County, Pennsylvania    48154  24405  19930    10130    1033
-    #> 6  42011     Berks County, Pennsylvania   419062 167514 156389    77317   12196
-    #> 7  42013     Blair County, Pennsylvania   122495  56960  51647    27397    2765
-    #> 8  42015  Bradford County, Pennsylvania    60721  30691  25084    13731    1331
-    #> 9  42017     Bucks County, Pennsylvania   627668 251373 240763    59899   14477
-    #> 10 42019    Butler County, Pennsylvania   187798  84106  77725    24141    4498
-    #>    E_HBURD E_NOHSDP E_UNINSUR
-    #> 1     9088     7788      5656
-    #> 2   133524    45708     46333
-    #> 3     5719     3973      2632
-    #> 4    15764     7546      6242
-    #> 5     3952     3996      3310
-    #> 6    40982    36488     25627
-    #> 7    12146     7292      6155
-    #> 8     5520     4395      3992
-    #> 9    57197    25651     25208
-    #> 10   15043     6118      6151
-
-(first ten rows and columns shown)
-
-``` r
 summarise_results <- find_svi(
   year = c(2017, 2018),
   state = c("NJ", "PA"),
   geography = "county"
 )
+summarise_results %>% head(10)
 ```
 
     #> # A tibble: 10 × 8
@@ -130,3 +78,51 @@ summarise_results <- find_svi(
     #>  8 34015       0.35       0.7        0.15       0.15       0.35  2017 NJ   
     #>  9 34017       0.75       0          1          0.75       0.7   2017 NJ   
     #> 10 34019       0          0.05       0.05       0.1        0     2017 NJ
+
+(first ten rows shown)
+
+``` r
+library(findSVI)
+data <- get_census_data(2020, "county", "PA")
+data[1:10, 1:10]
+```
+
+    #> # A tibble: 10 × 10
+    #>    GEOID NAME    B0600…¹ B0600…² B0900…³ B0900…⁴ B1101…⁵ B1101…⁶ B1101…⁷ B1101…⁸
+    #>    <chr> <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+    #>  1 42001 Adams …    7788     602   20663      NA    1237     215     482     171
+    #>  2 42003 Allegh…   45708    1713  228296      49   24311    1147    5378     525
+    #>  3 42005 Armstr…    3973     305   12516       9     912     161     247      85
+    #>  4 42007 Beaver…    7546     640   31915      NA    3380     380     787     174
+    #>  5 42009 Bedfor…    3996     317    9386      11     468      99     213      50
+    #>  6 42011 Berks …   36488    1356   93714      44    8812     662    1695     304
+    #>  7 42013 Blair …    7292     679   24920      19    2552     363     544     169
+    #>  8 42015 Bradfo…    4395     362   13358      NA     969     177     428     117
+    #>  9 42017 Bucks …   25651    1306  128008      53    8222     749    3174     581
+    #> 10 42019 Butler…    6118     468   37577      NA    2121     337     813     198
+    #> # … with abbreviated variable names ¹​B06009_002E, ²​B06009_002M, ³​B09001_001E,
+    #> #   ⁴​B09001_001M, ⁵​B11012_010E, ⁶​B11012_010M, ⁷​B11012_015E, ⁸​B11012_015M
+
+(first ten rows and columns shown)
+
+``` r
+result <- get_svi(2020, data)
+restult[1:10, 1:10]
+```
+
+    #> # A tibble: 10 × 10
+    #>    GEOID NAME      E_TOT…¹   E_HU   E_HH E_POV…² E_UNEMP E_HBURD E_NOH…³ E_UNI…⁴
+    #>    <chr> <chr>       <dbl>  <dbl>  <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+    #>  1 42001 Adams Co…  102627  42525  39628   13573    2049    9088    7788    5656
+    #>  2 42003 Alleghen… 1218380 602416 545695  212117   32041  133524   45708   46333
+    #>  3 42005 Armstron…   65356  32852  28035   13566    1735    5719    3973    2632
+    #>  4 42007 Beaver C…  164781  79587  72086   28766    4249   15764    7546    6242
+    #>  5 42009 Bedford …   48154  24405  19930   10130    1033    3952    3996    3310
+    #>  6 42011 Berks Co…  419062 167514 156389   77317   12196   40982   36488   25627
+    #>  7 42013 Blair Co…  122495  56960  51647   27397    2765   12146    7292    6155
+    #>  8 42015 Bradford…   60721  30691  25084   13731    1331    5520    4395    3992
+    #>  9 42017 Bucks Co…  627668 251373 240763   59899   14477   57197   25651   25208
+    #> 10 42019 Butler C…  187798  84106  77725   24141    4498   15043    6118    6151
+    #> # … with abbreviated variable names ¹​E_TOTPOP, ²​E_POV150, ³​E_NOHSDP, ⁴​E_UNINSUR
+
+(first ten rows and columns shown)
