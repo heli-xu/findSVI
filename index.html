@@ -80,19 +80,20 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>findSVI includes two major steps:</p>
+<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">here</a>). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (e.g., ZCTA/places, combining multiple states).</p>
+<p>To find SVI for one or multiple year-state pair(s):</p>
 <ul>
 <li>
-<code><a href="reference/get_census_data.html">get_census_data()</a></code>: retrieving US census data (Census API key required);</li>
-<li>
-<code><a href="reference/get_svi.html">get_svi()</a></code>: calculating SVI based on <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR SVI documentation</a>.</li>
+<code><a href="reference/find_svi.html">find_svi()</a></code>: retrieves US census data (Census API key required) and calculates SVI based on <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR SVI documentation</a> for each year-state pair at the same geography level.</li>
 </ul>
-<p>In addition, there’s a 2-in-1 wrapper with extra features:</p>
+<p>In most cases, <code><a href="reference/find_svi.html">find_svi()</a></code> would be the easiest option. If you have more customized requests for census data retrieval (e.g., different geography level for each year-state pair, multiple states for one year), you can process individual entry using the following:</p>
 <ul>
 <li>
-<code><a href="reference/find_svi.html">find_svi()</a></code>: retrieving US census data and calculate SVI for one or multiple year-state pair(s) at the same geography level.</li>
+<code><a href="reference/get_census_data.html">get_census_data()</a></code>: retrieves US census data (Census API key required);</li>
+<li>
+<code><a href="reference/get_svi.html">get_svi()</a></code>: calculates SVI from the census data supplied.</li>
 </ul>
-<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">here</a>). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (eg. ZCTA/places, combining multiple states).</p>
+<p>Essentially, <code><a href="reference/find_svi.html">find_svi()</a></code> is a wrapper function for <code><a href="reference/get_census_data.html">get_census_data()</a></code> and <code><a href="reference/get_svi.html">get_svi()</a></code> that also supports iteration over 1-year-and-1-state pairs at the same geography level.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -106,77 +107,64 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_census_data.html">get_census_data</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"county"</span>, <span class="st">"PA"</span><span class="op">)</span></span>
-<span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID                           NAME B06009_002E B06009_002M B09001_001E</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  42001     Adams County, Pennsylvania        7788         602       20663</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  42003 Allegheny County, Pennsylvania       45708        1713      228296</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  42005 Armstrong County, Pennsylvania        3973         305       12516</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  42007    Beaver County, Pennsylvania        7546         640       31915</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  42009   Bedford County, Pennsylvania        3996         317        9386</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  42011     Berks County, Pennsylvania       36488        1356       93714</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  42013     Blair County, Pennsylvania        7292         679       24920</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  42015  Bradford County, Pennsylvania        4395         362       13358</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  42017     Bucks County, Pennsylvania       25651        1306      128008</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 42019    Butler County, Pennsylvania        6118         468       37577</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    B09001_001M B11012_010E B11012_010M B11012_015E B11012_015M</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA        1237         215         482         171</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           49       24311        1147        5378         525</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            9         912         161         247          85</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           NA        3380         380         787         174</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           11         468          99         213          50</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           44        8812         662        1695         304</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7           19        2552         363         544         169</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8           NA         969         177         428         117</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9           53        8222         749        3174         581</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10          NA        2121         337         813         198</span></span></code></pre></div>
-<p>(first ten rows and columns shown)</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="va">restult</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID                           NAME E_TOTPOP   E_HU   E_HH E_POV150 E_UNEMP</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  42001     Adams County, Pennsylvania   102627  42525  39628    13573    2049</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  42003 Allegheny County, Pennsylvania  1218380 602416 545695   212117   32041</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  42005 Armstrong County, Pennsylvania    65356  32852  28035    13566    1735</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  42007    Beaver County, Pennsylvania   164781  79587  72086    28766    4249</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  42009   Bedford County, Pennsylvania    48154  24405  19930    10130    1033</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  42011     Berks County, Pennsylvania   419062 167514 156389    77317   12196</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  42013     Blair County, Pennsylvania   122495  56960  51647    27397    2765</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  42015  Bradford County, Pennsylvania    60721  30691  25084    13731    1331</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  42017     Bucks County, Pennsylvania   627668 251373 240763    59899   14477</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 42019    Butler County, Pennsylvania   187798  84106  77725    24141    4498</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    E_HBURD E_NOHSDP E_UNINSUR</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     9088     7788      5656</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   133524    45708     46333</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     5719     3973      2632</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    15764     7546      6242</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     3952     3996      3310</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    40982    36488     25627</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7    12146     7292      6155</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8     5520     4395      3992</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9    57197    25651     25208</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10   15043     6118      6151</span></span></code></pre></div>
-<p>(first ten rows and columns shown)</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">summarise_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_svi.html">find_svi</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">2018</span><span class="op">)</span>,</span>
 <span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NJ"</span>, <span class="st">"PA"</span><span class="op">)</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 34001       0.95       0.8        0.65       1          0.95  2017 NJ   </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 34003       0.2        0.3        0.55       0.45       0.25  2017 NJ   </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 34005       0.3        0.5        0.35       0.4        0.3   2017 NJ   </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 34007       0.7        0.9        0.55       0.6        0.75  2017 NJ   </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 34009       0.65       0.6        0.1        0.55       0.45  2017 NJ   </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 34011       1          0.95       0.75       0.95       1     2017 NJ   </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 34013       0.9        0.75       0.85       0.85       0.9   2017 NJ   </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 34015       0.35       0.7        0.15       0.15       0.35  2017 NJ   </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 34017       0.75       0          1          0.75       0.7   2017 NJ   </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 34019       0          0.05       0.05       0.1        0     2017 NJ</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="va">summarise_results</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 34001       0.95       0.8        0.65       1          0.95  2017 NJ   </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 34003       0.2        0.3        0.55       0.45       0.25  2017 NJ   </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 34005       0.3        0.5        0.35       0.4        0.3   2017 NJ   </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 34007       0.7        0.9        0.55       0.6        0.75  2017 NJ   </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 34009       0.65       0.6        0.1        0.55       0.45  2017 NJ   </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 34011       1          0.95       0.75       0.95       1     2017 NJ   </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 34013       0.9        0.75       0.85       0.85       0.9   2017 NJ   </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 34015       0.35       0.7        0.15       0.15       0.35  2017 NJ   </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 34017       0.75       0          1          0.75       0.7   2017 NJ   </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 34019       0          0.05       0.05       0.1        0     2017 NJ</span></span></code></pre></div>
+<p>(first ten rows shown)</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_census_data.html">get_census_data</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"county"</span>, <span class="st">"PA"</span><span class="op">)</span></span>
+<span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 10</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID NAME    B0600…¹ B0600…² B0900…³ B0900…⁴ B1101…⁵ B1101…⁶ B1101…⁷ B1101…⁸</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 42001 Adams …    7788     602   20663      NA    1237     215     482     171</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 42003 Allegh…   45708    1713  228296      49   24311    1147    5378     525</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 42005 Armstr…    3973     305   12516       9     912     161     247      85</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 42007 Beaver…    7546     640   31915      NA    3380     380     787     174</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 42009 Bedfor…    3996     317    9386      11     468      99     213      50</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 42011 Berks …   36488    1356   93714      44    8812     662    1695     304</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 42013 Blair …    7292     679   24920      19    2552     363     544     169</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 42015 Bradfo…    4395     362   13358      NA     969     177     428     117</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 42017 Bucks …   25651    1306  128008      53    8222     749    3174     581</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 42019 Butler…    6118     468   37577      NA    2121     337     813     198</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with abbreviated variable names ¹​B06009_002E, ²​B06009_002M, ³​B09001_001E,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   ⁴​B09001_001M, ⁵​B11012_010E, ⁶​B11012_010M, ⁷​B11012_015E, ⁸​B11012_015M</span></span></code></pre></div>
+<p>(first ten rows and columns shown)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">data</span><span class="op">)</span></span>
+<span><span class="va">restult</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 10</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    GEOID NAME      E_TOT…¹   E_HU   E_HH E_POV…² E_UNEMP E_HBURD E_NOH…³ E_UNI…⁴</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 42001 Adams Co…  102627  42525  39628   13573    2049    9088    7788    5656</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 42003 Alleghen… 1218380 602416 545695  212117   32041  133524   45708   46333</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 42005 Armstron…   65356  32852  28035   13566    1735    5719    3973    2632</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 42007 Beaver C…  164781  79587  72086   28766    4249   15764    7546    6242</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 42009 Bedford …   48154  24405  19930   10130    1033    3952    3996    3310</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 42011 Berks Co…  419062 167514 156389   77317   12196   40982   36488   25627</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 42013 Blair Co…  122495  56960  51647   27397    2765   12146    7292    6155</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 42015 Bradford…   60721  30691  25084   13731    1331    5520    4395    3992</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 42017 Bucks Co…  627668 251373 240763   59899   14477   57197   25651   25208</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 42019 Butler C…  187798  84106  77725   24141    4498   15043    6118    6151</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with abbreviated variable names ¹​E_TOTPOP, ²​E_POV150, ³​E_NOHSDP, ⁴​E_UNINSUR</span></span></code></pre></div>
+<p>(first ten rows and columns shown)</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
