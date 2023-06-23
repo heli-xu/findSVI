@@ -126,7 +126,7 @@ find_svi  <- function(
       return(results_RPL)
     }
 
-      if(length(state) == 1) {
+    if(length(state) == 1) {
         if(state == "US") {
       data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
       cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
@@ -140,7 +140,8 @@ find_svi  <- function(
         return(results)
       }
       return(results_RPL)
-        }
+
+      }  else {
 
       #length =1, not US
       data_tmp <- findSVI::get_census_data(year, state, geography = geography)
@@ -155,7 +156,7 @@ find_svi  <- function(
       return(results)
     }
     return(results_RPL)
-    }
+    }}
 
 
     if (length(state) > 1) {
@@ -193,14 +194,14 @@ find_svi  <- function(
           "!" = "You inputted {length(year)} years for nation-level data.",
           "i" = "For nation-level data(`state = 'US'` or unspecified), find_svi() requires single year argument."
         ))
-      }
+      }  else {
 
       #length = 1, not US
       cli::cli_abort(c(
         "!" = "You inputted {length(year)} years but only 1 state. find_svi() requires `year` and `state` to be of the same length.",
         "i" = "If you'd like to find SVI of the same state for multiple years, try `rep({state}, length(year))` in `state` argument."
       ))
-    }
+    }}
 
 
     if (length(state) > 1 & length(year) != length(state)) {
@@ -208,7 +209,7 @@ find_svi  <- function(
         "!" = "You inputted {length(year)} years and {length(state)} states. find_svi() requires `year` and `state` to be of the same length.",
         "i" = "Consider using pairs of `year` and `state`. For nation-level data (`state = NULL` or `state = 'US'`), use single year argument. "
       ))
-    }
+    }  else {
 
     results <- purrr::map2_dfr(
       year,state,
@@ -237,4 +238,5 @@ find_svi  <- function(
 
   }
 
+  }
 }
