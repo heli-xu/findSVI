@@ -4,21 +4,35 @@
 \alias{get_census_data}
 \title{Retrieve census data for American Community Survey (with Tidycensus)}
 \usage{
-get_census_data(year, state = NULL, geography, county = NULL, key = NULL, ...)
+get_census_data(
+  year,
+  state = NULL,
+  geography,
+  county = NULL,
+  key = NULL,
+  geometry = FALSE,
+  ...
+)
 }
 \arguments{
 \item{year}{The year of interest (available 2012-2021).}
 
 \item{state}{(Optional) Specify the state of interest. If data for multiple
 states are retrieved together, ranking for SVI calculation will be performed
-among all states. \code{state = NULL} as default, or \code{state = 'US'} return nation-level data.}
+among all states. \code{state = NULL} as default, or \code{state = 'US'} return
+nation-level data.}
 
 \item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 
 \item{county}{(Optional) Specify the county(s) of interest, must be combined
 with a value supplied to "state".}
 
-\item{key}{Your Census API key.}
+\item{key}{Your Census API key. obtain one at
+\url{https://api.census.gov/data/key_signup.html}.}
+
+\item{geometry}{Default as FALSE for a regular tibble of census data. If set
+as TRUE, returns a tibble with an additional \code{geometry} column containing
+simple feature geometry.}
 
 \item{...}{Other arguments; more details please see \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}}
 }

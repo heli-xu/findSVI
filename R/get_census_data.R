@@ -1,4 +1,4 @@
-#' Retrieve census data for American Community Survey (with Tidycensus)
+#'Retrieve census data for American Community Survey (with Tidycensus)
 #'
 #'@description This function uses [tidycensus::get_acs()] with a pre-defined
 #'  list of variables to retrieves ACS data for SVI calculation. Note that a
@@ -9,11 +9,16 @@
 #'@param year The year of interest (available 2012-2021).
 #'@param state (Optional) Specify the state of interest. If data for multiple
 #'  states are retrieved together, ranking for SVI calculation will be performed
-#'  among all states. `state = NULL` as default, or `state = 'US'` return nation-level data.
+#'  among all states. `state = NULL` as default, or `state = 'US'` return
+#'  nation-level data.
 #'@param geography The geography of interest (eg. state, county, zcta, tract)
 #'@param county (Optional) Specify the county(s) of interest, must be combined
 #'  with a value supplied to "state".
-#'@param key Your Census API key.
+#'@param key Your Census API key. obtain one at
+#'  <https://api.census.gov/data/key_signup.html>.
+#'@param geometry Default as FALSE for a regular tibble of census data. If set
+#'  as TRUE, returns a tibble with an additional `geometry` column containing
+#'  simple feature geometry.
 #'@param ... Other arguments; more details please see [tidycensus::get_acs()]
 #'
 #'@return A tibble of ACS data with each row represents an enumeration unit and
@@ -30,6 +35,7 @@ get_census_data <- function(year,
   geography,
   county = NULL,
   key = NULL,
+  geometry = FALSE,
   ...)
 {
   #predicate
@@ -95,13 +101,15 @@ if (length(state) == 1) {
       state = NULL,
       year = year,
       variables = var_list,
-      output = "wide"
+      output = "wide",
+      geometry = geometry,
+      ...
     )
     return(raw_data)
   }
 
   ##zcta >=2019
-  if(geography == "zcta"&& year >= 2019) {
+  else if(geography == "zcta"&& year >= 2019) {
     cli::cli_alert_info(
       "State-specific ZCTA-level data for {year} is currently not supported by Census API.
 Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit longer)"
@@ -112,7 +120,9 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     state = NULL,
     year = year,
     variables = var_list,
-    output = "wide"
+    output = "wide",
+    geometry = geometry,
+    ...
   )
 
   xwalk_name <- paste0("zcta_state_xwalk", year)
@@ -126,7 +136,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
 
   return(state_data)
-  }
+  } else {
 
     ##not >=2019 zcta
     raw_data <- tidycensus::get_acs(
@@ -134,16 +144,19 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       state = state,
       year = year,
       variables = var_list,
-      output = "wide"
+      output = "wide",
+      geometry = geometry,
+      ...
     )
     return(raw_data)
+  }
 }
 
 #state >1
-if (length(state) > 1) {
+  if (length(state) > 1) {
 
    ##zcta >=2019
-    if(geography == "zcta"&& year >= 2019) {
+  if(geography == "zcta"&& year >= 2019) {
       cli::cli_alert_info(
       "State-specific ZCTA-level data for {year} is currently not supported by Census API.
 Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit longer)"
@@ -154,7 +167,9 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       state = NULL,
       year = year,
       variables = var_list,
-      output = "wide"
+      output = "wide",
+      geometry = geometry,
+      ...
     )
 
     xwalk_name <- paste0("zcta_state_xwalk", year)
@@ -168,7 +183,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
 
     return(state_data)
-  }
+  } else {
 
   ##not >=2019 zcta data
   raw_data <- tidycensus::get_acs(
@@ -176,22 +191,27 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     state = state,
     year = year,
     variables = var_list,
-    output = "wide"
+    output = "wide",
+    geometry = geometry,
+    ...
   )
   return(raw_data)
   }
-}
 
-#state not >1, not =1, so = NULL, or default
-  raw_data <- tidycensus::get_acs(
-    geography = geography,
-    state = state,
-    year = year,
-    variables = var_list,
-    output = "wide"
-  )
-  return(raw_data)
-
+  }  else {
+    #state not >1, not =1, so = NULL, or default
+    raw_data <- tidycensus::get_acs(
+      geography = geography,
+      state = state,
+      year = year,
+      variables = var_list,
+      output = "wide",
+      geometry = geometry,
+      ...
+    )
+    return(raw_data)
+  }
+  }
 }
 
 
