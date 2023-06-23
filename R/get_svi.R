@@ -61,15 +61,25 @@ get_svi <- function(year, data){
   EP_var_expr <- EP_var[[3]]
   names(EP_var_expr) <- EP_var_name
 
+  if ("geometry" %in% colnames(data)) {
+
+    data_tmp <- data %>%
+      as.data.frame() %>%
+      dplyr::select(-geometry) %>%
+      dplyr::as_tibble()
+  } else {
+    data_tmp <- data
+  }
+
   ## iterate with E_ vector and THEN EP_ vector
   svi0 <-
     purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr){
-      data %>%
+      data_tmp %>%
         dplyr::transmute(
           !!tidyselect::all_of(var_0_name) := eval(str2lang(var_0_expr))
         )
     }) %>%
-    dplyr::bind_cols(data, .)
+    dplyr::bind_cols(data_tmp, .)
 
   svi_e <-
     purrr::map2_dfc(E_var_name, E_var_expr, function(E_var_name, E_var_expr){
@@ -188,6 +198,15 @@ get_svi <- function(year, data){
 
   svi_complete <- list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
     purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+
+  if ("geometry" %in% colnames(data)) {
+    data_geo <- data %>%
+      dplyr::select(GEOID, NAME, geometry)
+    svi_complete_geo <- list(data_geo, svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
+      purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+
+    return(svi_complete_geo)
+  }
 
   return(svi_complete)
 }
