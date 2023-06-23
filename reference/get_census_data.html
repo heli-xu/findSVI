@@ -63,7 +63,15 @@ at <a href="https://api.census.gov/data/key_signup.html" class="external-link">h
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_census_data</span><span class="op">(</span><span class="va">year</span>, state <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">geography</span>, county <span class="op">=</span> <span class="cn">NULL</span>, key <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_census_data</span><span class="op">(</span></span>
+<span>  <span class="va">year</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">geography</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,7 +83,8 @@ at <a href="https://api.census.gov/data/key_signup.html" class="external-link">h
 <dt>state</dt>
 <dd><p>(Optional) Specify the state of interest. If data for multiple
 states are retrieved together, ranking for SVI calculation will be performed
-among all states. <code>state = NULL</code> as default, or <code>state = 'US'</code> return nation-level data.</p></dd>
+among all states. <code>state = NULL</code> as default, or <code>state = 'US'</code> return
+nation-level data.</p></dd>
 
 
 <dt>geography</dt>
@@ -88,7 +97,14 @@ with a value supplied to "state".</p></dd>
 
 
 <dt>key</dt>
-<dd><p>Your Census API key.</p></dd>
+<dd><p>Your Census API key. obtain one at
+<a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a>.</p></dd>
+
+
+<dt>geometry</dt>
+<dd><p>Default as FALSE for a regular tibble of census data. If set
+as TRUE, returns a tibble with an additional <code>geometry</code> column containing
+simple feature geometry.</p></dd>
 
 
 <dt>...</dt>
