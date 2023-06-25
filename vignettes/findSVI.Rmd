@@ -27,7 +27,7 @@ First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lew
 
 CDC/ATSDR releases SVI biannually [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) in both shapefile and csv format, at the counties/census tracts level within an individual state or in the US. While the SVI database is very useful, sometimes we would prefer more up-to-date census data or different geographic levels. For example, if we'd like to address questions about ZCTA-level SVI of Pennsylvania in 2021, or census tract-level SVI within a few counties in Pennsylvania in 2020, we might need to calculate SVI from the census data ourselves.
 
-findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2014-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
+findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2012-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
 
 This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
 
