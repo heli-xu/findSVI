@@ -28,6 +28,9 @@ Suggests:
     readr,
     knitr,
     rmarkdown,
-    leaflet
+    leaflet,
+    htmltools,
+    glue,
+    sf
 Config/testthat/edition: 3
 VignetteBuilder: knitr
