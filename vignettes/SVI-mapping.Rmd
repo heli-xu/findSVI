@@ -1,8 +1,8 @@
 ---
-title: "SVI Mapping"
+title: "Mapping SVI for spatial analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SVI Mapping}
+  %\VignetteIndexEntry{Mapping SVI for spatial analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+As an essential part of census data analysis, spatial analysis provides valuable insight into geographic distribution, demographic dynamics and socioeconomic disparities. Derived from census variables, SVI is designed to represent the relative resilience of communities within a given area. Interpreting SVI in the spatial context not only is important for managing public heath crisis, but also helps researchers/policymakers/urban planners to better understand the interactions between SVI variables and geographic factors (such as transportation networks, land use patterns, environmental factors, and access to amenities or public services).
+
+[CDC/ATSDR Social Vulnerability Index (SVI) database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) includes county-/census tract-level SVI for US and each state, in the format of both table(.csv) and map(shapefile). In addition, we can explore the SVI maps and tables on [CDC/ATSDR SVI Interactive Map](https://www.atsdr.cdc.gov/placeandhealth/svi/interactive_map.html).
+
+For spatial analysis at a different geographic level or using more up-to-date census data, we can use findSVI to obtain a SVI table with geometry information, and create maps in R or export to other tools (such as QGIS) using `sf::st_write()` from the [sf package](https://r-spatial.github.io/sf/index.html). 
+
+```{r setup, warning=FALSE, message=FALSE}
 library(findSVI)
 library(dplyr)
 library(purrr)
@@ -23,14 +29,18 @@ library(knitr)
 library(tidyr)
 library(glue)
 library(htmltools)
-library(sf) #not suggests
-
+library(sf) 
+ 
 ```
 
 # Get census data with geometry
 First, we are using `get_census_data()` to obtain ZCTA-level data with simple feature geometry for PA for 2020 (Census API required).
 ```{r, eval=FALSE}
-pa_zcta_2020_geo_data <- get_census_data(year = 2020, state = "PA", geography = "zcta", geometry = TRUE)
+pa_zcta_2020_geo_data <- get_census_data(
+  year = 2020, 
+  state = "PA", 
+  geography = "zcta", 
+  geometry = TRUE)
 ```
 Here, we are showing the first 10 rows of the data. With the `geometry = TRUE`, we'll get a tibble with an additional column containing simple feature geometry (`MULTIPOLYGON`). 
 
@@ -44,7 +54,10 @@ pa_zcta_2020_geo_data
 After getting the data ready, we can supply this tibble with simple feature geometry to `get_svi()`.
 
 ```{r, eval=FALSE}
-pa_zcta_2020_geo_svi <- get_svi(2020, data = pa_zcta_2020_geo_data)
+pa_zcta_2020_geo_svi <- get_svi(
+  year = 2020, 
+  data = pa_zcta_2020_geo_data
+  )
 
 ```
 
@@ -53,7 +66,7 @@ load(system.file("extdata", "pa_zcta_2020_geo_svi.rda", package = "findSVI"))
 ```
 `get_svi()` will return the full SVI table with every SVI variables, intermediate percentile ranks, theme-specific SVIs and overall SVI (consistent with CDC/ATSDR SVI database, without MOE). 
 ```{r geo_svi}
-pa_zcta_2020_geo_svi %>% head(10) %>% kable()
+pa_zcta_2020_geo_svi %>% glimpse()
 ```
 
 For visualization purposes, we'll simplify the table and keep only the GEOID, geometry and SVIs.
@@ -71,7 +84,7 @@ First we'll examine the missing value.
 
 ```{r}
 missing <- svi %>% filter(is.na(RPL_theme1)) 
-missing %>% kable()
+missing %>% glimpse()
 ```
 
 Looks like there are a few ZCTAs with missing values in SVIs. (Upon checking the full SVI table, we can see that most of the individual SVI variables are 0 for those ZCTAs.) So we'll remove those ZCTAs for better visualization. 
@@ -80,6 +93,11 @@ To set up the interactive map for overall SVI, `leaflet()` does most of the heav
 
 ```{r}
 svi_clean <- svi %>% drop_na()
+
+#above shows CRS NAD83, change to 4326 (WGS84) to avoid warning as below:
+#Warning: sf layer has inconsistent datum (+proj=longlat +datum=NAD83 +no_defs).
+#Need '+proj=longlat +datum=WGS84'
+st_crs(svi_clean) <- 4326
 
 #set color palette
 pal <- colorNumeric(
