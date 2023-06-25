@@ -1,0 +1,108 @@
+---
+title: "SVI-mapping"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SVI-mapping}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(findSVI)
+library(dplyr)
+library(leaflet)
+library(knitr)
+library(tidyr)
+#not included in suggests yet
+library(htmltools)
+
+```
+
+
+First, we are using `get_census_data()` to obtain ZCTA-level data with simple feature geometry for PA for 2020 (Census API required).
+```{r, eval=FALSE}
+pa_zcta_2020_geo_data <- get_census_data(year = 2020, state = "PA", geography = "zcta", geometry = TRUE)
+```
+Here, we are showing the first 10 rows of the data. With the `geometry = TRUE`, we'll get a tibble with an additional column containing simple feature geometry (`MULTIPOLYGON`). 
+```{r load_raw_data, echo=FALSE}
+load(system.file("extdata", "pa_zcta_2020_geo_data.rda", package = "findSVI"))
+pa_zcta_2020_geo_data %>% kable()
+```
+
+After getting the data ready, we can supply this tibble with simple feature geometry to `get_svi()`.
+
+```{r, eval=FALSE}
+pa_zcta_2020_geo_svi <- get_svi(2020, data = pa_zcta_2020_geo_data)
+
+```
+
+```{r load_geo_svi, echo=FALSE}
+load(system.file("extdata", "pa_zcta_2020_geo_svi.rda", package = "findSVI"))
+```
+`get_svi()` will return the full SVI table with every SVI variables, intermediate percentile ranks, theme-specific SVIs and overall SVI (consistent with CDC/ATSDR SVI database, without MOE). 
+```{r geo_svi}
+pa_zcta_2020_geo_svi %>% head(10) %>% kable()
+```
+
+For visualization purposes, we'll simplify the table and keep only the GEOID, geometry and SVIs.
+```{r geo_svi_short}
+svi <- pa_zcta_2020_geo_svi %>% 
+  select(GEOID, geometry, contains("RPL_theme"))
+svi %>% head(10) %>% kable()
+```
+
+Using the simple feature geometry, we can visualize SVI patterns and perform spatial SVI analysis with any mapping tool. Here, we're using a powerful interactive mapping package [leaflet](https://rstudio.github.io/leaflet/) as an example.
+
+```{r}
+
+
+pal <- colorNumeric(
+  palette = c("orange","navy"),
+  domain = zz2$RPL_themes
+)
+
+missing <- zz2 %>% filter(is.na(RPL_theme1)) 
+missing %>% kable()
+
+zz3 <- zz2 %>% drop_na()
+
+
+zcta_label = glue("<h3 style='margin: 0px'>{zz3$GEOID}</h3>
+                    overall SVI: {zz3$RPL_themes}") %>%
+  map(~HTML(.x))
+
+leaflet(zz3) %>% 
+  addProviderTiles(providers$CartoDB.Voyager) %>% 
+  addPolygons(color = "white", 
+              weight = 0.5,
+              smoothFactor = 0.5,
+              opacity = 1,
+              fillColor = ~pal(RPL_themes),
+              fillOpacity = 0.8,
+              highlightOptions = highlightOptions(
+                weight = 5,
+                color = "white",
+                fillOpacity = 0.8,
+                bringToFront = TRUE),
+              label = zcta_label,
+              labelOptions = labelOptions(
+                style = list(
+                  "font-family" = "Fira Sans, sans-serif",
+                  "font-size" = "1.2em"
+                ))
+              ) %>% 
+  addLegend("bottomleft",
+            pal = pal,
+            values = ~RPL_themes,
+            title = "Overall SVI in all ZCTAs in PA for 2020",
+            #labFormat = labelFormat(prefix = "$"),
+            opacity = 1)
+
+```
