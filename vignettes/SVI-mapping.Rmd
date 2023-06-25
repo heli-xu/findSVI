@@ -1,8 +1,8 @@
 ---
-title: "SVI-mapping"
+title: "SVI Mapping"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SVI-mapping}
+  %\VignetteIndexEntry{SVI Mapping}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,24 +17,29 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(findSVI)
 library(dplyr)
+library(purrr)
 library(leaflet)
 library(knitr)
 library(tidyr)
-#not included in suggests yet
+library(glue)
 library(htmltools)
+library(sf) #not suggests
 
 ```
 
-
+# Get census data with geometry
 First, we are using `get_census_data()` to obtain ZCTA-level data with simple feature geometry for PA for 2020 (Census API required).
 ```{r, eval=FALSE}
 pa_zcta_2020_geo_data <- get_census_data(year = 2020, state = "PA", geography = "zcta", geometry = TRUE)
 ```
 Here, we are showing the first 10 rows of the data. With the `geometry = TRUE`, we'll get a tibble with an additional column containing simple feature geometry (`MULTIPOLYGON`). 
+
 ```{r load_raw_data, echo=FALSE}
 load(system.file("extdata", "pa_zcta_2020_geo_data.rda", package = "findSVI"))
-pa_zcta_2020_geo_data %>% kable()
+pa_zcta_2020_geo_data
 ```
+
+# Get SVI with geometry
 
 After getting the data ready, we can supply this tibble with simple feature geometry to `get_svi()`.
 
@@ -58,27 +63,36 @@ svi <- pa_zcta_2020_geo_svi %>%
 svi %>% head(10) %>% kable()
 ```
 
-Using the simple feature geometry, we can visualize SVI patterns and perform spatial SVI analysis with any mapping tool. Here, we're using a powerful interactive mapping package [leaflet](https://rstudio.github.io/leaflet/) as an example.
+# Interactive maps for overall SVI
+
+With the simple feature geometry, we can visualize SVI patterns and perform spatial SVI analysis with any mapping tool. Here, we're using a powerful package  [leaflet](https://rstudio.github.io/leaflet/) for interactive maps.
+
+First we'll examine the missing value. 
 
 ```{r}
+missing <- svi %>% filter(is.na(RPL_theme1)) 
+missing %>% kable()
+```
 
+Looks like there are a few ZCTAs with missing values in SVIs. (Upon checking the full SVI table, we can see that most of the individual SVI variables are 0 for those ZCTAs.) So we'll remove those ZCTAs for better visualization. 
 
+To set up the interactive map for overall SVI, `leaflet()` does most of the heavy lifting. Here, we'll just add some customized color palette and labels for the appearance.
+
+```{r}
+svi_clean <- svi %>% drop_na()
+
+#set color palette
 pal <- colorNumeric(
   palette = c("orange","navy"),
-  domain = zz2$RPL_themes
+  domain = svi_clean$RPL_themes
 )
 
-missing <- zz2 %>% filter(is.na(RPL_theme1)) 
-missing %>% kable()
-
-zz3 <- zz2 %>% drop_na()
-
-
-zcta_label = glue("<h3 style='margin: 0px'>{zz3$GEOID}</h3>
-                    overall SVI: {zz3$RPL_themes}") %>%
+#set label
+zcta_label <- glue("<h3 style='margin: 0px'>{svi_clean$GEOID}</h3>
+                    overall SVI: {svi_clean$RPL_themes}") %>%
   map(~HTML(.x))
 
-leaflet(zz3) %>% 
+leaflet(svi_clean) %>% 
   addProviderTiles(providers$CartoDB.Voyager) %>% 
   addPolygons(color = "white", 
               weight = 0.5,
@@ -101,8 +115,9 @@ leaflet(zz3) %>%
   addLegend("bottomleft",
             pal = pal,
             values = ~RPL_themes,
-            title = "Overall SVI in all ZCTAs in PA for 2020",
+            title = "Overall SVI in all ZCTAs in PA (2020)",
             #labFormat = labelFormat(prefix = "$"),
             opacity = 1)
 
 ```
+From the interactive map, we can visualize easily how SVI varies in different regions in PA and zoom in to examine specific ZCTAs of interest, making it a helpful approach to explore new ideas, patterns and analyses.
