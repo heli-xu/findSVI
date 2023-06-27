@@ -9,43 +9,46 @@ find_svi(year, state = NULL, geography, key = NULL, full.table = FALSE)
 }
 \arguments{
 \item{year}{A vector containing years of interest (available 2012-2021). Length >=1. Acting as pairs
-with \code{state}, \code{year} should be of the same length as \code{state}. The exception
+with `state`, `year` should be of the same length as `state`. The exception
 is when it's a single year entry (length 1), other than providing one state
-of interest, supply \code{state = NULL} as default or \code{state = 'US'} retrieves
+of interest, supply `state = NULL` as default or `state = 'US'` retrieves
 and processes nation level data to obtain SVI.}
 
 \item{state}{A vector containing states of interest. Length >=0. Length 0
-(\code{state = NULL}), or \code{state = 'US'} must be used with single year argument,
+(`state = NULL`), or `state = 'US'` must be used with single year argument,
 when SVI is calculated from nation-level census data. In other cases,
-\code{state} must have the same elements as \code{year} (same length).}
+`state` must have the same elements as `year` (same length).}
 
 \item{geography}{One geography level of interest for all year-state
 combination (e.g."county", "zcta", "tract").}
 
 \item{key}{Your Census API key. Obtain one at
-\url{https://api.census.gov/data/key_signup.html}. To set up, use
-\code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.}
+<https://api.census.gov/data/key_signup.html>. To set up, use
+`census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.}
 
-\item{full.table}{Default as \code{FALSE}, returning SVI table with only "GEOID",
-and SVI for each theme and all themes. If set as \code{TRUE}, a full SVI table
+\item{full.table}{Default as `FALSE`, returning SVI table with only "GEOID",
+and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
 with individual SVI variables and intermediate ranking calculations are also
 included in addition to the theme-related SVIs (similar style to tables from
-\href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR database}).}
+[CDC/ATSDR
+database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).}
 }
 \value{
 A tibble of summarised SVI for one or multiple year-state combination
-of interest. Rows represent the geographic units, and columns represent its
-SVI for each theme and all themes. Additional two columns at the end
-indicate the corresponding state and year information. For \code{full.table = TRUE}, estimated count and percentage values for individual SVI variables
-are also included. For description of variable names (column names), please
-refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
+ of interest. Rows represent the geographic units, and columns represent its
+ SVI for each theme and all themes. Additional two columns at the end
+ indicate the corresponding state and year information. For `full.table =
+ TRUE`, estimated count and percentage values for individual SVI variables
+ are also included. For description of variable names (column names), please
+ refer to [CDC/ATSDR
+ documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 }
 \description{
-This is a wrapper for \code{\link[=get_census_data]{get_census_data()}} and
-\code{\link[=get_svi]{get_svi()}} that retrieves census data and produces SVI for one or
-multiple years(s) and state(s). For multiple year-state entries, SVI is
-obtained from entry-specific percentile ranking and summarised into one
-table.
+This is a wrapper for [findSVI::get_census_data()] and
+ [findSVI::get_svi()] that retrieves census data and produces SVI for one or
+ multiple years(s) and state(s). For multiple year-state entries, SVI is
+ obtained from entry-specific percentile ranking and summarised into one
+ table.
 }
 \examples{
 \dontrun{
