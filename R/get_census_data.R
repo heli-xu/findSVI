@@ -118,6 +118,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
   us_data <- tidycensus::get_acs(
     geography = geography,
     state = NULL,
+    county = NULL,
     year = year,
     variables = var_list,
     output = "wide",
@@ -128,10 +129,19 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
   xwalk_name <- paste0("zcta_state_xwalk", year)
   st_input <- state
 
+  if (length(county) == 0) {
   zcta_by_state <- get(xwalk_name) %>%
     dplyr::filter(state == st_input | st_code == st_input | st_abb == st_input) %>%
     dplyr::pull(ZCTA)
+  } else {
 
+    cty_pat <- paste0(paste(county, collapse = " |")," ")
+    zcta_by_state <- get(xwalk_name) %>%
+      dplyr::filter(
+        state == st_input | st_code == st_input | st_abb == st_input,
+        stringr::str_starts(county, tidyselect::all_of(cty_pat)) ) %>%
+      dplyr::pull(ZCTA)
+  }
   state_data <- us_data %>%
     dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
 
@@ -142,6 +152,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     raw_data <- tidycensus::get_acs(
       geography = geography,
       state = state,
+      county = county,
       year = year,
       variables = var_list,
       output = "wide",
@@ -155,7 +166,14 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
 #state >1
   if (length(state) > 1) {
 
-   ##zcta >=2019
+    if (!length(county) == 0) {
+      cli::cli_abort(c(
+        "x" = "You specified `county` for {length(state)} states.",
+        "i" = "County-specific data retrieval is only supported with a single entry in `state`."
+      ))
+    }
+
+    ##zcta >=2019
   if(geography == "zcta"&& year >= 2019) {
       cli::cli_alert_info(
       "State-specific ZCTA-level data for {year} is currently not supported by Census API.
