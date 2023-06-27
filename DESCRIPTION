@@ -31,6 +31,7 @@ Suggests:
     leaflet,
     htmltools,
     glue,
-    sf
+    sf,
+    ggplot2
 Config/testthat/edition: 3
 VignetteBuilder: knitr
