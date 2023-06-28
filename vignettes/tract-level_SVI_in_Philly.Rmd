@@ -1,10 +1,10 @@
 ---
-title: "Census tract-level SVI in Philly (2019)"
+title: "Census tract-level SVI in Philly (2020)"
 output: 
-    rmarkdown::html_vignette:
-      code_folding: hide
+  rmarkdown::html_vignette:
+    code_folding: hide
 vignette: >
-  %\VignetteIndexEntry{Census tract-level SVI in Philly (2019)}
+  %\VignetteIndexEntry{Census tract-level SVI in Philly (2020)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,7 +25,7 @@ For example, if we are interested in SVI in Philadelphia (county), PA at the cen
 After downloading the shapefile from CDC/ATSDR SVI database, we can read it in R using the [sf package](https://r-spatial.github.io/sf/index.html). This is the data for the whole Pennsylvania, so we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself). For the size of the package, I'm only including the Philadelphia data here (`cdc_svi_phl_2020`).
 
 With the help of [leaflet](https://rstudio.github.io/leaflet/), we can create an interactive map to visualize the results:
-```{r setup}
+```{r setup, warning=FALSE, message=FALSE}
 library(dplyr)
 library(sf)
 library(leaflet)
@@ -100,7 +100,7 @@ leaflet(cdc_svi_phl_2020) %>%
 # SVI using ranks against tracts in Philly 
 
 As mentioned in [Mapping SVI for spatial analysis](SVI-mapping.html), we could use `get_census_data()` and `get_svi()` to retrieve data with geometry and calculate SVI within Philadelphia at the census tract level for 2020. Similarly, we'll use an interactive map to visualize the results. 
-```{r }
+```{r, warning=FALSE}
 load(system.file("extdata", "pa_ct_2020_geo_svi.rda", package = "findSVI"))
 
 svi <- pa_ct_2020_geo_svi %>% 
@@ -183,7 +183,7 @@ join_svi %>%
   ggplot(aes(x = CDC_SVI, y = findSVI_SVI, color = findSVI_SVI)) +
   geom_point()+
   scale_color_gradient(low = "orange", high = "navy")+
-  geom_abline(slope = 1, intercept = 0, color = 'orange', size= 0.5)+
+  geom_abline(slope = 1, intercept = 0, color = 'orange')+
   labs(title = "Tract-level overall SVI in Philadelphia (2020)",
        subtitle= "Ranking aganist tracts in PA (CDC) vs. \nranking against tracts in Philadelphia (findSVI)",
     x = "CDC",
