@@ -162,7 +162,7 @@ The CDC/ATSDR SVI database offers valuable insights into community vulnerabiliti
 
 As seen in the example above, SVI using ranks against tracts in PA shows an overall higher SVI (darker color), whereas SVI using ranks against tracts in Philly shows wider color range, revealing more noticeable difference among the tracts.
 
-If we plot out both versions of overall SVI for each tract, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. Quantitatively, the correlation coefficient between two versions of SVI is `r cor(join_svi$CDC_SVI, join_svi$findSVI_SVI)`, suggesting a discrepancy that perhaps warrants more discussion. 
+If we plot out both versions of overall SVI for each tract, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. 
 
 ```{r}
 join_svi <- cdc_svi_phl_2020 %>%
@@ -200,5 +200,7 @@ join_svi %>%
   )
 
 ```
+
+Quantitatively, the correlation coefficient between two versions of SVI is `r {cor(join_svi$CDC_SVI, join_svi$findSVI_SVI)}`, suggesting a discrepancy that perhaps warrants more discussion. 
 
 In this case, comparing tracts within Philadelphia enables a more granular analysis to better understand the relative social vulnerability among communities. This approach may help not only to target interventions and resources where they are most needed in crisis management, but also to enhance public health research using SVI as a metric.
