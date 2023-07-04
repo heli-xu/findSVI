@@ -20,12 +20,6 @@ Since SVI uses percentile ranks to summarise 16 census variables representing so
 
 For example, if we are interested in SVI for Philadelphia (county), PA at the census tract level for 2020, we could download the tract-level SVI result for PA from [CDC/ATSDR SVI database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html), which is ranking each tract against all tracts in PA. Alternatively, we could use findSVI to calculate tract-level SVI for Philadelphia county in PA for 2020, which is ranking each tract against all tracts in Philadelphia. Here, we'll compare what they would look like for both approaches, and discuss the potential implications.
 
-# SVI using ranks against tracts in PA
-
-After downloading the shapefile from CDC/ATSDR SVI database, we can read it in R using the [sf package](https://r-spatial.github.io/sf/index.html). This is the data for the whole Pennsylvania, so we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself). For the size of the package, I'm only including the Philadelphia data here (`cdc_svi_phl_2020`).
-
-With the help of [leaflet](https://rstudio.github.io/leaflet/), we can create an interactive map to visualize the results:
-
 ```{r setup, warning=FALSE, message=FALSE}
 library(dplyr)
 library(sf)
@@ -37,6 +31,12 @@ library(ggplot2)
 library(glue)
 library(tidyr)
 ```
+
+# SVI using ranks against tracts in PA
+
+After downloading the shapefile from CDC/ATSDR SVI database, we can read it in R using the [sf package](https://r-spatial.github.io/sf/index.html). This is the data for the whole Pennsylvania, so we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself). For the size of the package, I'm only including the Philadelphia data here (`cdc_svi_phl_2020`).
+
+With the help of [leaflet](https://rstudio.github.io/leaflet/), we can create an interactive map to visualize the results:
 
 ```{r}
 # unzip("../../Pennsylvania.zip",
@@ -57,7 +57,7 @@ library(tidyr)
 load(system.file("extdata", "cdc_svi_phl_2020.rda", package = "findSVI"))
 
 #set color palette
-pal2 <- colorNumeric(
+pal <- colorNumeric(
   palette = c("orange","navy"),
   domain = cdc_svi_phl_2020$RPL_THEMES
 )
@@ -75,7 +75,7 @@ leaflet(cdc_svi_phl_2020) %>%
     weight = 0.5,
     smoothFactor = 0.5,
     opacity = 1,
-    fillColor = ~pal2(RPL_THEMES),
+    fillColor = ~pal(RPL_THEMES),
     fillOpacity = 0.8,
     highlightOptions = highlightOptions(
       weight = 5,
@@ -90,7 +90,7 @@ leaflet(cdc_svi_phl_2020) %>%
       ))
   ) %>%
   addLegend("bottomright",
-    pal = pal2,
+    pal = pal,
     values = ~RPL_THEMES,
     title = "Tract-level SVI in Philly (2020)<br>source:CDC/ATSDR",
     #labFormat = labelFormat(prefix = "$"),
@@ -98,7 +98,7 @@ leaflet(cdc_svi_phl_2020) %>%
 
 ```
 
-# SVI using ranks against tracts in Philly
+# SVI using ranks against tracts in Philadelphia
 
 As mentioned in [Mapping SVI for spatial analysis](SVI-mapping.html), we could use `get_census_data()` and `get_svi()` to retrieve data with geometry and calculate SVI within Philadelphia at the census tract level for 2020. Similarly, we'll use an interactive map to visualize the results.
 

@@ -31,10 +31,11 @@ To find SVI for one or multiple year-state pair(s):
   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)
   for each year-state pair at the same geography level.
 
-In most cases, `find_svi()` would be the easiest option. If you have
-more customized requests for census data retrieval (e.g., different
-geography level for each year-state pair, multiple states for one year),
-you can process individual entry using the following:
+In most cases, `find_svi()` would be the easiest option. If you’d like
+to include simple feature geometry or have more customized requests for
+census data retrieval (e.g., different geography level for each
+year-state pair, multiple states for one year), you can process
+individual entry using the following:
 
 - `get_census_data()`: retrieves US census data (Census API key
   required);
@@ -57,6 +58,9 @@ devtools::install_github("heli-xu/findSVI")
 ## Usage
 
 ``` r
+library(findSVI)
+library(dplyr)
+
 summarise_results <- find_svi(
   year = c(2017, 2018),
   state = c("NJ", "PA"),
@@ -82,7 +86,6 @@ summarise_results %>% head(10)
 (first ten rows shown)
 
 ``` r
-library(findSVI)
 data <- get_census_data(2020, "county", "PA")
 data[1:10, 1:10]
 ```

@@ -25,7 +25,6 @@ library(findSVI)
 library(dplyr)
 library(purrr)
 library(leaflet)
-library(knitr)
 library(tidyr)
 library(glue)
 library(htmltools)
@@ -73,7 +72,7 @@ For visualization purposes, we'll simplify the table and keep only the GEOID, ge
 ```{r geo_svi_short}
 svi <- pa_zcta_2020_geo_svi %>% 
   select(GEOID, geometry, contains("RPL_theme"))
-svi %>% head(10) %>% kable()
+svi %>% head(10) 
 ```
 
 # Interactive maps for overall SVI
