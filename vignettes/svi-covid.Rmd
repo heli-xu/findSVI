@@ -1,6 +1,6 @@
 ---
 title: "Connecting SVI and health outcome"
-subtitle: "Correlation between SVI and COVID-19 cases/deaths in Philadelphia Neighborhoods"
+subtitle: "SVI and COVID-19 cases/deaths in Philadelphia"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Connecting SVI and health outcome}
@@ -90,14 +90,14 @@ phl_svi_covid %>% head(10)
 ```
 #### Maps
 To visualize their spatial pattern directly, we can plot the SVI and COVID-19 data in Philadelphia neighborhoods (ZCTAs) directly on maps:
-```{r fig.cap = 'SVI and COVID-19 outcome in Philadelphia Neighborhoods (ZCTAs)'}
+```{r fig.cap = 'SVI and COVID-19 outcome in Philadelphia Neighborhoods (ZCTAs). COVID-19 data are cumulative till 8/2022.'}
 covid_deaths <- phl_svi_covid %>% 
   select(GEOID, geometry, deaths_per_100k) %>%
   drop_na() %>%
   tm_shape(projection = sf::st_crs(26915))+
   tm_polygons("deaths_per_100k",
     style = "quantile",
-    title = "Deaths/100k (by 8/2022)")+
+    title = "Deaths/100k")+
   tm_layout(title = "COVID-19 Deaths",
     title.size = 1,
     title.position = c("left", "TOP"),
@@ -112,7 +112,7 @@ covid_cases <- phl_svi_covid %>%
   tm_shape(projection = sf::st_crs(26915))+
   tm_polygons("cases_per_100k",
     style = "quantile",
-    title = "Cases/100k (by 8/2022)")+
+    title = "Cases/100k")+
   tm_layout(title = "COVID-19 Cases",
     title.size = 1,
     title.position = c("left", "TOP"),
@@ -186,6 +186,7 @@ plot_row <- plot_grid(cases_svi, deaths_svi)
 title <- ggdraw() +
   draw_label(
     "SVI and COVID-19 Cases/Deaths in Philadelphia Neighborhoods",
+    size = 12,
     fontface = "bold",
     x = 0.1, 
     hjust = 0
