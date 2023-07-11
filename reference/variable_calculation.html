@@ -97,24 +97,31 @@ times one or more census variable(s) are included to derive an SVI variable.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>## A data frame with 3 columns and various number of rows, depending on the year:</p><dl><dt>_variable_name</dt>
+    
+<div class="section">
+<h3 id="a-data-frame-with-columns-and-various-number-of-rows-depending-on-the-year-">A data frame with 3 columns and various number of rows, depending on the year:<a class="anchor" aria-label="anchor" href="#a-data-frame-with-columns-and-various-number-of-rows-depending-on-the-year-"></a></h3>
+
+
+<dl><dt>_variable_name</dt>
 <dd><p>With a prefix "x" followed by the year, eg. x2018_variable_name, this column is the SVI variable name</p></dd>
 
-  <dt>theme</dt>
+<dt>theme</dt>
 <dd><p>SVI variables are categorized into four themes/domains:
-  socioeconomic, household composition/disability, minority status/language
-  and housing type/transportation. Theme 0 is used for 3 variables
-  representing total counts, while theme 5 is used for adjunct variables (not
-  included in calculation). Adjunct variables are not included in 2012 due to
-  unavailable data/documentation.</p></dd>
+socioeconomic, household composition/disability, minority status/language
+and housing type/transportation. Theme 0 is used for 3 variables
+representing total counts, while theme 5 is used for adjunct variables (not
+included in calculation). Adjunct variables are not included in 2012 due to
+unavailable data/documentation.</p></dd>
 
-  <dt>_table_field_calculation</dt>
+<dt>_table_field_calculation</dt>
 <dd><p>With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
-  this column contains the corresponding census variable names, and/or the calculation
-  using SVI/census variables.</p></dd>
+this column contains the corresponding census variable names, and/or the calculation
+using SVI/census variables.</p></dd>
 
 
-</dl><p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 35 rows and 3 columns.</p>
+</dl></div>
+
+<p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 35 rows and 3 columns.</p>
 <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 35 rows and 3 columns.</p>
 <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 35 rows and 3 columns.</p>
 <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 35 rows and 3 columns.</p>
@@ -127,7 +134,7 @@ times one or more census variable(s) are included to derive an SVI variable.</p>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
     <p>CDC/ATSDR SVI Documentation
-  &lt;https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html&gt;</p>
+<a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html</a></p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
