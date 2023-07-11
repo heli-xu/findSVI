@@ -22,79 +22,41 @@ For example, if we are interested in SVI for Philadelphia (county), PA at the ce
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(dplyr)
-library(sf)
-library(leaflet)
 library(findSVI)
-library(purrr)
-library(htmltools)
 library(ggplot2)
-library(glue)
 library(tidyr)
 ```
 
 # SVI using ranks against tracts in PA
 
-After downloading the shapefile from CDC/ATSDR SVI database, we can read it in R using the [sf package](https://r-spatial.github.io/sf/index.html). This is the data for the whole Pennsylvania, so we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself). For the size of the package, I'm only including the Philadelphia data here (`cdc_svi_phl_2020`).
+On the CDC/ATSDR SVI database, SVI results are available in the format of shapefile and data table (.csv). After downloading and importing the data for the whole Pennsylvania into R (using the [sf package](https://r-spatial.github.io/sf/index.html for shapefile), we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself).
 
-With the help of [leaflet](https://rstudio.github.io/leaflet/), we can create an interactive map to visualize the results:
+```{r, eval=FALSE}
+#source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 
+#For shapefile
+unzip("../../../Pennsylvania.zip",
+  exdir = "pa_ct_2020_shapefile", junkpaths = T,
+  overwrite = F)
+
+cdc_svi_pa_ct_2020 <- sf::st_read("pa_ct_2020_shapefile/SVI2020_PENNSYLVANIA_tract.shp")
+
+#For csv
+cdc_svi_pa_ct_2020 <- readr::read_csv("../Pennsylvania.csv")
+
+```
+```{r, echo=FALSE}
+load(system.file("extdata", "cdc_svi_pa_ct_2020.rda", package = "findSVI"))
+#no geometry
+```
 ```{r}
-# unzip("../../../Pennsylvania.zip",
-#   exdir = "pa_ct_2020_shapefile", junkpaths = T,
-#   overwrite = F)
-# 
-# pa_ct_2020 <- st_read("pa_ct_2020_shapefile/SVI2020_PENNSYLVANIA_tract.shp")
+cdc_svi_phl_2020 <- cdc_svi_pa_ct_2020 %>%
+  select(1:7, contains("RPL_THEME")) %>%
+  #CDC use -999 as NAs
+  filter(RPL_THEMES>= 0,
+    COUNTY == "Philadelphia")
 
-# cdc_svi_phl_2020 <- pa_ct_2020 %>%
-#   select(1:7, contains("RPL_THEME")) %>% 
-#   filter(RPL_THEMES>= 0,
-#     COUNTY == "Philadelphia")
-#
-# #To avoid Warning: sf layer has inconsistent datum (+proj=longlat +datum=NAD83 +no_defs).
-# #Need '+proj=longlat +datum=WGS84'
-# st_crs(cdc_svi_phl_2020) <- 4326
-
-load(system.file("extdata", "cdc_svi_phl_2020.rda", package = "findSVI"))
-
-#set color palette
-pal <- colorNumeric(
-  palette = c("orange","navy"),
-  domain = cdc_svi_phl_2020$RPL_THEMES
-)
-
-
-#set label
-ct_label <- glue("<h3 style='margin: 0px'>{cdc_svi_phl_2020$LOCATION}</h3>
-                    overall SVI: {cdc_svi_phl_2020$RPL_THEMES}") %>%
-  map(~HTML(.x))
-
-
-leaflet(cdc_svi_phl_2020) %>%
-  addProviderTiles(providers$CartoDB.Voyager) %>%
-  addPolygons(color = "white",
-    weight = 0.5,
-    smoothFactor = 0.5,
-    opacity = 1,
-    fillColor = ~pal(RPL_THEMES),
-    fillOpacity = 0.8,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      color = "white",
-      fillOpacity = 0.8,
-      bringToFront = TRUE),
-    label = ct_label,
-    labelOptions = labelOptions(
-      style = list(
-        "font-family" = "Fira Sans, sans-serif",
-        "font-size" = "1.2em"
-      ))
-  ) %>%
-  addLegend("bottomright",
-    pal = pal,
-    values = ~RPL_THEMES,
-    title = "Tract-level SVI in Philly (2020)<br>source:CDC/ATSDR",
-    #labFormat = labelFormat(prefix = "$"),
-    opacity = 1)
+glimpse(cdc_svi_phl_2020)
 
 ```
 
@@ -154,66 +116,33 @@ With a little peace of mind, we will now look at how SVI is affected if we use p
 
 # SVI using ranks against tracts in Philadelphia
 
-As mentioned in [Mapping SVI for spatial analysis](SVI-mapping.html), we could use `get_census_data()` and `get_svi()` to retrieve data with geometry and calculate SVI within Philadelphia at the census tract level for 2020. Similarly, we'll use an interactive map to visualize the results.
+To retrieve census data and calculate SVI for a specific county, we need to use `get_census_data()` and `get_svi()` (as oppose to the one-step `find_svi` for state-level data processing). 
 
-```{r, warning=FALSE}
-load(system.file("extdata", "pa_ct_2020_geo_svi.rda", package = "findSVI"))
-
-svi_clean <- pa_ct_2020_geo_svi %>% 
-  select(GEOID, geometry, contains("RPL_theme")) %>% 
-  drop_na()
-
-#above shows CRS NAD83, change to 4326 (WGS84) to avoid warning as below:
-#Warning: sf layer has inconsistent datum (+proj=longlat +datum=NAD83 +no_defs).
-#Need '+proj=longlat +datum=WGS84'
-st_crs(svi_clean) <- 4326
-
-#set color palette
-pal2 <- colorNumeric(
-  palette = c("orange","navy"),
-  domain = svi_clean$RPL_themes
+```{r, eval=FALSE}
+phl_ct_2020_data <- get_census_dataata(
+  2020, 
+  state = "PA",
+  county = "Philadelphia",
+  geography = "tract"
 )
 
-#set label
-ct_label2 <- glue("<h3 style='margin: 0px'>{svi_clean$GEOID}</h3>
-                    overall SVI: {svi_clean$RPL_themes}") %>%
-  map(~HTML(.x))
-
-leaflet(svi_clean) %>% 
-  addProviderTiles(providers$CartoDB.Voyager) %>% 
-  addPolygons(color = "white", 
-              weight = 0.5,
-              smoothFactor = 0.5,
-              opacity = 1,
-              fillColor = ~pal2(RPL_themes),
-              fillOpacity = 0.8,
-              highlightOptions = highlightOptions(
-                weight = 5,
-                color = "white",
-                fillOpacity = 0.8,
-                bringToFront = TRUE),
-              label = ct_label2,
-              labelOptions = labelOptions(
-                style = list(
-                  "font-family" = "Fira Sans, sans-serif",
-                  "font-size" = "1.2em"
-                ))
-              ) %>% 
-  addLegend("bottomright",
-            pal = pal2,
-            values = ~RPL_themes,
-            title = "Tract-level SVI in Philly (2020)<br>source: Census, findSVI",
-            #labFormat = labelFormat(prefix = "$"),
-            opacity = 1)
-
-
+phl_ct_svi_2020 <- get_svi(2020, phl_ct_2020_data)
+```
+```{r, echo=FALSE}
+load(system.file("extdata", "phl_ct_svi_2020.rda", package = "findSVI"))
+#no geometry
 ```
 
-If we plot out overall SVI using the two different ranks, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. 
+```{r, warning=FALSE}
+svi_clean <- phl_ct_svi_2020 %>% 
+  select(GEOID, contains("RPL_theme")) %>% 
+  drop_na()
+glimpse(svi_clean)
+```
+If we plot out overall SVI using the two different ranks, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. Specifically, SVI using ranks against PA tracts (CDC) appears higher than using SVI using ranks against tracts within Philadelphia (findSVI). 
 
 ```{r}
 join_svi <- cdc_svi_phl_2020 %>%
-  st_drop_geometry() %>% 
   rename(
     GEOID = FIPS,
     CDC_SVI = RPL_THEMES,
@@ -223,7 +152,6 @@ join_svi <- cdc_svi_phl_2020 %>%
     CDC_SVI4 = RPL_THEME4
   ) %>%
     left_join(svi_clean %>% 
-        st_drop_geometry() %>% 
         rename(findSVI_SVI = RPL_themes), 
       by = "GEOID") 
 
@@ -250,26 +178,41 @@ join_svi %>%
 
 Quantitatively, the correlation coefficient between two versions of SVI is `r {cor(join_svi$CDC_SVI, join_svi$findSVI_SVI)}`, suggesting a discrepancy that perhaps warrants more discussion. 
 
-# In another county?
+# What about another county?
+
+--Montgomery, for example. 
+
+Let's follow the same steps as above: 
+
+* Select the tracts for Montgomery County from downloaded data (ranking against tracts within PA).
+
+* Calculate SVI with findSVI for Montgomery County (ranking against tracts within the county) 
+
 ```{r, echo=FALSE}
 load(system.file("extdata", "mont_ct_svi_2020.rda", package = "findSVI"))
-load(system.file("extdata", "cdc_svi_mont_2020.rda", package = "findSVI"))
 ```
 
 ```{r, eval=FALSE}
-cdc_svi_mont_2020 <- pa_ct_2020 %>%
-  st_drop_geometry() %>% 
-  select(1:7, contains("RPL_THEME")) %>%
-  filter(RPL_THEMES>= 0,
-    COUNTY == "Montgomery")
-###add a few steps for getting mont_svi
+mont_data <- get_census_data(
+  2020,
+  state = "PA",
+  county = "Montgomery",
+  geography = "tract"
+)
 
+mont_ct_svi_2020 <- get_svi(2020, mont_data)
+```
 
+```{r}
 mont_svi <- mont_ct_svi_2020 %>% 
   select(GEOID, contains("RPL_theme")) %>% 
   drop_na()
-```
-```{r}
+
+cdc_svi_mont_2020 <- cdc_svi_pa_ct_2020 %>%
+  select(1:7, contains("RPL_THEME")) %>%
+  filter(RPL_THEMES>= 0,
+    COUNTY == "Montgomery")
+
 join_svi2 <- cdc_svi_mont_2020 %>%
   rename(
     GEOID = FIPS,
@@ -304,9 +247,54 @@ join_svi2 %>%
 
 ```
 
+Mmm, there's also a discrepancy particularly in the middle of the SVI spectrum, but the curve is now "concave down"--SVI ranked against PA tracts (CDC) is lower than SVI ranked against Philadelphia tracts (findSVI). 
 
-The CDC/ATSDR SVI database offers valuable insights into community vulnerabilities across the United States and each state, including Pennsylvania. However, when examining the social vulnerability within a smaller region, especially metropolitan areas/cities like Philadelphia, a more nuanced approach may be necessary to uncover the disparities between different communities.
+# Distribution of SVI variables
 
-As seen in the example above, SVI using ranks against tracts in PA shows an overall higher SVI (darker color), whereas SVI using ranks against tracts in Philly shows wider color range, revealing more noticeable difference among the tracts.
+The difference in SVI obtained with percentile ranks against all tracts in PA versus all tracts within the county may be attributed to the data distribution. 
 
-In this case, comparing tracts within Philadelphia enables a more granular analysis to better understand the relative social vulnerability among communities. This approach may help not only to target interventions and resources where they are most needed in crisis management, but also to enhance public health research using SVI as a metric.
+To compare distribution of SVI variables, we'll use percent estimate of each variable from PA, Philadelphia and Montgomery County. 
+
+```{r}
+df1 <- cdc_svi_pa_ct_2020 %>%
+  select(GEOID = FIPS, contains("EP_")) %>%
+  #adjunt var
+  select(-c("EP_NOINT", "EP_AFAM", "EP_HISP", "EP_ASIAN",
+    "EP_AIAN", "EP_NHPI", "EP_TWOMORE", "EP_OTHERRA")) %>%
+  mutate(area = "PA")
+
+df2 <- mont_ct_svi_2020 %>%
+  select(GEOID, contains("EP_")) %>%
+  mutate(area = "MONTCO")
+
+df3 <- phl_ct_svi_2020 %>%
+  select(GEOID, contains("EP_")) %>%
+  mutate(area = "PHL")
+
+density_df <- bind_rows(df1, df2, df3) %>%
+  pivot_longer(cols = 2:17, names_to = "EP_var") %>%
+  drop_na() %>%
+  filter(value >= 0)
+
+ggplot(data = density_df, aes(x = value, group = area, fill = area))+
+  geom_density(adjust = 1.5, alpha = 0.4)+
+  facet_wrap(~EP_var, scales = 'free')+
+    theme_bw()+
+  labs(title = "Distribution of Tract-level SVI Variables (2020)",
+    x = "Percent estimate of each variable",
+    fill = "Area")+
+  theme(
+    text = element_text(size = 10),
+    plot.title = element_text(size = 14, hjust = 0, face = "bold"),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.title = element_text(size = 13)
+  )
+  
+```
+Out of the 16 SVI variables, several show variation in data distribution among PA and the two counties, such as percentage of minority (EP_MINRTY), percentage of persons with no high school diploma (EP_NOHSDP), percentage of persons below 150% poverty (EP_POV150) and percentage uninsured in the noninstitutionalized population (EP_UNINSUR). In many of these cases, the values of SVI variables are concentrated at the lowest level for Montgomery County and the highest level for Philadelphia County, with PA in the middle.
+
+# Two angles of a story
+
+While SVI using percentile ranks against all PA tracts offers a broad perspective into community vulnerability relative to the state, SVI using ranks against tracts within the county (or region of interest) focuses on local context.
+
+When examining the social vulnerability within a smaller region, especially metropolitan areas/cities, it may be helpful to consider the context during calculation to better understand the disparities between different communities. 
