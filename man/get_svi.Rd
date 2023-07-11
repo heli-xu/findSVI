@@ -10,22 +10,21 @@ get_svi(year, data)
 \item{year}{The year of interest (available 2014-2021), must match the year
 specified in retrieving census data.}
 
-\item{data}{The census data retrieved by `get_census_data()`.}
+\item{data}{The census data retrieved by \code{get_census_data()}.}
 }
 \value{
 A tibble of SVI with rows representing geographic subunits, and
- columns indicating variable names (first two columns containing geographic
- information). For detailed description of the variable names (column names),
- please refer to [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+columns indicating variable names (first two columns containing geographic
+information). For detailed description of the variable names (column names),
+please refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
 }
 \description{
 This function calculates and constructs an SVI table for a
- geographic level of interest based on [CDC/ATSDR SVI
- documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
- Briefly, SVI includes 4 themes of variables that represent different aspects
- of socioeconomic challenges, and uses percentile ranking within a geographic
- level to indicate the relative social vulnerability of subunits in that
- geographic level.
+geographic level of interest based on \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR SVI documentation}.
+Briefly, SVI includes 4 themes of variables that represent different aspects
+of socioeconomic challenges, and uses percentile ranking within a geographic
+level to indicate the relative social vulnerability of subunits in that
+geographic level.
 }
 \examples{
 \dontrun{

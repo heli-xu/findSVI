@@ -15,18 +15,20 @@
 \alias{variable_e_ep_calculation_2021}
 \title{Table of census variables and formula for SVI calculation}
 \format{
-## A data frame with 3 columns and various number of rows, depending on the year:
+\subsection{A data frame with 3 columns and various number of rows, depending on the year:}{
+
 \describe{
-  \item{_variable_name}{With a prefix "x" followed by the year, eg. x2018_variable_name, this column is the SVI variable name}
-  \item{theme}{SVI variables are categorized into four themes/domains:
-  socioeconomic, household composition/disability, minority status/language
-  and housing type/transportation. Theme 0 is used for 3 variables
-  representing total counts, while theme 5 is used for adjunct variables (not
-  included in calculation). Adjunct variables are not included in 2012 due to
-  unavailable data/documentation.}
-  \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
-  this column contains the corresponding census variable names, and/or the calculation
-  using SVI/census variables.}
+\item{_variable_name}{With a prefix "x" followed by the year, eg. x2018_variable_name, this column is the SVI variable name}
+\item{theme}{SVI variables are categorized into four themes/domains:
+socioeconomic, household composition/disability, minority status/language
+and housing type/transportation. Theme 0 is used for 3 variables
+representing total counts, while theme 5 is used for adjunct variables (not
+included in calculation). Adjunct variables are not included in 2012 due to
+unavailable data/documentation.}
+\item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
+this column contains the corresponding census variable names, and/or the calculation
+using SVI/census variables.}
+}
 }
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
@@ -49,7 +51,7 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 }
 \source{
 CDC/ATSDR SVI Documentation
-  <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
+\url{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}
 }
 \usage{
 variable_e_ep_calculation_2012
