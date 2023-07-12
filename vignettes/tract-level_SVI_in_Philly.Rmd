@@ -1,10 +1,9 @@
 ---
-title: "Putting local SVI in context"
+title: "SVI in Local Context"
 output: 
-  rmarkdown::html_vignette:
-    code_folding: hide
+  rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Putting local SVI in context}
+  %\VignetteIndexEntry{SVI in Local Context}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,20 +15,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-Since SVI uses percentile ranks to summarise 16 census variables representing socioeconomic and demographic factors, it's important to keep in mind the result may be affected by what we are ranking each geographic unit against.
+Since SVI uses percentile ranks to summarize 16 census variables representing socioeconomic and demographic factors, it's important to keep in mind the result may be affected by what we are ranking each geographic unit against.
 
-For example, if we are interested in SVI for Philadelphia (county), PA at the census tract level for 2020, we could download the tract-level SVI result for PA from [CDC/ATSDR SVI database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html), which is ranking each tract against all tracts in PA. Alternatively, we could use findSVI to calculate tract-level SVI for Philadelphia county in PA for 2020, which is ranking each tract against all tracts in Philadelphia. Here, we'll compare what they would look like for both approaches, and discuss the potential implications.
+For example, if we are interested in SVI for Philadelphia (County), PA at the census tract level for 2020, we could download the tract-level SVI result for PA from [CDC/ATSDR SVI database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html), which is ranking each tract against all tracts in PA. Alternatively, we could use findSVI to calculate tract-level SVI for Philadelphia county in PA for 2020, which is ranking each tract against all tracts in Philadelphia. Here, we'll compare what they would look like for both approaches, and discuss the potential implications.
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(dplyr)
 library(findSVI)
 library(ggplot2)
 library(tidyr)
+library(stringr)
 ```
 
-# SVI using ranks against tracts in PA
+# SVI ranked within all PA: CDC and findSVI strongly correlate
 
-On the CDC/ATSDR SVI database, SVI results are available in the format of shapefile and data table (.csv). After downloading and importing the data for the whole Pennsylvania into R (using the [sf package](https://r-spatial.github.io/sf/index.html for shapefile), we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself).
+On the CDC/ATSDR SVI database, SVI results are available in the format of shapefile and data table (.csv). After downloading and importing the data for the whole Pennsylvania into R (using the [sf package](https://r-spatial.github.io/sf/index.html%20for%20shapefile) for shapefile), we'll filter by the county and only keep the data for Philadelphia (which happens to be the city itself).
 
 ```{r, eval=FALSE}
 #source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
@@ -45,10 +45,12 @@ cdc_svi_pa_ct_2020 <- sf::st_read("pa_ct_2020_shapefile/SVI2020_PENNSYLVANIA_tra
 cdc_svi_pa_ct_2020 <- readr::read_csv("../Pennsylvania.csv")
 
 ```
+
 ```{r, echo=FALSE}
 load(system.file("extdata", "cdc_svi_pa_ct_2020.rda", package = "findSVI"))
 #no geometry
 ```
+
 ```{r}
 cdc_svi_phl_2020 <- cdc_svi_pa_ct_2020 %>%
   select(1:7, contains("RPL_THEME")) %>%
@@ -60,16 +62,14 @@ glimpse(cdc_svi_phl_2020)
 
 ```
 
-As a proof of concept, we'll use findSVI to reproduce CDC/ATSDR's version of tract-level SVI using percentile ranks aganist all tracts in PA, and select the tracts in Philadelphia county. Putting both versions of SVI on a scatterplot, we can see they are highly consistent. 
+As a proof of concept, we'll use findSVI to reproduce CDC/ATSDR's version of tract-level SVI using percentile ranks aganist all tracts in PA, and select the tracts in Philadelphia County. Putting both versions of SVI on a scatterplot, we can see they are highly consistent.
 
 ```{r, eval=FALSE}
-pa_ct_raw2020 <- get_census_data(
-  2020,
-  state = "PA",
+pa_ct_svi_2020 <- find_svi(
+  2020, 
+  state = "PA", 
   geography = "tract"
   )
-
-pa_ct_svi_2020 <- get_svi(2020, pa_ct_raw2020)
 
 phl_ct_2020_svi_PA <- pa_ct_svi_2020 %>%
   filter(str_detect(NAME, "Philadelphia County"))
@@ -79,6 +79,7 @@ phl_ct_2020_svi_PA <- pa_ct_svi_2020 %>%
 load(system.file("extdata", "phl_ct_2020_svi_PA.rda", package = "findSVI"))
 
 ```
+
 ```{r}
 phl_ct_svi_check <- cdc_svi_phl_2020 %>% 
   rename(
@@ -112,11 +113,11 @@ phl_ct_svi_check %>%
 
 ```
 
-With a little peace of mind, we will now look at how SVI is affected if we use percentile ranks against all tracts in Philadelphia County instead of PA.
+With a little peace of mind, we will now look at how SVI is affected if we use percentile ranks against just tracts in Philadelphia County instead of all PA.
 
-# SVI using ranks against tracts in Philadelphia
+# SVI ranked within Philadelphia
 
-To retrieve census data and calculate SVI for a specific county, we need to use `get_census_data()` and `get_svi()` (as oppose to the one-step `find_svi` for state-level data processing). 
+To retrieve census data and calculate SVI for a specific county, we need to use `get_census_data()` and `get_svi()` (as oppose to the one-step `find_svi` for state-level data processing).
 
 ```{r, eval=FALSE}
 phl_ct_2020_data <- get_census_dataata(
@@ -128,6 +129,7 @@ phl_ct_2020_data <- get_census_dataata(
 
 phl_ct_svi_2020 <- get_svi(2020, phl_ct_2020_data)
 ```
+
 ```{r, echo=FALSE}
 load(system.file("extdata", "phl_ct_svi_2020.rda", package = "findSVI"))
 #no geometry
@@ -139,7 +141,8 @@ svi_clean <- phl_ct_svi_2020 %>%
   drop_na()
 glimpse(svi_clean)
 ```
-If we plot out overall SVI using the two different ranks, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. Specifically, SVI using ranks against PA tracts (CDC) appears higher than using SVI using ranks against tracts within Philadelphia (findSVI). 
+
+If we plot out overall SVI using the two different ranking methods, we can observe an interesting pattern, where they correlate well at both ends of the SVI spectrum but correlate poorly in the middle. Specifically, SVI using ranks against PA tracts (CDC) appears higher than using SVI using ranks against tracts within Philadelphia (findSVI).
 
 ```{r}
 join_svi <- cdc_svi_phl_2020 %>%
@@ -176,17 +179,17 @@ join_svi %>%
 
 ```
 
-Quantitatively, the correlation coefficient between two versions of SVI is `r {cor(join_svi$CDC_SVI, join_svi$findSVI_SVI)}`, suggesting a discrepancy that perhaps warrants more discussion. 
+Quantitatively, the correlation coefficient between two versions of SVI is `r {cor(join_svi$CDC_SVI, join_svi$findSVI_SVI)}`, suggesting a discrepancy that perhaps warrants more discussion.
 
-# What about another county?
+# SVI ranked within another county
 
---Montgomery, for example. 
+--Montgomery, for example.
 
-Let's follow the same steps as above: 
+Let's follow the same steps as above:
 
-* Select the tracts for Montgomery County from downloaded data (ranking against tracts within PA).
+-   Select the tracts for Montgomery County from downloaded data (ranking against tracts within PA).
 
-* Calculate SVI with findSVI for Montgomery County (ranking against tracts within the county) 
+-   Calculate SVI with findSVI for Montgomery County (ranking against tracts within the county)
 
 ```{r, echo=FALSE}
 load(system.file("extdata", "mont_ct_svi_2020.rda", package = "findSVI"))
@@ -247,13 +250,13 @@ join_svi2 %>%
 
 ```
 
-Mmm, there's also a discrepancy particularly in the middle of the SVI spectrum, but the curve is now "concave down"--SVI ranked against PA tracts (CDC) is lower than SVI ranked against Philadelphia tracts (findSVI). 
+Mmm, there's also a discrepancy particularly in the middle of the SVI spectrum, but the curve is now "concave down"--SVI ranked against PA tracts (CDC) is lower than SVI ranked against Montgomery tracts (findSVI).
 
 # Distribution of SVI variables
 
-The difference in SVI obtained with percentile ranks against all tracts in PA versus all tracts within the county may be attributed to the data distribution. 
+As mentioned before, SVI is a composite percentile rank of 16 census variables. Percentile rank is a concept that represents the percentage of values in a distribution that are equal to or below a specific value. It is a way to express the relative standing or position of a particular value within a distribution. **Importantly, if a distribution changes the percentile rank will change, even if the value being ranked stays the same.** This may be one of the explanations why we observe the discrepancies in SVI using different ranking methods.
 
-To compare distribution of SVI variables, we'll use percent estimate of each variable from PA, Philadelphia and Montgomery County. 
+For example, the percentile rank of percentage of minority (EP_MINRTY) of a tract in Philadelphia will differ depending on what it is being ranked against: against tracts in Philadelphia vs. tracts in PA. This is because the distribution of tract-level percentage of minority is very different for Philadelphia and PA.
 
 ```{r}
 df1 <- cdc_svi_pa_ct_2020 %>%
@@ -276,6 +279,27 @@ density_df <- bind_rows(df1, df2, df3) %>%
   drop_na() %>%
   filter(value >= 0)
 
+
+density_df %>% 
+  filter(EP_var == "EP_MINRTY",
+    area != "MONTCO") %>% 
+  ggplot(aes(x = value, group = area, fill = area))+
+  geom_density(adjust = 1.5, alpha = 0.4)+
+    theme_bw()+
+  labs(title = "Distribution of Tract-level EP_MINRTY (2020)",
+    x = "Pct. Minority",
+    fill = "Area")+
+  theme(
+    text = element_text(size = 10),
+    plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
+    axis.title = element_text(size = 12, face = "bold"),
+    legend.title = element_text(size = 13)
+  )
+```
+
+The data distribution within an area can be considered as the "context" of SVI, and this context matters as many variables turn out to have different distribution among PA, Philadelphia and Montgomery County.
+
+```{r}
 ggplot(data = density_df, aes(x = value, group = area, fill = area))+
   geom_density(adjust = 1.5, alpha = 0.4)+
   facet_wrap(~EP_var, scales = 'free')+
@@ -291,10 +315,37 @@ ggplot(data = density_df, aes(x = value, group = area, fill = area))+
   )
   
 ```
-Out of the 16 SVI variables, several show variation in data distribution among PA and the two counties, such as percentage of minority (EP_MINRTY), percentage of persons with no high school diploma (EP_NOHSDP), percentage of persons below 150% poverty (EP_POV150) and percentage uninsured in the noninstitutionalized population (EP_UNINSUR). In many of these cases, the values of SVI variables are concentrated at the lowest level for Montgomery County and the highest level for Philadelphia County, with PA in the middle.
+
+Out of the 16 SVI variables, several show variation in data distribution among the three regions of interest, such as EP_MINRTY, percentage of persons with no high school diploma (EP_NOHSDP), percentage of persons below 150% poverty (EP_POV150) and percentage uninsured in the noninstitutionalized population (EP_UNINSUR). In many of these cases, the values of SVI variables are concentrated at the lowest level for Montgomery County and the highest level for Philadelphia County, with PA in the middle.
+
+In keeping with the pattern, the table below summarizes median values of the SVI variables in the 4 different themes for the three regions discussed above: PA, Philadelphia County and Montgomery County.
+
+```{r}
+var_theme <- variable_e_ep_calculation_2020 %>% 
+  select(var = x2020_variable_name, theme) %>% 
+  filter(str_detect(var, "EP_"),
+    theme%in%c(1:4))
+
+density_df %>% 
+  group_by(area, EP_var) %>% 
+  summarize(median = median(value)) %>% 
+  ungroup() %>% 
+  pivot_wider(values_from = median, names_from = area) %>% 
+  select(var = EP_var, PA, PHL, MONTCO) %>% 
+  left_join(var_theme, by = "var") %>% 
+  arrange(theme) %>% 
+  mutate(
+    theme_name = case_match(
+    theme,
+    1 ~ "Socioeconomic Status",
+    2 ~ "Household Characteristics",
+    3 ~ "Racial and Ethnic Minority Status",
+    4 ~ "Housing Type or Transportation")) 
+
+```
 
 # Two angles of a story
 
-While SVI using percentile ranks against all PA tracts offers a broad perspective into community vulnerability relative to the state, SVI using ranks against tracts within the county (or region of interest) focuses on local context.
+While SVI using percentile ranks against all PA tracts offers a broad perspective into community vulnerability relative to the state, SVI using ranks against tracts within the county (or region of interest) focuses on local context, comparing communities to their immediate surroundings.
 
-When examining the social vulnerability within a smaller region, especially metropolitan areas/cities, it may be helpful to consider the context during calculation to better understand the disparities between different communities. 
+When examining the social vulnerability within a smaller region, especially metropolitan areas/cities, it may be helpful to consider the context during calculation to better understand the disparities between different communities.
