@@ -25,6 +25,7 @@ library(findSVI)
 library(ggplot2)
 library(tidyr)
 library(stringr)
+library(knitr)
 ```
 
 # SVI ranked within all PA: CDC and findSVI strongly correlate
@@ -194,7 +195,12 @@ Let's follow the same steps as above:
 ```{r, echo=FALSE}
 load(system.file("extdata", "mont_ct_svi_2020.rda", package = "findSVI"))
 ```
-
+```{r}
+cdc_svi_mont_2020 <- cdc_svi_pa_ct_2020 %>%
+  select(1:7, contains("RPL_THEME")) %>%
+  filter(RPL_THEMES>= 0,
+    COUNTY == "Montgomery")
+```
 ```{r, eval=FALSE}
 mont_data <- get_census_data(
   2020,
@@ -205,16 +211,10 @@ mont_data <- get_census_data(
 
 mont_ct_svi_2020 <- get_svi(2020, mont_data)
 ```
-
 ```{r}
 mont_svi <- mont_ct_svi_2020 %>% 
   select(GEOID, contains("RPL_theme")) %>% 
   drop_na()
-
-cdc_svi_mont_2020 <- cdc_svi_pa_ct_2020 %>%
-  select(1:7, contains("RPL_THEME")) %>%
-  filter(RPL_THEMES>= 0,
-    COUNTY == "Montgomery")
 
 join_svi2 <- cdc_svi_mont_2020 %>%
   rename(
@@ -328,7 +328,7 @@ var_theme <- variable_e_ep_calculation_2020 %>%
 
 density_df %>% 
   group_by(area, EP_var) %>% 
-  summarize(median = median(value)) %>% 
+  summarize(median = median(value), .groups = "drop") %>% 
   ungroup() %>% 
   pivot_wider(values_from = median, names_from = area) %>% 
   select(var = EP_var, PA, PHL, MONTCO) %>% 
@@ -340,7 +340,8 @@ density_df %>%
     1 ~ "Socioeconomic Status",
     2 ~ "Household Characteristics",
     3 ~ "Racial and Ethnic Minority Status",
-    4 ~ "Housing Type or Transportation")) 
+    4 ~ "Housing Type or Transportation")) %>% 
+  kable()
 
 ```
 
