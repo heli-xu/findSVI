@@ -1,9 +1,9 @@
 ---
-title: "Connecting SVI and health outcome"
-subtitle: "SVI and COVID-19 cases/deaths in Philadelphia"
+title: "SVI and health outcome"
+subtitle: "SVI and COVID-19 hospitalizations in Philadelphia"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Connecting SVI and health outcome}
+  %\VignetteIndexEntry{SVI and health outcome}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -58,30 +58,30 @@ glimpse(phl_zcta_svi_geo_2020)
 
 Disease-related data at the ZCTA level is usually not easily accessible for privacy reasons. Here, we'll use data from the [COVID-19 Health Inequities in Cities Dashboard](https://drexel-uhc.shinyapps.io/bchc_covid19/_w_0444d5bc/_w_e6851016/_w_6d75b9f7/), a great resource released by Drexel University’s Urban Health Collaborative and the Big Cities Health Coalition (BCHC). In addition to data available for download, the dashboard provides informative visualizations of COVID-19 related outcomes and inequities over time and across BCHC cities.
 
-After downloading the raw data, we can select Philadelphia city and the variables of interest (cases per 100k and deaths per 100k).
+After downloading the raw data, we can select Philadelphia city and the variables of interest (hospitalization per 100k).
 
 ```{r, eval=FALSE}
 #source:https://github.com/Drexel-UHC/covid_inequities_project
 #bchc_raw <- read_csv("../../byZCTA_bchc.csv")
 
-phl_covid <- bchc_raw %>%
+phl_hosp <- bchc_raw %>%
   filter(city == "Philadelphia") %>%
   mutate(GEOID = paste(zcta), .after = zcta) %>%
-  select(GEOID, cases_per_100k, deaths_per_100k)
+  select(GEOID, hosp_per_100k)
 
-glimpse(phl_covid)
+glimpse(phl_hosp)
 ```
 
 ```{r, echo=FALSE}
-load(system.file("extdata", "phl_covid.rda", package = "findSVI"))
-glimpse(phl_covid)
+load(system.file("extdata", "phl_hosp.rda", package = "findSVI"))
+glimpse(phl_hosp)
 ```
 
 ## Joining data for visualzation
 Once we have the ZCTA-level SVI and COVID-19 data ready, we can join them together by GEOID(ZCTA), keeping the spatial information.
 
 ```{r}
-phl_svi_covid <- phl_covid %>%
+phl_svi_covid <- phl_hosp %>%
   left_join(phl_zcta_svi_geo_2020, by = "GEOID") %>%
   #although geometry sticky, after wrangling, class() become df
   st_as_sf(sf_column_name = "geometry")
@@ -90,30 +90,17 @@ phl_svi_covid %>% head(10)
 ```
 #### Maps
 To visualize their spatial pattern directly, we can plot the SVI and COVID-19 data in Philadelphia neighborhoods (ZCTAs) directly on maps:
-```{r fig.cap = 'SVI and COVID-19 outcome in Philadelphia Neighborhoods (ZCTAs). COVID-19 data are cumulative till 8/2022.'}
-covid_deaths <- phl_svi_covid %>% 
-  select(GEOID, geometry, deaths_per_100k) %>%
-  drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("deaths_per_100k",
-    style = "quantile",
-    title = "Deaths/100k")+
-  tm_layout(title = "COVID-19 Deaths",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 1.5)
 
+```{r fig.cap = 'SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs). COVID-19 data are cumulative till 8/2022.'}
 
-covid_cases <- phl_svi_covid %>%
-  select(GEOID, geometry, cases_per_100k) %>%
+covid_hosp <- phl_svi_covid %>%
+  select(GEOID, geometry, hosp_per_100k) %>%
   drop_na() %>% 
   tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("cases_per_100k",
+  tm_polygons("hosp_per_100k",
     style = "quantile",
-    title = "Cases/100k")+
-  tm_layout(title = "COVID-19 Cases",
+    title = "Hospitalizations/100k")+
+  tm_layout(title = "COVID-19 Hospitalizations",
     title.size = 1,
     title.position = c("left", "TOP"),
     legend.position = c("RIGHT", "bottom"),
@@ -128,14 +115,14 @@ svi <- phl_svi_covid %>%
     style = "quantile",
     title = "Overall SVI (2020)",
     palette = "Blues")+
-  tm_layout(title = "SVI",
+  tm_layout(title = "Social Vulnerability",
     title.size = 1,
     title.position = c("left", "TOP"),
     legend.position = c("RIGHT", "bottom"),
     legend.title.size = 0.9,
     legend.width = 2)
 
-plots <- list(svi, covid_cases, covid_deaths)
+plots <- list(svi, covid_hosp)
 
 current.mode <- tmap_mode("plot")
 #> tmap mode set to plotting
@@ -143,66 +130,37 @@ current.mode <- tmap_mode("plot")
 tmap_arrange(
   plots, 
   nrow = 1,
-  width = c(0.33, 0.33, 0.34)
+  width = c(0.5, 0.5)
   ) 
 
 ```
 
 #### Correlation
-To look at possible correlation between SVI and COVID-19 cases/deaths, we'll scatter plot to visualize their relationships:
+To look at possible correlation between SVI and COVID-19 hospitalizations, we'll use scatter plot to visualize their relationships:
 
 ```{r, warning=FALSE}
-deaths_svi <- phl_svi_covid %>%
-  ggplot(aes(x = RPL_themes, y = deaths_per_100k)) +
+phl_svi_covid %>%
+  ggplot(aes(x = RPL_themes, y = hosp_per_100k)) +
   geom_point()+
   labs(
-    caption = "COVID-19 data shown are cumulative till 8/2022",
+    title = "Social Vulnerability and COVID-19 Hospitalizations \nin Philadelphia Neighborhoods",
+    caption = "COVID-19 data are cumulative till 8/2022", 
     x = "Overall SVI (2020)",
-    y = "Deaths per 100k")+
+    y = "Hospitalizations per 100k") +
   theme_bw()+
   theme(
     text = element_text(size = 13),
-    plot.caption = element_text(size = 10, color = "#4D4948"),
+    plot.title = element_text(size = 14, face = "bold"),
     axis.title = element_text(size = 12, face = "bold"),
-    legend.title = element_text(size = 13)
+    legend.title = element_text(size = 13),
+    plot.caption = element_text(size = 9, color = "#4D4948")
   )
 
-cases_svi  <- phl_svi_covid %>%
-  ggplot(aes(x = RPL_themes, y = log(cases_per_100k))) +
-  geom_point()+
-  labs( 
-    caption = " ", # to keep same dimension
-    x = "Overall SVI (2020)",
-    y = "log Cases per 100k ") +
-  theme_bw()+
-  theme(
-    text = element_text(size = 13),
-    axis.title = element_text(size = 12, face = "bold"),
-    legend.title = element_text(size = 13)
-  )
-
-plot_row <- plot_grid(cases_svi, deaths_svi)
-
-title <- ggdraw() +
-  draw_label(
-    "SVI and COVID-19 Cases/Deaths in Philadelphia Neighborhoods",
-    size = 12,
-    fontface = "bold",
-    x = 0.1, 
-    hjust = 0
-  )+
-  theme(
-    plot.margin = margin(0, 0, 0, 0)
-  )
-
-plot_grid(
-  title, plot_row,
-  ncol = 1,
-  #adjust vertical title margins
-  rel_heights = c(0.1, 1))
 ```
 
-This is similar to the story shown on the COVID-19 Health Inequities in Cities Dashboard, where they found most socially vulnerable neighborhoods have 52% and 7.3% higher deaths and cases per 100k, respectively, compared to the least socially vulnerable neighborhoods. It may be interesting to look back on the correlation between SVI and COVID-19 outcome at an earlier time point to see how the communities are impacted (perhaps more directly) by the pandemic. 
+With a correlation coefficient of `r {cor(phl_svi_covid$RPL_themes, phl_svi_covid$hosp_per_100k)}`, overall SVI is shown to be strongly associated with COVID-19 hospitalizations in Philadelphia neighborhoods, where higher hospitalization rate is found in neighborhoods with higher social vulnerability.
+
+This is consistent with the story on the [COVID-19 Health Inequities in Cities Dashboard](https://drexel-uhc.shinyapps.io/bchc_covid19/_w_8408f640/), where they found most socially vulnerable neighborhoods have 129.4% higher hospitalizations per 100k compared to the least socially vulnerable neighborhoods. 
 
 ## Reference
 
