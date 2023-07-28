@@ -121,7 +121,7 @@ With a little peace of mind, we will now look at how SVI is affected if we use p
 To retrieve census data and calculate SVI for a specific county, we need to use `get_census_data()` and `get_svi()` (as oppose to the one-step `find_svi` for state-level data processing).
 
 ```{r, eval=FALSE}
-phl_ct_2020_data <- get_census_dataata(
+phl_ct_2020_data <- get_census_data(
   2020, 
   state = "PA",
   county = "Philadelphia",
