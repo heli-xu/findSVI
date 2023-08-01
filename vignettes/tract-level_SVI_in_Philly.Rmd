@@ -50,11 +50,12 @@ pa_svi <- st_read("../../SVI2020_PENNSYLVANIA_tract.gdb/")
 
 # alternative: findSVI
 # us_data <- get_census_data(2020, 
-#   state = "US", 
+#   state = "US", #"PA" for statewide data
 #   geography = "tract", 
 #   geometry = TRUE)
 # 
 # us_svi <- get_svi(2020, us_data)
+
 ```
 
 After obtaining the nationwide and statewide(Pennsylvania) SVI by either findSVI or CDC's database, we could filter the result by the county and only keep the data for Philadelphia.
@@ -79,6 +80,10 @@ us_svi_phl <- us_svi %>%
 
 glimpse(us_svi_phl)
 ```
+```{r, echo=FALSE}
+glimpse(us_svi_phl)
+```
+
 ```{r, eval=FALSE}
 # statewide (PA)
 pa_svi_phl <- pa_svi %>%
@@ -89,10 +94,13 @@ pa_svi_phl <- pa_svi %>%
 
 glimpse(pa_svi_phl)
 ```
+```{r, echo=FALSE}
+glimpse(pa_svi_phl)
+```
 
 # County-specific SVI
 
-For retrieving data and calculation at any geographic level below state, we need to use `get_census_data()` followed by `get_svi()`. (For nation- or state-level data processing without geometry, the easiest option is one-step `find_svi`.)
+For retrieving data and calculation at any geographic level below state, we need to use `get_census_data()` followed by `get_svi()`. (For nation- or state-level data processing without geometry, the easiest option is one-step `find_svi()`.)
 
 ```{r, eval=FALSE}
 phl_ct_2020_data <- get_census_data(
