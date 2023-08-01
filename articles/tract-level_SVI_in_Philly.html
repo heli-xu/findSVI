@@ -145,7 +145,7 @@ census tract-level data with geometry.</p>
 <span></span>
 <span><span class="co"># alternative: findSVI</span></span>
 <span><span class="co"># us_data &lt;- get_census_data(2020, </span></span>
-<span><span class="co">#   state = "US", </span></span>
+<span><span class="co">#   state = "US", #"PA" for statewide data</span></span>
 <span><span class="co">#   geography = "tract", </span></span>
 <span><span class="co">#   geometry = TRUE)</span></span>
 <span><span class="co"># </span></span>
@@ -166,7 +166,22 @@ county and only keep the data for Philadelphia.</p>
 <span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">us_svi_phl</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">#&gt; Rows: 388</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
+<span><span class="co">#&gt; $ ST         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42", "42", "42", "42", "42", "42", "42", "42", "42", "42",…</span></span>
+<span><span class="co">#&gt; $ STATE      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Pennsylvania", "Pennsylvania", "Pennsylvania", "Pennsylvan…</span></span>
+<span><span class="co">#&gt; $ ST_ABBR    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA",…</span></span>
+<span><span class="co">#&gt; $ STCNTY     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42101", "42101", "42101", "42101", "42101", "42101", "4210…</span></span>
+<span><span class="co">#&gt; $ COUNTY     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Philadelphia", "Philadelphia", "Philadelphia", "Philadelph…</span></span>
+<span><span class="co">#&gt; $ GEOID      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42101000101", "42101000102", "42101000200", "42101000300",…</span></span>
+<span><span class="co">#&gt; $ LOCATION   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Census Tract 1.01, Philadelphia County, Pennsylvania", "Ce…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME1 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.2486, 0.2251, 0.6340, 0.1153, 0.3515, 0.0017, 0.0473, 0.7…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME2 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.1972, 0.0037, 0.0497, 0.2564, 0.2988, 0.0013, 0.0688, 0.0…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME3 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.4678, 0.2809, 0.8235, 0.6105, 0.5988, 0.3492, 0.3249, 0.7…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME4 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.4840, 0.8570, 0.9504, 0.9106, 0.9205, 0.3731, 0.6343, 0.9…</span></span>
+<span><span class="co">#&gt; $ RPL_THEMES <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.2888, 0.1676, 0.6587, 0.4253, 0.5832, 0.0044, 0.1433, 0.7…</span></span>
+<span><span class="co">#&gt; $ geometry   <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span> MULTIPOLYGON (((-75.152 39...., MULTIPOLYGON (…</span></span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># statewide (PA)</span></span>
 <span><span class="va">pa_svi_phl</span> <span class="op">&lt;-</span> <span class="va">pa_svi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL_THEME"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -175,6 +190,21 @@ county and only keep the data for Philadelphia.</p>
 <span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">pa_svi_phl</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Rows: 388</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
+<span><span class="co">#&gt; $ ST         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42", "42", "42", "42", "42", "42", "42", "42", "42", "42",…</span></span>
+<span><span class="co">#&gt; $ STATE      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Pennsylvania", "Pennsylvania", "Pennsylvania", "Pennsylvan…</span></span>
+<span><span class="co">#&gt; $ ST_ABBR    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA", "PA",…</span></span>
+<span><span class="co">#&gt; $ STCNTY     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42101", "42101", "42101", "42101", "42101", "42101", "4210…</span></span>
+<span><span class="co">#&gt; $ COUNTY     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Philadelphia", "Philadelphia", "Philadelphia", "Philadelph…</span></span>
+<span><span class="co">#&gt; $ GEOID      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "42101000101", "42101000102", "42101000200", "42101000300",…</span></span>
+<span><span class="co">#&gt; $ LOCATION   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Census Tract 1.01, Philadelphia County, Pennsylvania", "Ce…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME1 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.3105, 0.2976, 0.7757, 0.1388, 0.4349, 0.0029, 0.0567, 0.8…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME2 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.2015, 0.0029, 0.0464, 0.2955, 0.2479, 0.0012, 0.0620, 0.1…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME3 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.7213, 0.5299, 0.9150, 0.8115, 0.8057, 0.6070, 0.5797, 0.8…</span></span>
+<span><span class="co">#&gt; $ RPL_THEME4 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.5494, 0.9005, 0.9729, 0.9576, 0.9582, 0.3605, 0.6789, 0.9…</span></span>
+<span><span class="co">#&gt; $ RPL_THEMES <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.3802, 0.2253, 0.7677, 0.5244, 0.6817, 0.0059, 0.1658, 0.8…</span></span>
+<span><span class="co">#&gt; $ geometry   <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span> MULTIPOLYGON (((-75.152 39...., MULTIPOLYGON (…</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="county-specific-svi">County-specific SVI<a class="anchor" aria-label="anchor" href="#county-specific-svi"></a>
@@ -183,8 +213,8 @@ county and only keep the data for Philadelphia.</p>
 state, we need to use <code><a href="../reference/get_census_data.html">get_census_data()</a></code> followed by
 <code><a href="../reference/get_svi.html">get_svi()</a></code>. (For nation- or state-level data processing
 without geometry, the easiest option is one-step
-<code>find_svi</code>.)</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code><a href="../reference/find_svi.html">find_svi()</a></code>.)</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">phl_ct_2020_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_census_data.html">get_census_data</a></span><span class="op">(</span></span>
 <span>  <span class="fl">2020</span>, </span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
@@ -196,7 +226,7 @@ without geometry, the easiest option is one-step
 <span><span class="va">phl_ct_svi_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">phl_ct_2020_data</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL_theme"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">phl_ct_svi_2020</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 390</span></span>
 <span><span class="co">#&gt; Columns: 7</span></span>
@@ -219,7 +249,7 @@ without geometry, the easiest option is one-step
 </h2>
 <p>For visualization, we’ll create maps on the same color scale (using
 <a href="https://r-tmap.github.io/tmap/" class="external-link">tmap</a>).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nation</span> <span class="op">&lt;-</span> <span class="va">us_svi_phl</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="va">geometry</span>, <span class="va">RPL_THEMES</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -279,7 +309,7 @@ without geometry, the easiest option is one-step
 <span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.34</span>, <span class="fl">0.33</span>, <span class="fl">0.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="tract-level_SVI_in_Philly_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="tract-level_SVI_in_Philly_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>As we can see, while the SVI values (actual color) vary among the
 three maps depending on how the percentile ranking is performed to
 obtain the SVI, they generally show the same pattern (which tracts are
