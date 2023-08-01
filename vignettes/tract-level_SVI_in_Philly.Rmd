@@ -1,9 +1,9 @@
 ---
-title: "SVI in Local Context"
+title: "SVI in Different Geographic Context"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SVI in Local Context}
+  %\VignetteIndexEntry{SVI in Different Geographic Context}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,9 +15,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-Since SVI uses percentile ranks to summarize 16 census variables representing socioeconomic and demographic factors, it's important to keep in mind the result may be affected by what we are ranking each geographic unit against.
+Since SVI is calculated from percentile ranks of census variables, it's important to keep in mind the SVI values may be affected by the total area that we are ranking each geographic unit against.
 
-For example, if we are interested in SVI for Philadelphia (County), PA at the census tract level for 2020, we could download the tract-level SVI result for PA from [CDC/ATSDR SVI database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html), which is ranking each tract against all tracts in PA. Alternatively, we could use findSVI to calculate tract-level SVI for Philadelphia county in PA for 2020, which is ranking each tract against all tracts in Philadelphia. Here, we'll compare what they would look like for both approaches, and discuss the potential implications.
+Currently [CDC/ATSDR Social Vulnerability Index (SVI) database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) provides nationwide- and statewide- SVI at the census tract and county level. Nationwide-SVI will obviously include SVI for all the states, but the value may be different from the statewide-SVI for the corresponding state due to the ranking method. For example, nationwide-SVI at the census tract level is obtained by ranking the variables in each census tract among all tracts in the US, while statewide-SVI for PA at the census tract level is obtained by ranking the variables in each tract among all tracts in PA. Despite the likely different SVI values, both versions offers valuable information about the relative social vulnerability of communities within a different geographic context.
+
+Building upon this, in addition to nation- or statewide-SVI calculations for flexible geographic levels (e.g. at the ZCTA level; mentioned in [Introduction to findSVI](findSVI.html)), findSVI also supports SVI calculations for more specific geographic context (below the state level, e.g. county).
+
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(dplyr)
