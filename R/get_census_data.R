@@ -30,7 +30,7 @@
 #'   get_census_data(year = 2018,
 #'     geography = "county",
 #'     state = "PA")
-#'
+#' @importFrom rlang .data
 #' @export
 
 get_census_data <- function(year,
@@ -44,13 +44,16 @@ get_census_data <- function(year,
   #predicate
   year_valid <- 2012:2021
 
+  state_valid <- state_valid
+
   state_valid_chr <- state_valid %>%
-    dplyr::select(st_abbr, st_name) %>%
+    dplyr::select("st_abbr", "st_name") %>%
     unlist(use.names = FALSE)
+
   state_valid_chr_us <- c("US", state_valid_chr)
 
   state_valid_dbl <- state_valid %>%
-    dplyr::select(fips_code) %>%
+    dplyr::select("fips_code") %>%
     unlist(use.names = FALSE)
 
   if (length(year) > 1) {
@@ -134,19 +137,19 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
 
   if (length(county) == 0) {
   zcta_by_state <- get(xwalk_name) %>%
-    dplyr::filter(state == st_input | st_code == st_input | st_abb == st_input) %>%
-    dplyr::pull(ZCTA)
+    dplyr::filter(.data$state == st_input | .data$st_code == st_input | .data$st_abb == st_input) %>%
+    dplyr::pull("ZCTA")
   } else {
 
     cty_pat <- paste0(paste(county, collapse = " |")," ")
     zcta_by_state <- get(xwalk_name) %>%
       dplyr::filter(
-        state == st_input | st_code == st_input | st_abb == st_input,
+        .data$state == st_input | .data$st_code == st_input | .data$st_abb == st_input,
         stringr::str_starts(county, tidyselect::all_of(cty_pat)) ) %>%
-      dplyr::pull(ZCTA)
+      dplyr::pull("ZCTA")
   }
   state_data <- us_data %>%
-    dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
+    dplyr::filter(.data$GEOID %in% tidyselect::all_of(zcta_by_state))
 
   return(state_data)
   } else {
@@ -197,11 +200,11 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     st_input <- state
 
     zcta_by_state <- get(xwalk_name) %>%
-      dplyr::filter(state %in% st_input | st_code %in% st_input | st_abb %in% st_input) %>%
-      dplyr::pull(ZCTA)
+      dplyr::filter(.data$state %in% st_input | .data$st_code %in% st_input | .data$st_abb %in% st_input) %>%
+      dplyr::pull("ZCTA")
 
     state_data <- us_data %>%
-      dplyr::filter(GEOID %in% tidyselect::all_of(zcta_by_state))
+      dplyr::filter(.data$GEOID %in% tidyselect::all_of(zcta_by_state))
 
     return(state_data)
   } else {
