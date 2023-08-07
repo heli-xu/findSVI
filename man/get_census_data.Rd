@@ -6,8 +6,8 @@
 \usage{
 get_census_data(
   year,
-  state = NULL,
   geography,
+  state = NULL,
   county = NULL,
   key = NULL,
   geometry = FALSE,
@@ -17,12 +17,12 @@ get_census_data(
 \arguments{
 \item{year}{The year of interest (available 2012-2021).}
 
+\item{geography}{The geography of interest (eg. state, county, zcta, tract)}
+
 \item{state}{(Optional) Specify the state of interest. If data for multiple
 states are retrieved together, ranking for SVI calculation will be performed
 among all states. \code{state = NULL} as default, or \code{state = 'US'} return
 nation-level data.}
-
-\item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 
 \item{county}{(Optional) Specify the county(s) of interest, must be combined
 with a value supplied to "state".}
@@ -48,7 +48,11 @@ at \url{https://api.census.gov/data/key_signup.html}. To set up your key, use
 \code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.
 }
 \examples{
-\dontrun{
-census_api_key("YOUR KEY GOES HERE")
-get_census_data(2018, "county", "PA")}
+\dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# census_api_key("YOUR KEY GOES HERE")
+
+  get_census_data(year = 2018,
+    geography = "county",
+    state = "PA")
+\dontshow{\}) # examplesIf}
 }
