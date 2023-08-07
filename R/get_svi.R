@@ -27,6 +27,7 @@
 get_svi <- function(year, data){
 
 
+
   # E_&EP_
 
   filename <- paste0("variable_e_ep_calculation_", year)
@@ -70,6 +71,7 @@ get_svi <- function(year, data){
   } else {
     data_tmp <- data
   }
+
 
   ## iterate with E_ vector and THEN EP_ vector
   svi0 <-
