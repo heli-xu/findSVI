@@ -1,35 +1,36 @@
 #' Retrieve census data for American Community Survey (with Tidycensus)
 #'
 #' @description This function uses [tidycensus::get_acs()] with a pre-defined
-#'  list of variables to retrieves ACS data for SVI calculation. Note that a
-#'  Census API key is required for this function to work, which can be obtained
-#'  at <https://api.census.gov/data/key_signup.html>. To set up your key, use
-#'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
+#'   list of variables to retrieves ACS data for SVI calculation. Note that a
+#'   Census API key is required for this function to work, which can be obtained
+#'   at <https://api.census.gov/data/key_signup.html>.
 #'
 #' @param year The year of interest (available 2012-2021).
 #' @param state (Optional) Specify the state of interest. If data for multiple
-#'  states are retrieved together, ranking for SVI calculation will be performed
-#'  among all states. `state = NULL` as default, or `state = 'US'` return
-#'  nation-level data.
+#'   states are retrieved together, ranking for SVI calculation will be
+#'   performed among all states. `state = NULL` as default, or `state = 'US'`
+#'   return nation-level data.
 #' @param geography The geography of interest (eg. state, county, zcta, tract)
 #' @param county (Optional) Specify the county(s) of interest, must be combined
-#'  with a value supplied to "state".
-#' @param key Your Census API key. obtain one at
-#'  <https://api.census.gov/data/key_signup.html>.
+#'   with a value supplied to "state".
+#' @param key Your Census API key. Obtain one at
+#'   <https://api.census.gov/data/key_signup.html>. Include it in this argument
+#'   or set up your key using `census_api_key("YOUR KEY GOES HERE")`.
 #' @param geometry Default as FALSE for a regular tibble of census data. If set
-#'  as TRUE, returns a tibble with an additional `geometry` column containing
-#'  simple feature geometry.
+#'   as TRUE, returns a tibble with an additional `geometry` column containing
+#'   simple feature geometry.
 #' @param ... Other arguments; more details please see [tidycensus::get_acs()]
 #'
 #' @return A tibble of ACS data with each row represents an enumeration unit and
-#'  each column represents the variables ("wide" form).
+#'   each column represents the variables ("wide" form).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # census_api_key("YOUR KEY GOES HERE")
 #'
-#'   get_census_data(year = 2018,
-#'     geography = "county",
-#'     state = "PA")
+#'  get_census_data(year = 2018,
+#'   geography = "county",
+#'   state = "PA")
+#'
 #' @importFrom rlang .data
 #' @export
 

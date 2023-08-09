@@ -20,15 +20,16 @@ get_census_data(
 \item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 
 \item{state}{(Optional) Specify the state of interest. If data for multiple
-states are retrieved together, ranking for SVI calculation will be performed
-among all states. \code{state = NULL} as default, or \code{state = 'US'} return
-nation-level data.}
+states are retrieved together, ranking for SVI calculation will be
+performed among all states. \code{state = NULL} as default, or \code{state = 'US'}
+return nation-level data.}
 
 \item{county}{(Optional) Specify the county(s) of interest, must be combined
 with a value supplied to "state".}
 
-\item{key}{Your Census API key. obtain one at
-\url{https://api.census.gov/data/key_signup.html}.}
+\item{key}{Your Census API key. Obtain one at
+\url{https://api.census.gov/data/key_signup.html}. Include it in this argument
+or set up your key using \code{census_api_key("YOUR KEY GOES HERE")}.}
 
 \item{geometry}{Default as FALSE for a regular tibble of census data. If set
 as TRUE, returns a tibble with an additional \code{geometry} column containing
@@ -44,15 +45,14 @@ each column represents the variables ("wide" form).
 This function uses \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} with a pre-defined
 list of variables to retrieves ACS data for SVI calculation. Note that a
 Census API key is required for this function to work, which can be obtained
-at \url{https://api.census.gov/data/key_signup.html}. To set up your key, use
-\code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.
+at \url{https://api.census.gov/data/key_signup.html}.
 }
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # census_api_key("YOUR KEY GOES HERE")
 
-  get_census_data(year = 2018,
-    geography = "county",
-    state = "PA")
+ get_census_data(year = 2018,
+  geography = "county",
+  state = "PA")
 \dontshow{\}) # examplesIf}
 }
