@@ -23,7 +23,8 @@ Imports:
     tidycensus,
     tidyr,
     tidyselect,
-    rlang
+    rlang,
+    utils
 Suggests: 
     testthat (>= 3.0.0),
     readr,

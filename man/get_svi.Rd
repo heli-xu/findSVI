@@ -27,8 +27,13 @@ level to indicate the relative social vulnerability of subunits in that
 geographic level.
 }
 \examples{
-\dontrun{
-census_api_key("YOUR KEY GOES HERE")
-pa2018 <- get_census_data(2018, "county", "PA")
-get_svi(2018, pa2018)}
+\dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# census_api_key("YOUR KEY GOES HERE")
+
+pa2018 <- get_census_data(year = 2018,
+  geography = "county",
+  state = "PA")
+
+get_svi(2018, pa2018)
+\dontshow{\}) # examplesIf}
 }
