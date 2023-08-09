@@ -1,10 +1,5 @@
 ---
-title: "Mapping SVI for spatial analysis"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Mapping SVI for spatial analysis}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Mapping SVI for Spatial Analysis"
 ---
 
 ```{r, include = FALSE}
@@ -41,6 +36,7 @@ pa_zcta_2020_geo_data <- get_census_data(
   geography = "zcta", 
   geometry = TRUE)
 ```
+
 Here, we are showing the first 10 rows of the data. With the `geometry = TRUE`, we'll get a tibble with an additional column containing simple feature geometry (`MULTIPOLYGON`). 
 
 ```{r load_raw_data, echo=FALSE}
@@ -137,4 +133,5 @@ leaflet(svi_clean) %>%
             opacity = 1)
 
 ```
+
 From the interactive map, we can visualize easily how SVI varies in different regions in PA and zoom in to examine specific ZCTAs of interest, making it a helpful approach to explore new ideas, patterns and analyses.
