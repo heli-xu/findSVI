@@ -48,11 +48,11 @@ obtained from entry-specific percentile ranking and summarised into one
 table.
 }
 \examples{
-\dontrun{
-census_api_key("YOUR KEY GOES HERE")
+\dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# census_api_key("YOUR KEY GOES HERE")
 
 # Use with vectors for year and state
-## for one year-state information (all ZCTAs of PA in 2019)
+## for one year-state information (all tracts of PA in 2019)
 find_svi(
       year = 2019,
       state = "PA",
@@ -68,18 +68,14 @@ find_svi(
    )
 
 # Use with a table of year-state information
-info <- tribble(
-    ~state, ~year,
-    "AZ", 2015,
-    "AZ", 2016,
-    "PA", 2020,
-    "RI", 2018)
+year <- c(2015, 2016, 2020, 2018)
+state <- c("AZ", "AZ", "PA", "RI")
+info <- data.frame(year, state)
 
 find_svi(
     year = info$year,
     state = info$state,
     geography = "county"
    )
-}
-
+\dontshow{\}) # examplesIf}
 }

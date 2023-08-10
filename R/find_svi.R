@@ -1,7 +1,7 @@
 #'Retrieve Census Data and Calculate Social Vulnerability Index (SVI) for One or
 #'Multiple Year(s)/State(s)
 #'
-#'@description This is a wrapper for [findSVI::get_census_data()] and
+#' @description This is a wrapper for [findSVI::get_census_data()] and
 #'  [findSVI::get_svi()] that retrieves census data and produces SVI for one or
 #'  multiple years(s) and state(s). For multiple year-state entries, SVI is
 #'  obtained from entry-specific percentile ranking and summarised into one
@@ -12,23 +12,23 @@
 #'  is when it's a single year entry (length 1), other than providing one state
 #'  of interest, supply `state = NULL` as default or `state = 'US'` retrieves
 #'  and processes nation level data to obtain SVI.
-#'@param state A vector containing states of interest. Length >=0. Length 0
+#' @param state A vector containing states of interest. Length >=0. Length 0
 #'  (`state = NULL`), or `state = 'US'` must be used with single year argument,
 #'  when SVI is calculated from nation-level census data. In other cases,
 #'  `state` must have the same elements as `year` (same length).
-#'@param geography One geography level of interest for all year-state
+#' @param geography One geography level of interest for all year-state
 #'  combination (e.g."county", "zcta", "tract").
-#'@param key Your Census API key. Obtain one at
+#' @param key Your Census API key. Obtain one at
 #'  <https://api.census.gov/data/key_signup.html>. To set up, use
 #'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
-#'@param full.table Default as `FALSE`, returning SVI table with only "GEOID",
+#' @param full.table Default as `FALSE`, returning SVI table with only "GEOID",
 #'  and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
 #'  with individual SVI variables and intermediate ranking calculations are also
 #'  included in addition to the theme-related SVIs (similar style to tables from
 #'  [CDC/ATSDR
 #'  database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 #'
-#'@return A tibble of summarised SVI for one or multiple year-state combination
+#' @return A tibble of summarised SVI for one or multiple year-state combination
 #'  of interest. Rows represent the geographic units, and columns represent its
 #'  SVI for each theme and all themes. Additional two columns at the end
 #'  indicate the corresponding state and year information. For `full.table =
@@ -36,14 +36,12 @@
 #'  are also included. For description of variable names (column names), please
 #'  refer to [CDC/ATSDR
 #'  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
-#'@export
 #'
-#' @examples
-#' \dontrun{
-#' census_api_key("YOUR KEY GOES HERE")
+#' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
+#' # census_api_key("YOUR KEY GOES HERE")
 #'
 #' # Use with vectors for year and state
-#' ## for one year-state information (all ZCTAs of PA in 2019)
+#' ## for one year-state information (all tracts of PA in 2019)
 #' find_svi(
 #'       year = 2019,
 #'       state = "PA",
@@ -58,21 +56,20 @@
 #'       geography = "zcta"
 #'    )
 #'
-#'# Use with a table of year-state information
-#' info <- tribble(
-#'     ~state, ~year,
-#'     "AZ", 2015,
-#'     "AZ", 2016,
-#'     "PA", 2020,
-#'     "RI", 2018)
+#' # Use with a table of year-state information
+#' year <- c(2015, 2016, 2020, 2018)
+#' state <- c("AZ", "AZ", "PA", "RI")
+#' info <- data.frame(year, state)
 #'
 #' find_svi(
 #'     year = info$year,
 #'     state = info$state,
 #'     geography = "county"
 #'    )
-#' }
 #'
+#' @importFrom rlang .data
+#' @export
+
 find_svi  <- function(
   year,
   state = NULL,
@@ -81,13 +78,15 @@ find_svi  <- function(
   full.table = FALSE
   )
 {
+  state_valid <- state_valid
+
   state_valid_chr <- state_valid %>%
-    dplyr::select(st_abbr, st_name) %>%
+    dplyr::select("st_abbr", "st_name") %>%
     unlist(use.names = FALSE)
   state_valid_chr_us <- c("US", state_valid_chr)
 
   state_valid_dbl <- state_valid %>%
-    dplyr::select(fips_code) %>%
+    dplyr::select("fips_code") %>%
     unlist(use.names = FALSE)
 
   if (inherits(state, "numeric")) {
@@ -114,8 +113,8 @@ find_svi  <- function(
     if (length(state) == 0) {
       data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
       cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
-      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = "US")
-      results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = {{year}}, state = "US")
+      results_RPL <- results %>% dplyr::select("GEOID", tidyselect::contains("RPL_theme"), "year", "state")
       cli::cli_alert_success(
         "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
       )
@@ -130,8 +129,8 @@ find_svi  <- function(
         if(state == "US") {
       data_tmp <- findSVI::get_census_data(year, state = NULL, geography = geography)
       cli::cli_alert_success("Finished retrieving nation-level census data for {year}")
-      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = "US")
-      results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = {{year}}, state = "US")
+      results_RPL <- results %>% dplyr::select("GEOID", tidyselect::contains("RPL_theme"), "year", "state")
       cli::cli_alert_success(
         "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
       )
@@ -146,8 +145,8 @@ find_svi  <- function(
       #length =1, not US
       data_tmp <- findSVI::get_census_data(year, state, geography = geography)
       cli::cli_alert_success("Finished retrieving census data for {year} {state}")
-      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = year, state = state)
-      results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
+      results <- findSVI::get_svi(year, data_tmp) %>% dplyr::mutate(year = {{year}}, state = {{state}})
+      results_RPL <- results %>% dplyr::select("GEOID", tidyselect::contains("RPL_theme"), "year", "state")
       cli::cli_alert_success(
         "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
         )
@@ -221,11 +220,11 @@ find_svi  <- function(
 
         ## Calculate SVI
         svi_tmp <- findSVI::get_svi(year_tmp, census_tmp) %>%
-          dplyr::mutate(year = year_tmp, state = state_tmp)
+          dplyr::mutate(year = {{year_tmp}}, state = {{state_tmp}})
         return(svi_tmp)
       })
 
-    results_RPL <- results %>% dplyr::select(GEOID, tidyselect::contains("RPL_theme"), year, state)
+    results_RPL <- results %>% dplyr::select("GEOID", tidyselect::contains("RPL_theme"), "year", "state")
 
     cli::cli_alert_success(
       "Finished summarising theme-specific and overall SVI. For all variables, set 'full.table = TRUE'"
