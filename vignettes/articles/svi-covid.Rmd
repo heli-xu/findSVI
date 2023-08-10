@@ -1,11 +1,6 @@
 ---
 title: "SVI and health outcome"
 subtitle: "SVI and COVID-19 hospitalizations in Philadelphia"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{SVI and health outcome}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -27,7 +22,6 @@ library(sf)
 library(tidyr)
 library(tmap)
 library(ggplot2)
-library(cowplot)
 ```
 
 ## ZCTA-level SVI in Philadelphia for 2020
