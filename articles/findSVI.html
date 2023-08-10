@@ -336,15 +336,13 @@ way to supply <code>year</code> and <code>state</code> pairs is to
 extract columns from a table. Suppose we have a table called
 <code>info_table</code> containing the year-state information we’d like
 to include in the analysis:</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
-<span><span class="co">#&gt;    year state</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>017 AZ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>018 FL   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">2</span>014 FL   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">2</span>013 MA   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">2</span>020 KY</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;   year state</span></span>
+<span><span class="co">#&gt; 1 2017    AZ</span></span>
+<span><span class="co">#&gt; 2 2018    FL</span></span>
+<span><span class="co">#&gt; 3 2014    FL</span></span>
+<span><span class="co">#&gt; 4 2018    PA</span></span>
+<span><span class="co">#&gt; 5 2013    MA</span></span>
+<span><span class="co">#&gt; 6 2020    KY</span></span></code></pre>
 <p>We could extract specific columns of interest from
 <code>info_table</code> for the <code>year</code> and <code>state</code>
 arguments:</p>
