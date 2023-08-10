@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(findSVI)
-
 ```
 
 # What is SVI
@@ -121,15 +120,9 @@ As a result, we have (first 10 rows of) a table summarising the county-level SVI
 
 As other R functions that accepts vectors in their arguments, another way to supply `year` and `state` pairs is to extract columns from a table. Suppose we have a table called `info_table` containing the year-state information we'd like to include in the analysis:
 ```{r info_table, echo=FALSE}
-info_table <- tribble(
-  ~year, ~state,
-  2017, "AZ",
-  2018, "FL",
-  2014, "FL",
-  2018, "PA",
-  2013, "MA",
-  2020, "KY"
-  )
+year <- c(2017,2018, 2014, 2018, 2013,2020)
+state <- c("AZ", "FL", "FL", "PA", "MA", "KY")
+info_table <- data.frame(year, state)
 info_table
 ```
 
