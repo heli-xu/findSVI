@@ -1,9 +1,15 @@
 Package: findSVI
-Title: Calculate CDC/ATSDR Social Vulnerability Index
+Title: Calculate Social Vulnerability Index at Flexible Geographic Levels
 Version: 0.1.0
 Authors@R: person("Heli", "Xu", email = "xuheli91@gmail.com",
   role = c("aut", "cre"))
-Description: Retrieve variables from US census data and calculate SVI in a given geographic area based on CDC/ATSDR SVI documentation.
+Description: Developed by CDC/ATSDR (Centers for Disease Control and Prevention/
+    Agency for Toxic Substances and Disease Registry), 
+    Social Vulnerability Index (SVI) serves as a tool to assess the resilience 
+    of communities by taking into account socioeconomic and demographic factors. 
+    Provided with year(s), region(s) and a geographic level of interest, 
+    'findSVI' retrieves required variables from US census data and calculates SVI 
+    for communities in the specified area based on CDC/ATSDR SVI documentation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

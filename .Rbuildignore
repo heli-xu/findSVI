@@ -11,3 +11,4 @@
 ^pkgdown$
 ^xtra$
 ^vignettes/articles$
+^cran-comments\.md$

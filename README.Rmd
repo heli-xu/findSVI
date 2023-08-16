@@ -40,9 +40,15 @@ Essentially, `find_svi()` is a wrapper function for `get_census_data()` and `get
 
 ## Installation
 
-You can install the development version of findSVI from [GitHub](https://github.com/) with:
+Install the findSVI package via CRAN:
 
-``` r
+```{r, eval=FALSE}
+install.packages("findSVI")
+```
+
+Alternatively, you can install the development version of findSVI from [GitHub](https://github.com/) with:
+
+``` {r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("heli-xu/findSVI")
 ```

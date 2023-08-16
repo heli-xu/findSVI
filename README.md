@@ -47,7 +47,13 @@ pairs at the same geography level.
 
 ## Installation
 
-You can install the development version of findSVI from
+Install the findSVI package via CRAN:
+
+``` r
+install.packages("findSVI")
+```
+
+Alternatively, you can install the development version of findSVI from
 [GitHub](https://github.com/) with:
 
 ``` r
