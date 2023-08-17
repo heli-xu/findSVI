@@ -64,7 +64,9 @@ summarise_results <- find_svi(
   state = c("NJ", "PA"),
   geography = "county"
 )
-summarise_results %>% head(10)
+summarise_results %>% 
+  group_by(year, state) %>% 
+  slice_head(n = 5)
 ```
 
 ```{r summarise_results, echo=FALSE, warning=FALSE, message=FALSE}
@@ -72,10 +74,12 @@ library(findSVI)
 library(dplyr)
 
 load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
-summarise_results %>% head(10)
+summarise_results %>% 
+  group_by(year, state) %>% 
+  slice_head(n = 5)
 ```
 
-(first ten rows shown)
+(First 5 rows of results for 2017-NJ and 2018-PA are shown.)
 
 ```{r get_census_data, eval=FALSE}
 data <- get_census_data(2020, "county", "PA")
@@ -87,16 +91,14 @@ load(system.file("testdata","pa_cty_raw2020.rda",package = "findSVI"))
 pa_cty_raw2020[1:10, 1:10]
 ```
 
-(first ten rows and columns shown)
+(First 10 rows and columns are shown, with the rest of columns being other census variables for SVI calculation.)
 
 ```{r get_svi, eval = FALSE}
 result <- get_svi(2020, data)
-restult[1:10, 1:10]
+glimpse(restult)
 ```
 
 ```{r svi, echo=FALSE}
 load(system.file("testdata", "pa_cty_result2020.rda", package = "findSVI"))
-pa_cty_result2020[1:10, 1:10]
+glimpse(pa_cty_result2020)
 ```
-
-(first ten rows and columns shown)
