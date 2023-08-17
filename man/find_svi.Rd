@@ -2,17 +2,17 @@
 % Please edit documentation in R/find_svi.R
 \name{find_svi}
 \alias{find_svi}
-\title{Retrieve Census Data and Calculate Social Vulnerability Index (SVI) for One or
-Multiple Year(s)/State(s)}
+\title{Retrieve census data and calculate SVI for one or multiple year(s)/state(s)}
 \usage{
 find_svi(year, state = NULL, geography, key = NULL, full.table = FALSE)
 }
 \arguments{
-\item{year}{A vector containing years of interest (available 2012-2021). Length >=1. Acting as pairs
-with \code{state}, \code{year} should be of the same length as \code{state}. The exception
-is when it's a single year entry (length 1), other than providing one state
-of interest, supply \code{state = NULL} as default or \code{state = 'US'} retrieves
-and processes nation level data to obtain SVI.}
+\item{year}{A vector containing years of interest (available 2012-2021).
+Length >=1. Acting as pairs with \code{state}, \code{year} should be of the same
+length as \code{state}. The exception is when it's a single year entry (length
+1), other than providing one state of interest, supply \code{state = NULL} as
+default or \code{state = 'US'} retrieves and processes nation level data to
+obtain SVI.}
 
 \item{state}{A vector containing states of interest. Length >=0. Length 0
 (\code{state = NULL}), or \code{state = 'US'} must be used with single year argument,
@@ -24,16 +24,16 @@ combination (e.g."county", "zcta", "tract").}
 
 \item{key}{Your Census API key. Obtain one at
 \url{https://api.census.gov/data/key_signup.html}. To set up, use
-\code{census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.}
+\code{tidycensus::census_api_key("YOUR KEY GOES HERE")}, or include it as an argument.}
 
 \item{full.table}{Default as \code{FALSE}, returning SVI table with only "GEOID",
 and SVI for each theme and all themes. If set as \code{TRUE}, a full SVI table
-with individual SVI variables and intermediate ranking calculations are also
-included in addition to the theme-related SVIs (similar style to tables from
-\href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR database}).}
+with individual SVI variables and intermediate ranking calculations are
+also included in addition to the theme-related SVIs (similar style to
+tables from \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR database}).}
 }
 \value{
-A tibble of summarised SVI for one or multiple year-state combination
+A tibble of summarised SVI for one or multiple year-state combination(s)
 of interest. Rows represent the geographic units, and columns represent its
 SVI for each theme and all themes. Additional two columns at the end
 indicate the corresponding state and year information. For \code{full.table = TRUE}, estimated count and percentage values for individual SVI variables
@@ -41,18 +41,18 @@ are also included. For description of variable names (column names), please
 refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
 }
 \description{
-This is a wrapper for \code{\link[=get_census_data]{get_census_data()}} and
+\code{find_svi()} is like a wrapper for \code{\link[=get_census_data]{get_census_data()}} and
 \code{\link[=get_svi]{get_svi()}} that retrieves census data and produces SVI for one or
 multiple years(s) and state(s). For multiple year-state entries, SVI is
-obtained from entry-specific percentile ranking and summarised into one
-table.
+obtained from percentile rankings for each entry and summarised into one
+table. Note that a Census API key is required for this function to work,
+which can be obtained at \url{https://api.census.gov/data/key_signup.html} and
+set up using \code{\link[tidycensus:census_api_key]{tidycensus::census_api_key()}}.
 }
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# census_api_key("YOUR KEY GOES HERE")
-
-# Use with vectors for year and state
-## for one year-state information (all tracts of PA in 2019)
+# Census API key required
+# For one year-state entry (all tracts of PA in 2019)
 find_svi(
       year = 2019,
       state = "PA",
@@ -60,14 +60,14 @@ find_svi(
    )
 
 
-## for multiple year-state combination (all ZCTAs of RI in 2017 and PA in 2018)
+# For multiple year-state entried (all ZCTAs of RI in 2017 and PA in 2018)
 find_svi(
       year = c(2017, 2018),
       state = c("RI", "PA"),
       geography = "zcta"
    )
 
-# Use with a table of year-state information
+# Extract year-state information from a table
 year <- c(2015, 2016, 2020, 2018)
 state <- c("AZ", "AZ", "PA", "RI")
 info <- data.frame(year, state)

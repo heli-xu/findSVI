@@ -1,30 +1,32 @@
-#' Calculate Social Vulnerability Index (SVI) for a Region from Census Data
+#' Calculate SVI for communities in a region from census data
 #'
-#' @description This function calculates and constructs an SVI table for a
-#'  geographic level of interest based on [CDC/ATSDR SVI
-#'  documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
-#'  Briefly, SVI includes 4 themes of variables that represent different aspects
-#'  of socioeconomic challenges, and uses percentile ranking within a geographic
-#'  level to indicate the relative social vulnerability of subunits in that
-#'  geographic level.
+#' @description `get_svi()` calculates and constructs an SVI table for a
+#'   geographic level of interest based on [CDC/ATSDR SVI
+#'   documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
+#'   Briefly, by taking into account 4 themes of census variables that represent
+#'   challenges in socioeconomic status, household characteristics, racial and
+#'   ethnic minority status and housing/transportation, SVI uses percentile
+#'   ranking within a region to indicate the relative social vulnerability of
+#'   the geographic units (communities) in that region.
 #'
 #' @param year The year of interest (available 2014-2021), must match the year
-#'  specified in retrieving census data.
+#'   specified in retrieving census data.
 #' @param data The census data retrieved by `get_census_data()`.
 #'
-#' @return A tibble of SVI with rows representing geographic subunits, and
-#'  columns indicating variable names (first two columns containing geographic
-#'  information). For detailed description of the variable names (column names),
-#'  please refer to [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#' @returns A tibble of SVI with rows representing geographic units, and columns
+#'   indicating variable names (first two columns containing geographic
+#'   information). For detailed description of the variable names (column
+#'   names), please refer to [CDC/ATSDR
+#'   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
-#' # census_api_key("YOUR KEY GOES HERE")
+#' # Census API key required
+#'  pa2018 <- get_census_data(
+#'     year = 2018,
+#'     geography = "county",
+#'     state = "PA")
 #'
-#' pa2018 <- get_census_data(year = 2018,
-#'   geography = "county",
-#'   state = "PA")
-#'
-#' get_svi(2018, pa2018)
+#'  get_svi(2018, pa2018)
 #'
 #' @importFrom rlang .data
 #'

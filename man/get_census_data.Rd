@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_census_data.R
 \name{get_census_data}
 \alias{get_census_data}
-\title{Retrieve census data for American Community Survey (with Tidycensus)}
+\title{Retrieve American Community Survey data for SVI variables}
 \usage{
 get_census_data(
   year,
@@ -29,28 +29,29 @@ with a value supplied to "state".}
 
 \item{key}{Your Census API key. Obtain one at
 \url{https://api.census.gov/data/key_signup.html}. Include it in this argument
-or set up your key using \code{census_api_key("YOUR KEY GOES HERE")}.}
+or set up your key using \code{tidycensus::census_api_key("YOUR KEY GOES HERE")}.}
 
-\item{geometry}{Default as FALSE for a regular tibble of census data. If set
-as TRUE, returns a tibble with an additional \code{geometry} column containing
+\item{geometry}{Default as \code{FALSE} for a regular tibble of census data. If set
+as \code{TRUE}, returns a tibble with an additional \code{geometry} column containing
 simple feature geometry.}
 
 \item{...}{Other arguments; more details please see \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}}
 }
 \value{
-A tibble of ACS data with each row represents an enumeration unit and
-each column represents the variables ("wide" form).
+A tibble of ACS data with each row represents an enumeration
+(geographic) unit and each column represents a census variable ("wide"
+form).
 }
 \description{
 This function uses \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} with a pre-defined
 list of variables to retrieves ACS data for SVI calculation. Note that a
 Census API key is required for this function to work, which can be obtained
-at \url{https://api.census.gov/data/key_signup.html}.
+at \url{https://api.census.gov/data/key_signup.html} and set up using
+\code{\link[tidycensus:census_api_key]{tidycensus::census_api_key()}}.
 }
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# census_api_key("YOUR KEY GOES HERE")
-
+# Census API key required
  get_census_data(year = 2018,
   geography = "county",
   state = "PA")

@@ -1,34 +1,36 @@
-#'Retrieve Census Data and Calculate Social Vulnerability Index (SVI) for One or
-#'Multiple Year(s)/State(s)
+#' Retrieve census data and calculate SVI for one or multiple year(s)/state(s)
 #'
-#' @description This is a wrapper for [findSVI::get_census_data()] and
+#' @description `find_svi()` is like a wrapper for [findSVI::get_census_data()] and
 #'  [findSVI::get_svi()] that retrieves census data and produces SVI for one or
 #'  multiple years(s) and state(s). For multiple year-state entries, SVI is
-#'  obtained from entry-specific percentile ranking and summarised into one
-#'  table.
+#'  obtained from percentile rankings for each entry and summarised into one
+#'  table. Note that a Census API key is required for this function to work,
+#'  which can be obtained at <https://api.census.gov/data/key_signup.html> and
+#'  set up using [tidycensus::census_api_key()].
 #'
-#'@param year A vector containing years of interest (available 2012-2021). Length >=1. Acting as pairs
-#'  with `state`, `year` should be of the same length as `state`. The exception
-#'  is when it's a single year entry (length 1), other than providing one state
-#'  of interest, supply `state = NULL` as default or `state = 'US'` retrieves
-#'  and processes nation level data to obtain SVI.
+#' @param year A vector containing years of interest (available 2012-2021).
+#'   Length >=1. Acting as pairs with `state`, `year` should be of the same
+#'   length as `state`. The exception is when it's a single year entry (length
+#'   1), other than providing one state of interest, supply `state = NULL` as
+#'   default or `state = 'US'` retrieves and processes nation level data to
+#'   obtain SVI.
 #' @param state A vector containing states of interest. Length >=0. Length 0
-#'  (`state = NULL`), or `state = 'US'` must be used with single year argument,
-#'  when SVI is calculated from nation-level census data. In other cases,
-#'  `state` must have the same elements as `year` (same length).
+#'   (`state = NULL`), or `state = 'US'` must be used with single year argument,
+#'   when SVI is calculated from nation-level census data. In other cases,
+#'   `state` must have the same elements as `year` (same length).
 #' @param geography One geography level of interest for all year-state
 #'  combination (e.g."county", "zcta", "tract").
 #' @param key Your Census API key. Obtain one at
 #'  <https://api.census.gov/data/key_signup.html>. To set up, use
-#'  `census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
+#'  `tidycensus::census_api_key("YOUR KEY GOES HERE")`, or include it as an argument.
 #' @param full.table Default as `FALSE`, returning SVI table with only "GEOID",
-#'  and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
-#'  with individual SVI variables and intermediate ranking calculations are also
-#'  included in addition to the theme-related SVIs (similar style to tables from
-#'  [CDC/ATSDR
-#'  database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
+#'   and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
+#'   with individual SVI variables and intermediate ranking calculations are
+#'   also included in addition to the theme-related SVIs (similar style to
+#'   tables from [CDC/ATSDR
+#'   database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 #'
-#' @return A tibble of summarised SVI for one or multiple year-state combination
+#' @returns A tibble of summarised SVI for one or multiple year-state combination(s)
 #'  of interest. Rows represent the geographic units, and columns represent its
 #'  SVI for each theme and all themes. Additional two columns at the end
 #'  indicate the corresponding state and year information. For `full.table =
@@ -38,10 +40,8 @@
 #'  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
-#' # census_api_key("YOUR KEY GOES HERE")
-#'
-#' # Use with vectors for year and state
-#' ## for one year-state information (all tracts of PA in 2019)
+#' # Census API key required
+#' # For one year-state entry (all tracts of PA in 2019)
 #' find_svi(
 #'       year = 2019,
 #'       state = "PA",
@@ -49,14 +49,14 @@
 #'    )
 #'
 #'
-#' ## for multiple year-state combination (all ZCTAs of RI in 2017 and PA in 2018)
+#' # For multiple year-state entried (all ZCTAs of RI in 2017 and PA in 2018)
 #' find_svi(
 #'       year = c(2017, 2018),
 #'       state = c("RI", "PA"),
 #'       geography = "zcta"
 #'    )
 #'
-#' # Use with a table of year-state information
+#' # Extract year-state information from a table
 #' year <- c(2015, 2016, 2020, 2018)
 #' state <- c("AZ", "AZ", "PA", "RI")
 #' info <- data.frame(year, state)

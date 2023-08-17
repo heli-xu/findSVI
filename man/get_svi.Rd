@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_svi.R
 \name{get_svi}
 \alias{get_svi}
-\title{Calculate Social Vulnerability Index (SVI) for a Region from Census Data}
+\title{Calculate SVI for communities in a region from census data}
 \usage{
 get_svi(year, data)
 }
@@ -13,27 +13,28 @@ specified in retrieving census data.}
 \item{data}{The census data retrieved by \code{get_census_data()}.}
 }
 \value{
-A tibble of SVI with rows representing geographic subunits, and
-columns indicating variable names (first two columns containing geographic
-information). For detailed description of the variable names (column names),
-please refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
+A tibble of SVI with rows representing geographic units, and columns
+indicating variable names (first two columns containing geographic
+information). For detailed description of the variable names (column
+names), please refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
 }
 \description{
-This function calculates and constructs an SVI table for a
+\code{get_svi()} calculates and constructs an SVI table for a
 geographic level of interest based on \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR SVI documentation}.
-Briefly, SVI includes 4 themes of variables that represent different aspects
-of socioeconomic challenges, and uses percentile ranking within a geographic
-level to indicate the relative social vulnerability of subunits in that
-geographic level.
+Briefly, by taking into account 4 themes of census variables that represent
+challenges in socioeconomic status, household characteristics, racial and
+ethnic minority status and housing/transportation, SVI uses percentile
+ranking within a region to indicate the relative social vulnerability of
+the geographic units (communities) in that region.
 }
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# census_api_key("YOUR KEY GOES HERE")
+# Census API key required
+ pa2018 <- get_census_data(
+    year = 2018,
+    geography = "county",
+    state = "PA")
 
-pa2018 <- get_census_data(year = 2018,
-  geography = "county",
-  state = "PA")
-
-get_svi(2018, pa2018)
+ get_svi(2018, pa2018)
 \dontshow{\}) # examplesIf}
 }
