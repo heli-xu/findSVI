@@ -93,7 +93,8 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="what-is-svi">What is SVI<a class="anchor" aria-label="anchor" href="#what-is-svi"></a>
 </h2>
@@ -170,38 +171,30 @@ to retrieves ACS data for SVI calculation. The list of census variables
 is built in the function, and changes according to the year of interest.
 Importantly, a Census API key is required for this function to work,
 which can be obtained <a href="https://api.census.gov/data/key_signup.html" class="external-link">online</a> and set up
-by <code>census_api_key("YOUR KEY GOES HERE")</code>. The arguments are
-largely the same with [tidycensus::get_acs()], including year, geography
-and state.</p>
+by <code>tidycensus::census_api_key("YOUR KEY GOES HERE")</code>. The
+arguments are largely the same with <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>,
+including year, geography and state.</p>
 <p>For example, we can retrieve ZCTA-level data for Rhode Island for
 2018:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_census_data.html">get_census_data</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"zcta"</span>, <span class="st">"RI"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_census_data.html">get_census_data</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"zcta"</span>, <span class="st">"RI"</span><span class="op">)</span></span>
 <span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;    GEOID        NAME B17001_002E B17001_002M B19301_001E B19301_001M</span></span>
-<span><span class="co">#&gt; 1  02802 ZCTA5 02802         154         190       24925       14640</span></span>
-<span><span class="co">#&gt; 2  02804 ZCTA5 02804         130          91       39065        6412</span></span>
-<span><span class="co">#&gt; 3  02806 ZCTA5 02806         520         183       61534        3820</span></span>
-<span><span class="co">#&gt; 4  02807 ZCTA5 02807          73          33       39287        7937</span></span>
-<span><span class="co">#&gt; 5  02808 ZCTA5 02808         162         166       29356        3819</span></span>
-<span><span class="co">#&gt; 6  02809 ZCTA5 02809        1619         368       34252        2269</span></span>
-<span><span class="co">#&gt; 7  02812 ZCTA5 02812          31          52       41718        5771</span></span>
-<span><span class="co">#&gt; 8  02813 ZCTA5 02813         605         271       42612        4889</span></span>
-<span><span class="co">#&gt; 9  02814 ZCTA5 02814         722         253       37750        3056</span></span>
-<span><span class="co">#&gt; 10 02815 ZCTA5 02815          13          21       71975       22744</span></span>
-<span><span class="co">#&gt;    B06009_002E B06009_002M B09001_001E B09001_001M</span></span>
-<span><span class="co">#&gt; 1           80          87         220         161</span></span>
-<span><span class="co">#&gt; 2           56          45         331         156</span></span>
-<span><span class="co">#&gt; 3          383         111        4375         204</span></span>
-<span><span class="co">#&gt; 4           19          22         143          87</span></span>
-<span><span class="co">#&gt; 5          272         146         598         271</span></span>
-<span><span class="co">#&gt; 6         2077         370        3201         241</span></span>
-<span><span class="co">#&gt; 7           72          60         323         144</span></span>
-<span><span class="co">#&gt; 8          411         157        1265         147</span></span>
-<span><span class="co">#&gt; 9          381         115        1489         170</span></span>
-<span><span class="co">#&gt; 10           0          13          74         113</span></span></code></pre>
-<p>(only first 10 rows and columns are shown)</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 10</span></span></span>
+<span><span class="co">#&gt;    GEOID NAME        B17001_002E B17001_002M B19301_001E B19301_001M B06009_002E</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02802 ZCTA5 02802         154         190       <span style="text-decoration: underline;">24</span>925       <span style="text-decoration: underline;">14</span>640          80</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02804 ZCTA5 02804         130          91       <span style="text-decoration: underline;">39</span>065        <span style="text-decoration: underline;">6</span>412          56</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02806 ZCTA5 02806         520         183       <span style="text-decoration: underline;">61</span>534        <span style="text-decoration: underline;">3</span>820         383</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02807 ZCTA5 02807          73          33       <span style="text-decoration: underline;">39</span>287        <span style="text-decoration: underline;">7</span>937          19</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02808 ZCTA5 02808         162         166       <span style="text-decoration: underline;">29</span>356        <span style="text-decoration: underline;">3</span>819         272</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02809 ZCTA5 02809        <span style="text-decoration: underline;">1</span>619         368       <span style="text-decoration: underline;">34</span>252        <span style="text-decoration: underline;">2</span>269        <span style="text-decoration: underline;">2</span>077</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02812 ZCTA5 02812          31          52       <span style="text-decoration: underline;">41</span>718        <span style="text-decoration: underline;">5</span>771          72</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02813 ZCTA5 02813         605         271       <span style="text-decoration: underline;">42</span>612        <span style="text-decoration: underline;">4</span>889         411</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02814 ZCTA5 02814         722         253       <span style="text-decoration: underline;">37</span>750        <span style="text-decoration: underline;">3</span>056         381</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02815 ZCTA5 02815          13          21       <span style="text-decoration: underline;">71</span>975       <span style="text-decoration: underline;">22</span>744           0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: B06009_002M &lt;dbl&gt;, B09001_001E &lt;dbl&gt;, B09001_001M &lt;dbl&gt;</span></span></span></code></pre>
+<p>(First 10 rows and columns are shown, with the rest of the columns
+being other census variables.)</p>
 <p>Note that for ZCTA-level after 2018, data retrieving by state is not
 supported by Census API/tidycensus. For such requests,
 <code><a href="../reference/get_census_data.html">get_census_data()</a></code> first retrieves ZCTA-level data for the
@@ -225,20 +218,72 @@ ranking again as the SVI for each theme and overall SVI.</p>
 <p>For example, to obtain ZCTA-level SVI for Rhode Island for 2018:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="va">result</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;    GEOID        NAME E_TOTPOP E_HU E_HH E_POV E_UNEMP E_PCI E_NOHSDP E_AGE65</span></span>
-<span><span class="co">#&gt; 1  02802 ZCTA5 02802      671  314  223   154      18 24925       80      15</span></span>
-<span><span class="co">#&gt; 2  02804 ZCTA5 02804     2004  947  840   130      12 39065       56     351</span></span>
-<span><span class="co">#&gt; 3  02806 ZCTA5 02806    16192 6393 6111   520     244 61534      383    2680</span></span>
-<span><span class="co">#&gt; 4  02807 ZCTA5 02807      827 1856  429    73      21 39287       19     221</span></span>
-<span><span class="co">#&gt; 5  02808 ZCTA5 02808     2565  969  889   162     171 29356      272     267</span></span>
-<span><span class="co">#&gt; 6  02809 ZCTA5 02809    22258 9181 8442  1619     424 34252     2077    4578</span></span>
-<span><span class="co">#&gt; 7  02812 ZCTA5 02812     1208  402  402    31      44 41718       72     144</span></span>
-<span><span class="co">#&gt; 8  02813 ZCTA5 02813     7780 5173 3200   605     330 42612      411    1733</span></span>
-<span><span class="co">#&gt; 9  02814 ZCTA5 02814     7673 3350 2903   722     167 37750      381    1207</span></span>
-<span><span class="co">#&gt; 10 02815 ZCTA5 02815      208   76   76    13       0 71975        0      16</span></span></code></pre>
-<p>(Only first 10 rows and columns are shown. The columns included are
-some of the individual SVI variables.)</p>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Rows: 77</span></span>
+<span><span class="co">#&gt; Columns: 60</span></span>
+<span><span class="co">#&gt; $ GEOID      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "02802", "02804", "02806", "02807", "02808", "02809", "0281…</span></span>
+<span><span class="co">#&gt; $ NAME       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ZCTA5 02802", "ZCTA5 02804", "ZCTA5 02806", "ZCTA5 02807",…</span></span>
+<span><span class="co">#&gt; $ E_TOTPOP   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 671, 2004, 16192, 827, 2565, 22258, 1208, 7780, 7673, 208, …</span></span>
+<span><span class="co">#&gt; $ E_HU       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 314, 947, 6393, 1856, 969, 9181, 402, 5173, 3350, 76, 14272…</span></span>
+<span><span class="co">#&gt; $ E_HH       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 223, 840, 6111, 429, 889, 8442, 402, 3200, 2903, 76, 13304,…</span></span>
+<span><span class="co">#&gt; $ E_POV      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 154, 130, 520, 73, 162, 1619, 31, 605, 722, 13, 2575, 143, …</span></span>
+<span><span class="co">#&gt; $ E_UNEMP    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18, 12, 244, 21, 171, 424, 44, 330, 167, 0, 1016, 123, 459,…</span></span>
+<span><span class="co">#&gt; $ E_PCI      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 24925, 39065, 61534, 39287, 29356, 34252, 41718, 42612, 377…</span></span>
+<span><span class="co">#&gt; $ E_NOHSDP   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 80, 56, 383, 19, 272, 2077, 72, 411, 381, 0, 2011, 158, 523…</span></span>
+<span><span class="co">#&gt; $ E_AGE65    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 15, 351, 2680, 221, 267, 4578, 144, 1733, 1207, 16, 5520, 8…</span></span>
+<span><span class="co">#&gt; $ E_AGE17    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 220, 331, 4375, 143, 598, 3201, 323, 1265, 1489, 74, 6322, …</span></span>
+<span><span class="co">#&gt; $ E_DISABL   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 194, 200, 1453, 96, 184, 2234, 149, 818, 1172, 53, 5630, 39…</span></span>
+<span><span class="co">#&gt; $ E_SNGPNT   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 94, 47, 254, 36, 45, 447, 10, 202, 134, 0, 824, 176, 396, 9…</span></span>
+<span><span class="co">#&gt; $ E_MINRTY   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 87, 0, 1426, 49, 264, 1850, 146, 476, 518, 37, 2058, 606, 2…</span></span>
+<span><span class="co">#&gt; $ E_LIMENG   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18, 0, 98, 0, 0, 416, 0, 0, 0, 0, 205, 47, 91, 0, 10, 14, 0…</span></span>
+<span><span class="co">#&gt; $ E_MUNIT    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 72, 0, 147, 90, 0, 592, 0, 38, 46, 0, 1119, 158, 1163, 60, …</span></span>
+<span><span class="co">#&gt; $ E_MOBILE   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 13, 0, 37, 0, 0, 0, 232, 174, 0, 841, 98, 100, 231, 8, 0…</span></span>
+<span><span class="co">#&gt; $ E_CROWD    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18, 0, 11, 10, 0, 71, 0, 68, 11, 0, 166, 44, 69, 15, 33, 0,…</span></span>
+<span><span class="co">#&gt; $ E_NOVEH    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 10, 13, 151, 11, 0, 530, 0, 90, 83, 0, 472, 0, 563, 29, 61,…</span></span>
+<span><span class="co">#&gt; $ E_GROUPQ   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0, 34, 39, 0, 3559, 0, 49, 10, 0, 452, 33, 59, 288, 20, …</span></span>
+<span><span class="co">#&gt; $ EP_POV     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 23.0, 6.5, 3.2, 8.8, 6.4, 8.6, 2.6, 7.8, 9.5, 6.3, 8.0, 2.4…</span></span>
+<span><span class="co">#&gt; $ EP_UNEMP   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 6.4, 1.0, 2.9, 4.6, 11.4, 3.6, 6.7, 7.4, 3.8, 0.0, 5.5, 3.3…</span></span>
+<span><span class="co">#&gt; $ EP_PCI     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 24925, 39065, 61534, 39287, 29356, 34252, 41718, 42612, 377…</span></span>
+<span><span class="co">#&gt; $ EP_NOHSDP  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 20.1, 3.9, 3.4, 2.8, 15.7, 14.0, 8.9, 7.0, 6.7, 0.0, 8.4, 3…</span></span>
+<span><span class="co">#&gt; $ EP_AGE65   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.2, 17.5, 16.6, 26.7, 10.4, 20.6, 11.9, 22.3, 15.7, 7.7, 1…</span></span>
+<span><span class="co">#&gt; $ EP_AGE17   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 32.8, 16.5, 27.0, 17.3, 23.3, 14.4, 26.7, 16.3, 19.4, 35.6,…</span></span>
+<span><span class="co">#&gt; $ EP_DISABL  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 28.9, 10.0, 9.0, 11.6, 7.2, 10.3, 12.5, 10.5, 15.3, 25.5, 1…</span></span>
+<span><span class="co">#&gt; $ EP_SNGPNT  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 42.2, 5.6, 4.2, 8.4, 5.1, 5.3, 2.5, 6.3, 4.6, 0.0, 6.2, 8.1…</span></span>
+<span><span class="co">#&gt; $ EP_MINRTY  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 13.0, 0.0, 8.8, 5.9, 10.3, 8.3, 12.1, 6.1, 6.8, 17.8, 6.3, …</span></span>
+<span><span class="co">#&gt; $ EP_LIMENG  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.1, 0.0, 0.6, 0.0, 0.0, 1.9, 0.0, 0.0, 0.0, 0.0, 0.7, 0.8,…</span></span>
+<span><span class="co">#&gt; $ EP_MUNIT   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 22.9, 0.0, 2.3, 4.8, 0.0, 6.4, 0.0, 0.7, 1.4, 0.0, 7.8, 6.6…</span></span>
+<span><span class="co">#&gt; $ EP_MOBILE  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0, 1.4, 0.0, 2.0, 0.0, 0.0, 0.0, 4.5, 5.2, 0.0, 5.9, 4.1,…</span></span>
+<span><span class="co">#&gt; $ EP_CROWD   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 8.1, 0.0, 0.2, 2.3, 0.0, 0.8, 0.0, 2.1, 0.4, 0.0, 1.2, 2.0,…</span></span>
+<span><span class="co">#&gt; $ EP_NOVEH   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 4.5, 1.5, 2.5, 2.6, 0.0, 6.3, 0.0, 2.8, 2.9, 0.0, 3.5, 0.0,…</span></span>
+<span><span class="co">#&gt; $ EP_GROUPQ  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0, 0.0, 0.2, 4.7, 0.0, 16.0, 0.0, 0.6, 0.1, 0.0, 1.4, 0.5…</span></span>
+<span><span class="co">#&gt; $ EPL_POV    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9054, 0.4054, 0.1486, 0.5405, 0.3919, 0.5135, 0.0946, 0.4…</span></span>
+<span><span class="co">#&gt; $ EPL_UNEMP  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6842, 0.1053, 0.1711, 0.4079, 0.9605, 0.2632, 0.7105, 0.8…</span></span>
+<span><span class="co">#&gt; $ EPL_PCI    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.8684, 0.4605, 0.0263, 0.4211, 0.7763, 0.6711, 0.3158, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_NOHSDP <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9211, 0.2500, 0.1842, 0.1447, 0.8553, 0.8026, 0.5921, 0.4…</span></span>
+<span><span class="co">#&gt; $ EPL_AGE65  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0789, 0.5132, 0.4474, 0.9605, 0.1842, 0.7895, 0.2105, 0.8…</span></span>
+<span><span class="co">#&gt; $ EPL_AGE17  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9737, 0.2632, 0.9211, 0.3684, 0.8158, 0.1579, 0.9079, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_DISABL <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.0000, 0.1867, 0.1467, 0.4000, 0.1067, 0.2267, 0.4667, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_SNGPNT <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9865, 0.4324, 0.2838, 0.7027, 0.3649, 0.3919, 0.1216, 0.5…</span></span>
+<span><span class="co">#&gt; $ EPL_MINRTY <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6447, 0.0000, 0.4211, 0.2237, 0.5000, 0.4079, 0.5921, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_LIMENG <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.8289, 0.0000, 0.4342, 0.0000, 0.0000, 0.7500, 0.0000, 0.0…</span></span>
+<span><span class="co">#&gt; $ EPL_MUNIT  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9459, 0.0000, 0.2838, 0.3919, 0.0000, 0.4459, 0.0000, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_MOBILE <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0000, 0.7973, 0.0000, 0.8378, 0.0000, 0.0000, 0.0000, 0.9…</span></span>
+<span><span class="co">#&gt; $ EPL_CROWD  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.0000, 0.0000, 0.2973, 0.8243, 0.0000, 0.4865, 0.0000, 0.7…</span></span>
+<span><span class="co">#&gt; $ EPL_NOVEH  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.4054, 0.1757, 0.2162, 0.2297, 0.0000, 0.5946, 0.0000, 0.2…</span></span>
+<span><span class="co">#&gt; $ EPL_GROUPQ <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0000, 0.0000, 0.2368, 0.8158, 0.0000, 0.9342, 0.0000, 0.4…</span></span>
+<span><span class="co">#&gt; $ SPL_theme1 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.3791, 1.2212, 0.5302, 1.5142, 2.9840, 2.2504, 1.7130, 1.9…</span></span>
+<span><span class="co">#&gt; $ SPL_theme2 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.0391, 1.3955, 1.7990, 2.4316, 1.4716, 1.5660, 1.7067, 1.9…</span></span>
+<span><span class="co">#&gt; $ SPL_theme3 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.4736, 0.0000, 0.8553, 0.2237, 0.5000, 1.1579, 0.5921, 0.2…</span></span>
+<span><span class="co">#&gt; $ SPL_theme4 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.3513, 0.9730, 1.0341, 3.0995, 0.0000, 2.4612, 0.0000, 2.6…</span></span>
+<span><span class="co">#&gt; $ RPL_theme1 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9211, 0.2237, 0.0395, 0.3158, 0.8289, 0.6447, 0.4474, 0.6…</span></span>
+<span><span class="co">#&gt; $ RPL_theme2 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.0000, 0.1711, 0.3421, 0.7237, 0.2105, 0.2632, 0.3158, 0.3…</span></span>
+<span><span class="co">#&gt; $ RPL_theme3 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.8026, 0.0000, 0.4868, 0.1447, 0.2763, 0.5921, 0.3158, 0.1…</span></span>
+<span><span class="co">#&gt; $ RPL_theme4 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.4474, 0.1579, 0.2237, 0.8158, 0.0000, 0.4737, 0.0000, 0.6…</span></span>
+<span><span class="co">#&gt; $ SPL_themes <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 10.2431, 3.5897, 4.2186, 7.2690, 4.9556, 7.4355, 4.0118, 6.…</span></span>
+<span><span class="co">#&gt; $ RPL_themes <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.8553, 0.1184, 0.1579, 0.5263, 0.2237, 0.5526, 0.1447, 0.4…</span></span></code></pre>
+<p>Columns include geographic unit information, individual SVI variables
+(“E_xx” and “EP_xx”), intermediate percentile rankings (“EPL_xx” and
+“SPL_xx”), and the theme-specific and overall SVIs (“RPL_xx”).</p>
 </div>
 <div class="section level2">
 <h2 id="wrapper-and-more-find_svi">Wrapper and more: <code>find_svi()</code><a class="anchor" aria-label="anchor" href="#wrapper-and-more-find_svi"></a>
@@ -277,15 +322,7 @@ calculate SVI for Rhode Island for 2018 in one step:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">onestep_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi.html">find_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="st">"RI"</span>, <span class="st">"zcta"</span><span class="op">)</span></span>
 <span><span class="va">onestep_result</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span></span>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span></span>
 <span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02802     0.921       1          0.803      0.447     0.855   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
@@ -298,9 +335,12 @@ calculate SVI for Rhode Island for 2018 in one step:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02813     0.618       0.382      0.171      0.632     0.460   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02814     0.5         0.487      0.224      0.342     0.382   <span style="text-decoration: underline;">2</span>018 RI   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02815     0.026<span style="text-decoration: underline;">3</span>      0.513      0.342      0         0.078<span style="text-decoration: underline;">9</span>  <span style="text-decoration: underline;">2</span>018 RI</span></span></code></pre>
-<p>This is a glimpse of the first 10 rows of the summarised SVI table
-(with only GEOID and SVIs), with additional columns indicating the year
-and state information.</p>
+<p>This is a glimpse of the first 10 rows of the summarised SVI table,
+with additional columns indicating the year and state information. At
+default, the summarised table only keeps the GEOID and SVIs. Set
+<code>full.table = TRUE</code> for a more complete SVI table with all
+the individual SVI variables from census data (like the result from
+<code><a href="../reference/get_svi.html">get_svi()</a></code> shown in the previous section).</p>
 </div>
 <div class="section level4">
 <h4 id="multiple-year-state-entries">Multiple year-state entries<a class="anchor" aria-label="anchor" href="#multiple-year-state-entries"></a>
@@ -314,26 +354,32 @@ and Pennsylvania for 2017 and 2018, respectively:</p>
 <span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">2018</span><span class="op">)</span>,</span>
 <span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NJ"</span>, <span class="st">"PA"</span><span class="op">)</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
-<span><span class="op">)</span> </span></code></pre></div>
+<span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">summarise_results</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">state</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   year, state [2]</span></span></span>
 <span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 34001       0.95       0.8        0.65       1          0.95  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 34003       0.2        0.3        0.55       0.45       0.25  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 34005       0.3        0.5        0.35       0.4        0.3   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 34007       0.7        0.9        0.55       0.6        0.75  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 34009       0.65       0.6        0.1        0.55       0.45  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 34011       1          0.95       0.75       0.95       1     <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 34013       0.9        0.75       0.85       0.85       0.9   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 34015       0.35       0.7        0.15       0.15       0.35  <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 34017       0.75       0          1          0.75       0.7   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 34019       0          0.05       0.05       0.1        0     <span style="text-decoration: underline;">2</span>017 NJ</span></span></code></pre>
-<p>As a result, we have (first 10 rows of) a table summarising the
-county-level SVI of New Jersey for 2017 and that of Pennsylvania for
-2018, after retrieving census data for these two year-state pairs.
-Again, here data retrieval and SVI calculation (percentile ranking) are
-performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are
-combined into a summarised table.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 34001      0.95      0.8        0.65        1          0.95   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 34003      0.2       0.3        0.55        0.45       0.25   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 34005      0.3       0.5        0.35        0.4        0.3    <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 34007      0.7       0.9        0.55        0.6        0.75   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 34009      0.65      0.6        0.1         0.55       0.45   <span style="text-decoration: underline;">2</span>017 NJ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 42001      0.212     0.242      0.697       0.227      0.182  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 42003      0.136     0.075<span style="text-decoration: underline;">8</span>     0.742       0.576      0.212  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 42005      0.621     0.530      0.015<span style="text-decoration: underline;">2</span>      0.167      0.227  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 42007      0.182     0.409      0.530       0.348      0.197  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 42009      0.712     0.606      0.075<span style="text-decoration: underline;">8</span>      0.288      0.394  <span style="text-decoration: underline;">2</span>018 PA</span></span></code></pre>
+<p>As a result, we have a table summarising the county-level SVI of New
+Jersey for 2017 and that of Pennsylvania for 2018, after retrieving
+census data for these two year-state pairs (first 5 rows of SVI results
+for each pair are shown above). Again, here data retrieval and SVI
+calculation (percentile ranking) are performed separately for 2017-NJ
+and 2018-PA, and the resulting SVIs are combined into a summarised
+table.</p>
 <p>As other R functions that accepts vectors in their arguments, another
 way to supply <code>year</code> and <code>state</code> pairs is to
 extract columns from a table. Suppose we have a table called
@@ -354,9 +400,38 @@ arguments:</p>
 <span>  year <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">year</span>,</span>
 <span>  state <span class="op">=</span> <span class="va">info_table</span><span class="op">$</span><span class="va">state</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>This will likely make things easier especially for a long list of
-year-state combinations.</p>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">all_results</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">state</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 18 × 8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   year, state [6]</span></span></span>
+<span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes  year state</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 25001      0.231     0.462      0.076<span style="text-decoration: underline;">9</span>     0           0      <span style="text-decoration: underline;">2</span>013 MA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 25003      0.769     0.769      0.308      0.692       0.692  <span style="text-decoration: underline;">2</span>013 MA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 25005      0.923     0.923      0.615      0.538       0.846  <span style="text-decoration: underline;">2</span>013 MA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 12001      0.333     0          0.485      0.727       0.242  <span style="text-decoration: underline;">2</span>014 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 12003      0.485     0.803      0.060<span style="text-decoration: underline;">6</span>     0.424       0.454  <span style="text-decoration: underline;">2</span>014 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 12005      0.242     0.652      0.197      0.394       0.288  <span style="text-decoration: underline;">2</span>014 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 04001      1         0.929      0.857      0.714       1      <span style="text-decoration: underline;">2</span>017 AZ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 04003      0.214     0.714      0.571      0.429       0.357  <span style="text-decoration: underline;">2</span>017 AZ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 04005      0.357     0          0.214      0.857       0.286  <span style="text-decoration: underline;">2</span>017 AZ   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 12001      0.439     0          0.606      0.636       0.242  <span style="text-decoration: underline;">2</span>018 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 12003      0.485     0.894      0.075<span style="text-decoration: underline;">8</span>     0.439       0.439  <span style="text-decoration: underline;">2</span>018 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 12005      0.318     0.803      0.318      0.5         0.470  <span style="text-decoration: underline;">2</span>018 FL   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 42001      0.212     0.242      0.697      0.227       0.182  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 42003      0.136     0.075<span style="text-decoration: underline;">8</span>     0.742      0.576       0.212  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 42005      0.621     0.530      0.015<span style="text-decoration: underline;">2</span>     0.167       0.227  <span style="text-decoration: underline;">2</span>018 PA   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 21001      0.580     0.109      0.538      0.689       0.445  <span style="text-decoration: underline;">2</span>020 KY   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 21003      0.664     0.782      0.277      0.353       0.555  <span style="text-decoration: underline;">2</span>020 KY   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> 21005      0.235     0.622      0.487      0.008<span style="text-decoration: underline;">4</span>      0.118  <span style="text-decoration: underline;">2</span>020 KY</span></span></code></pre>
+<p>Here, only showing first 3 rows of results for each year-state
+combination, what we’re actually getting is a table with SVIs for all
+the counties in the 6 year-state pairs from the columns of
+<code>info_table</code>. This will likely make things easier especially
+there’s a long list of year-state combinations to process.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
