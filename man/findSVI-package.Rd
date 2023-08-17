@@ -4,11 +4,11 @@
 \name{findSVI-package}
 \alias{findSVI}
 \alias{findSVI-package}
-\title{findSVI: Calculate CDC/ATSDR Social Vulnerability Index}
+\title{findSVI: Calculate Social Vulnerability Index for Communities}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Retrieve variables from US census data and calculate SVI in a given geographic area based on CDC/ATSDR SVI documentation.
+Developed by CDC/ATSDR (Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry), Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by taking into account socioeconomic and demographic factors. Provided with year(s), region(s) and a geographic level of interest, 'findSVI' retrieves required variables from US census data and calculates SVI for communities in the specified area based on CDC/ATSDR SVI documentation. Reference for the calculation methods: Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B (2011) \doi{10.2202/1547-7355.1792}.
 }
 \seealso{
 Useful links:
@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Heli Xu \email{xuheli91@gmail.com}
+\strong{Maintainer}: Heli Xu \email{xuheli91@gmail.com} (\href{https://orcid.org/0000-0002-9792-2727}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}
