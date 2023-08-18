@@ -52,30 +52,20 @@ set up using \code{\link[tidycensus:census_api_key]{tidycensus::census_api_key()
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Census API key required
-# For one year-state entry (all tracts of PA in 2019)
+# For one year-state entry (all counties of AZ in 2019)
 find_svi(
       year = 2019,
-      state = "PA",
-      geography = "tract"
+      state = "AZ",
+      geography = "county"
    )
 
 
-# For multiple year-state entried (all ZCTAs of RI in 2017 and PA in 2018)
+# For multiple year-state entries (all ZCTAs of DE in 2017 and DC in 2018)
 find_svi(
       year = c(2017, 2018),
-      state = c("RI", "PA"),
+      state = c("DE", "DC"),
       geography = "zcta"
    )
 
-# Extract year-state information from a table
-year <- c(2015, 2016, 2020, 2018)
-state <- c("AZ", "AZ", "PA", "RI")
-info <- data.frame(year, state)
-
-find_svi(
-    year = info$year,
-    state = info$state,
-    geography = "county"
-   )
 \dontshow{\}) # examplesIf}
 }
