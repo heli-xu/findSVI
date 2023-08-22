@@ -12,3 +12,4 @@
 ^xtra$
 ^vignettes/articles$
 ^cran-comments\.md$
+^revdep$
