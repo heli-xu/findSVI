@@ -83,7 +83,7 @@ get_svi <- function(year, data){
     purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr){
       data_tmp %>%
         dplyr::transmute(
-          !!tidyselect::all_of(var_0_name) := eval(str2lang(var_0_expr))
+          {{var_0_name}} := eval(str2lang({{var_0_expr}}))
         )
     }) %>%
     dplyr::bind_cols(data_tmp, .)
@@ -92,7 +92,7 @@ get_svi <- function(year, data){
     purrr::map2_dfc(E_var_name, E_var_expr, function(E_var_name, E_var_expr){
       svi0 %>%
         dplyr::transmute(
-          !!tidyselect::all_of(E_var_name) := eval(str2lang(E_var_expr))
+          {{E_var_name}} := eval(str2lang({{E_var_expr}}))
         )
     }) %>%
     dplyr::bind_cols(svi0, .)
@@ -102,7 +102,7 @@ get_svi <- function(year, data){
     purrr::map2(EP_var_name, EP_var_expr, function(EP_var_name, EP_var_expr){
       svi_e %>%
         dplyr::transmute(
-          !!tidyselect::all_of(EP_var_name) := eval(str2lang(EP_var_expr))
+          {{EP_var_name}} := eval(str2lang({{EP_var_expr}}))
         )
     }) %>%
     dplyr::bind_cols(svi_e, .) %>%
@@ -124,7 +124,7 @@ get_svi <- function(year, data){
       values_to = "value") %>%
     tidyr::drop_na("value") %>%  # in case there's *some* variables missing in some tracts
     dplyr::group_by(.data$svi_var) %>%
-    dplyr::mutate(rank =  rank("value", ties.method = "min")) %>%
+    dplyr::mutate(rank =  rank(.data$value, ties.method = "min")) %>%
     #check out count() "wt" arg, if NULL, count rows
     dplyr::add_count(.data$svi_var) %>%
     dplyr::mutate(EPL_var = dplyr::case_when(
@@ -155,7 +155,7 @@ get_svi <- function(year, data){
     dplyr::ungroup() %>%
     #RPL_
     dplyr::group_by(.data$theme) %>%
-    dplyr::mutate(rank_theme = rank(SPL_theme, ties.method = "min")) %>%
+    dplyr::mutate(rank_theme = rank(.data$SPL_theme, ties.method = "min")) %>%
     dplyr::add_count(.data$theme) %>%  #rows per group, count the group_by param
     dplyr::mutate(RPL_theme = (.data$rank_theme-1)/(.data$n-1),
       RPL_theme = round(.data$RPL_theme, 4)) %>%
