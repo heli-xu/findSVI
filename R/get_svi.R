@@ -122,9 +122,9 @@ get_svi <- function(year, data){
     tidyr::pivot_longer(!c("GEOID", "NAME"),   #all but GEOID and NAME - no need to know total columns
       names_to = "svi_var",
       values_to = "value") %>%
-    tidyr::drop_na(.data$value) %>%  # in case there's *some* variables missing in some tracts
+    tidyr::drop_na("value") %>%  # in case there's *some* variables missing in some tracts
     dplyr::group_by(.data$svi_var) %>%
-    dplyr::mutate(rank =  rank(.data$value, ties.method = "min")) %>%
+    dplyr::mutate(rank =  rank("value", ties.method = "min")) %>%
     #check out count() "wt" arg, if NULL, count rows
     dplyr::add_count(.data$svi_var) %>%
     dplyr::mutate(EPL_var = dplyr::case_when(
