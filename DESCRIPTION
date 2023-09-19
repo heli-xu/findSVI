@@ -1,8 +1,11 @@
 Package: findSVI
 Title: Calculate Social Vulnerability Index for Communities
 Version: 0.1.2.9000
-Authors@R: person("Heli", "Xu", email = "xuheli91@gmail.com",
-  role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-9792-2727"))
+Authors@R: c(
+    person("Heli", "Xu", email = "xuheli91@gmail.com",
+    role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-9792-2727")),
+    person("Ran", "Li", email = "rl627@drexel.edu",
+    role = "ctb", comment = c(ORCID = "0000-0002-4699-4755")))
 Description: Developed by CDC/ATSDR (Centers for Disease Control and Prevention/
     Agency for Toxic Substances and Disease Registry), 
     Social Vulnerability Index (SVI) serves as a tool to assess the resilience 
