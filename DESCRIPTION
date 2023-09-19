@@ -45,6 +45,7 @@ Suggests:
     glue,
     sf,
     ggplot2,
-    tmap
+    tmap,
+    reactable
 Config/testthat/edition: 3
 VignetteBuilder: knitr
