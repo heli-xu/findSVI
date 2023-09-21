@@ -12,17 +12,6 @@ knitr::opts_chunk$set(
 
 This is a quick reference and validation of our functions to calculate SVI from Census data, where we'll include the tables for retrieving census variables and normalizing data, as well as a comparison between findSVI calculations and [CDC/ATSDR SVI data](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 
-## SVI variables and corresponding Census variables
-
-For each year between 2012-2021, we include a dataset in the package containing the SVI variable names, their theme group and corresponding Census variable(s) and calculation formula. The information is extracted from [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) for the years available, and modified for the years that the CDC/ATSDR SVI database does not cover (if Census variable names are different, otherwise information of the adjacent year is used). These datasets are documented in `?variable_calculation`. 
-
-Here we show all the datasets as one table for easier search and reference, with the columns represent:
-- year: The year that the other columns of data correspond to.
-- SVI_var: SVI variable names ("E_xx" for counts, "EP_xx" for normalized values).
-- Theme: SVI variables are categorized into four themes/domains: 1) Socioeconomic Status, 2) Household Characteristics, 3) Racial & Ethnic Minority Status and 4) Housing Type/Transportation. Theme 0 is used for 3 variables representing total counts, while theme 5 is used for adjunct variables (not included in calculation). 
-- Census_var_calculation: Census variable name(s) corresponding to the SVI variable, and/or the calculation using SVI/census variables.
-
-
 ```{r setup, warning=FALSE, message=FALSE}
 library(findSVI)
 library(dplyr)
@@ -31,8 +20,12 @@ library(stringr)
 library(purrr)
 library(ggplot2)
 ```
-```{r}
 
+## SVI variables and Census variables
+
+For each year between 2012-2021, we include a dataset in the package containing the SVI variable names, their theme group and corresponding Census variable(s) and calculation formula. The information is extracted from [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) for the years available, and modified for the years that the CDC/ATSDR SVI database does not cover (if Census variable names are different, otherwise information of the adjacent year is used). These datasets are documented in `?variable_calculation`.
+
+```{r}
 datasets <- list( 
   variable_e_ep_calculation_2012,
   variable_e_ep_calculation_2013,
@@ -63,9 +56,17 @@ all_datasets <- datasets %>%
 
 ```
 
-```{r}
-library(reactable)
+Here we show all the datasets as one table for easier search and reference, with the columns represent:
 
+-   **year**: The year that the other columns of data correspond to.
+
+-   **SVI_var**: SVI variable names ("E_xx" for counts, "EP_xx" for normalized values).
+
+-   **Theme**: SVI variables are categorized into four themes/domains: 1) Socioeconomic Status, 2) Household Characteristics, 3) Racial & Ethnic Minority Status and 4) Housing Type/Transportation. Theme 0 is used for 3 variables representing total counts, while theme 5 is used for adjunct variables (not included in calculation).
+
+-   **Census_var**: Census variable name(s) corresponding to the SVI variable, and/or the calculation using SVI/census variables.
+
+```{r}
 reactable(
   all_datasets,
   filterable = TRUE,
@@ -79,9 +80,10 @@ reactable(
   defaultPageSize = 10
 )
 ```
+
 ## Correlation between CDC/ATSDR and findSVI results
 
-As part of the automatic unit testing in the package, county-level SVI calculations for Pennsylvania for 2014, 2016, 2018 and 2020 are compared with the SVI results downloaded from CDC/ATSDR SVI database and the tests are considered passed when correlation coefficient is higher than 0.9995. 
+As part of the automatic unit testing in the package, county-level SVI calculations for Pennsylvania for 2014, 2016, 2018 and 2020 are compared with the SVI results downloaded from CDC/ATSDR SVI database and the tests are considered passed when correlation coefficient is higher than 0.9995.
 
 For example, comparing two versions of SVIs for 2020:
 
@@ -120,7 +122,7 @@ join_RPL %>%
   ggplot(aes(x = cdc_RPL_themes, y = RPL_themes)) +
   geom_point(color = "#004C54")+
   geom_abline(slope = 1, intercept = 0)+
-  labs(title = "CDC vs. findSVI CTY-level SVI for PA in 2020",
+  labs(title = "CDC vs. findSVI CTY-level SVI for Pennsylvania in 2020",
     subtitle = paste0("Comparison of overall percentile ranking (RPLs), correlation coefficient = ", coeff1),
     y = "findSVI",
     x = "CDC")+
@@ -128,8 +130,7 @@ join_RPL %>%
 
 ```
 
-
-Similarly, we could visualize the two versions of census tract-level SVIs for Delaware for 2020. (For considerations of dataset size in the package, census tract-level SVI comparisons are not included in the unit testing.) 
+Similarly, we could visualize the two versions of census tract-level SVIs for Delaware for 2020. (For considerations of datasets size in the package, census tract-level SVI comparisons are not included in the automated testing.)
 
 ```{r}
 load(system.file("extdata","cdc_de_ct_svi2020.rda",package = "findSVI"))
@@ -171,4 +172,3 @@ join_RPL2 %>%
 
 
 ```
-
