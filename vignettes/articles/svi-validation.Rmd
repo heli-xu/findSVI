@@ -15,6 +15,7 @@ This is a quick reference and validation of our functions to calculate SVI from 
 ```{r setup, warning=FALSE, message=FALSE}
 library(findSVI)
 library(dplyr)
+library(tidyr)
 library(reactable)
 library(stringr)
 library(purrr)
