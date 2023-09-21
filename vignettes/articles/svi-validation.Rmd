@@ -99,22 +99,22 @@ pa_cty_raw <- load(system.file("testdata","pa_cty_raw2020.rda",package = "findSV
 output <- get_svi(2020, pa_cty_raw)
 
 join_RPL <- cdc_pa_cty_svi2020 %>%
-    dplyr::select(GEOID,
+    select(GEOID,
       cdc_RPL_themes = RPL_THEMES,
       cdc_RPL_theme1 = RPL_THEME1,
       cdc_RPL_theme2 = RPL_THEME2,
       cdc_RPL_theme3 = RPL_THEME3,
       cdc_RPL_theme4 = RPL_THEME4) %>%
-    dplyr::mutate(GEOID = paste(GEOID)) %>%
-    dplyr::left_join(output %>%
-        dplyr::select(GEOID,
+    mutate(GEOID = paste(GEOID)) %>%
+    left_join(output %>%
+        select(GEOID,
           RPL_themes,
           RPL_theme1,
           RPL_theme2,
           RPL_theme3,
           RPL_theme4)) %>%
-    tidyr::drop_na() %>%   ## remove NA rows
-    dplyr::filter_all(dplyr::all_vars(. >= 0)) #-999 in cdc data
+    drop_na() %>%   ## remove NA rows
+    filter_all(all_vars(. >= 0)) #-999 in cdc data
 
 coeff1 <- cor(join_RPL$cdc_RPL_themes, join_RPL$RPL_themes)
 
@@ -141,22 +141,22 @@ de_ct_raw <- load(system.file("extdata","de_ct_raw2020.rda",package = "findSVI")
 output2 <- get_svi(2020, de_ct_raw)
 
 join_RPL2 <- cdc_de_ct_svi2020 %>%
-    dplyr::select(GEOID,
+    select(GEOID,
       cdc_RPL_themes = RPL_THEMES,
       cdc_RPL_theme1 = RPL_THEME1,
       cdc_RPL_theme2 = RPL_THEME2,
       cdc_RPL_theme3 = RPL_THEME3,
       cdc_RPL_theme4 = RPL_THEME4) %>%
-    dplyr::mutate(GEOID = paste(GEOID)) %>%
-    dplyr::left_join(output2 %>%
-        dplyr::select(GEOID,
+    mutate(GEOID = paste(GEOID)) %>%
+    left_join(output2 %>%
+        select(GEOID,
           RPL_themes,
           RPL_theme1,
           RPL_theme2,
           RPL_theme3,
           RPL_theme4)) %>%
-    tidyr::drop_na() %>%   ## remove NA rows
-    dplyr::filter_all(dplyr::all_vars(. >= 0)) #-999 in cdc data
+    drop_na() %>%   ## remove NA rows
+    filter_all(all_vars(. >= 0)) #-999 in cdc data
 
 coeff2 <- round(cor(join_RPL2$cdc_RPL_themes, join_RPL2$RPL_themes),6)
 
