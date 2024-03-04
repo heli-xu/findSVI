@@ -3,7 +3,7 @@ title: 'findSVI: an R package to calculate the Social Vulnerability Index at mul
 tags:
   - R
   - social vulnerability
-  - Census data
+  - census data
   - community resilience
   - spatial inequity
 authors:
