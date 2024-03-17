@@ -18,9 +18,9 @@ authors:
     orcid: 0000-0002-9868-7773
     affiliation: "1, 2"
 affiliations:
- - name: Urban Health Collaborative, Drexel Dornsife School of Public Health, Philadelphia, PA
+ - name: Urban Health Collaborative, Drexel Dornsife School of Public Health, Philadelphia, PA, United States of America
    index: 1
- - name: Department of Epidemiology and Biostatistics, Drexel Dornsife School of Public Health, Philadelphia, PA
+ - name: Department of Epidemiology and Biostatistics, Drexel Dornsife School of Public Health, Philadelphia, PA, United States of America
    index: 2
 date: 3 March 2024 
 bibliography: paper.bib
@@ -30,7 +30,7 @@ bibliography: paper.bib
 
 The Social Vulnerability Index (SVI) was created by the Centers for Disease Control and Prevention and Agency for Toxic Substances and Disease Registry (CDC/ATSDR) as a tool to assess the resilience of communities in preparation for public health crisis [@flanagan2011social]. In the event of public health emergencies, communities with higher SVI are considered more vulnerable, i.e., more likely to suffer serious consequences such as mortality/physical injuries, displacement and economic loss. The Geospatial Research, Analysis, and Services Program (GRASP) maintains the SVI database and updates the SVI every two years [@centers2021cdc].
 
-The SVI uses 16 variables from the American Community Survey (ACS) [@flanagan2011social].These 16 variables are grouped into 4 themes/domains: Socioeconomic Status, Household Characteristics, Racial & Ethnic Minority Status and Housing Type & Transportation. For each variable, percentile ranks are calculated and aggregated (summed) for each theme and all themes for a geographic level of interest, which are used to generate another set of percentile ranks for a geographic unit as the theme-specific and overall SVIs. The CDC/ATSDR provides the SVI at the census tract and county levels, with percentiles calculated with respect to each state and the entire country.    
+The SVI uses 16 variables from the American Community Survey (ACS) [@flanagan2011social].These 16 variables are grouped into 4 themes/domains: Socioeconomic Status, Household Characteristics, Racial & Ethnic Minority Status and Housing Type & Transportation. For each variable, percentile ranks are calculated and aggregated (summed) for each theme and all themes for a geographic level of interest, which are used to generate another set of percentile ranks for a geographic unit as the theme-specific and overall SVIs. The CDC/ATSDR provides the SVI at the census tract and county levels, with percentiles calculated with respect to each state and the entire United States of America.    
 
 The main aim of the findSVI R package is to extend the application of CDC/ATSDR SVI methodology to more geographic levels and to utilize more up-to-date ACS data. Leveraging the tidycensus R package [@walker2022tidycensus], findSVI allows data retrieval from American Community Survey for any year from 2012 to 2021, with more options for geographic levels (e.g., zip code tabulation areas or ZCTAs, places) and regions of reference for percentile calculations (e.g., county-specific, multiple states). In addition, findSVI provides an efficient SVI analysis workflow for requests involving multiple year-state pairs that need to be ranked separately. Apart from returning the result as an SVI data frame, findSVI also supports output as an SVI table with simple feature geometry for spatial analysis in R and other Geographic Information Systems tools. 
 
