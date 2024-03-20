@@ -93,10 +93,12 @@ onestep_result %>% head(10)
 ```
 
 ```{r RI_result_RPL, echo=FALSE}
-ri_zcta_svi2018 %>% 
-  select(GEOID, contains("RPL_theme")) %>% 
-  mutate(year = 2018,
-    state = "RI") %>% 
+ri_zcta_svi2018 %>%
+  select(GEOID, contains("RPL_theme")) %>%
+  mutate(
+    year = 2018,
+    state = "RI"
+  ) %>%
   head(10)
 ```
 This is a glimpse of the first 10 rows of the summarised SVI table, with additional columns indicating the year and state information. At default, the summarised table only keeps the GEOID and SVIs. Set `full.table = TRUE` for a more complete SVI table with all the individual SVI variables from census data (like the result from `get_svi()` shown in the previous section).   
@@ -108,23 +110,23 @@ summarise_results <- find_svi(
   year = c(2017, 2018),
   state = c("NJ", "PA"),
   geography = "county"
-) 
+)
 
-summarise_results %>% 
-  group_by(year, state) %>% 
+summarise_results %>%
+  group_by(year, state) %>%
   slice_head(n = 5)
 ```
 ```{r summarise_results_RPL, echo=FALSE}
 load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
-summarise_results %>% 
-  group_by(year, state) %>% 
+summarise_results %>%
+  group_by(year, state) %>%
   slice_head(n = 5)
 ```
 As a result, we have a table summarising the county-level SVI of New Jersey for 2017 and that of Pennsylvania for 2018, after retrieving census data for these two year-state pairs (first 5 rows of SVI results for each pair are shown above). Again, here data retrieval and SVI calculation (percentile ranking) are performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are combined into a summarised table.
 
 As other R functions that accepts vectors in their arguments, another way to supply `year` and `state` pairs is to extract columns from a table. Suppose we have a table called `info_table` containing the year-state information we'd like to include in the analysis:
 ```{r info_table, echo=FALSE}
-year <- c(2017,2018, 2014, 2018, 2013, 2020)
+year <- c(2017, 2018, 2014, 2018, 2013, 2020)
 state <- c("AZ", "FL", "FL", "PA", "MA", "KY")
 info_table <- data.frame(year, state)
 info_table
@@ -138,8 +140,8 @@ all_results <- find_svi(
   geography = "county"
 )
 
-all_results %>% 
-  group_by(year, state) %>% 
+all_results %>%
+  group_by(year, state) %>%
   slice_head(n = 3)
 ```
 ```{r, echo=FALSE}

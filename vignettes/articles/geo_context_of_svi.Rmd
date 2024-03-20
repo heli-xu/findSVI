@@ -32,8 +32,8 @@ library(tmap)
 Although we could use findSVI for nationwide- and statewide-SVI, it may be more convenient to download the data from [CDC/ATSDR Social Vulnerability Index (SVI) database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html), especially for nationwide census tract-level data with geometry.
 
 ```{r, eval=FALSE}
-#source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
-#choose map data (recently changed to ESTI geodatabase), unzip files
+# source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
+# choose map data (recently changed to ESTI geodatabase), unzip files
 
 # nationwide
 us_svi <- st_read("../../SVI2020_US_tract.gdb/")
@@ -43,13 +43,12 @@ pa_svi <- st_read("../../SVI2020_PENNSYLVANIA_tract.gdb/")
 # old format: pa_svi <- st_read("pa_ct_2020_shapefile/SVI2020_PENNSYLVANIA_tract.shp")
 
 # alternative: findSVI
-# us_data <- get_census_data(2020, 
+# us_data <- get_census_data(2020,
 #   state = "US", #"PA" for statewide data
-#   geography = "tract", 
+#   geography = "tract",
 #   geometry = TRUE)
-# 
+#
 # us_svi <- get_svi(2020, us_data)
-
 ```
 
 After obtaining the nationwide and statewide(Pennsylvania) SVI by either findSVI or CDC's database, we could filter the result by the county and only keep the data for Philadelphia.
@@ -64,13 +63,17 @@ load(system.file("extdata", "phl_ct_svi_2020_geo.rda", package = "findSVI"))
 # nationwide
 us_svi_phl <- us_svi %>%
   select(1:7, contains("RPL_THEME")) %>%
-  rename(GEOID = FIPS,
-    #format switched to ESRI gdb, col name change -7/28/23
-    geometry = Shape) %>%
-    #CDC use -999 as NAs
-  filter(RPL_THEMES >= 0,
+  rename(
+    GEOID = FIPS,
+    # format switched to ESRI gdb, col name change -7/28/23
+    geometry = Shape
+  ) %>%
+  # CDC use -999 as NAs
+  filter(
+    RPL_THEMES >= 0,
     ST_ABBR == "PA",
-    COUNTY == "Philadelphia")
+    COUNTY == "Philadelphia"
+  )
 
 glimpse(us_svi_phl)
 ```
@@ -83,8 +86,10 @@ glimpse(us_svi_phl)
 pa_svi_phl <- pa_svi %>%
   select(1:7, contains("RPL_THEME")) %>%
   rename(GEOID = FIPS) %>%
-  filter(RPL_THEMES>= 0,
-    COUNTY == "Philadelphia")
+  filter(
+    RPL_THEMES >= 0,
+    COUNTY == "Philadelphia"
+  )
 
 glimpse(pa_svi_phl)
 ```
@@ -98,14 +103,14 @@ For retrieving data and calculation at any geographic level below state, we need
 
 ```{r, eval=FALSE}
 phl_ct_2020_data <- get_census_data(
-  2020, 
+  2020,
   state = "PA",
   county = "Philadelphia",
   geography = "tract",
   geometry = TRUE
 )
 
-phl_ct_svi_2020 <- get_svi(2020, phl_ct_2020_data)%>%
+phl_ct_svi_2020 <- get_svi(2020, phl_ct_2020_data) %>%
   select(GEOID, contains("RPL_theme")) %>%
   drop_na()
 ```
@@ -116,7 +121,7 @@ glimpse(phl_ct_svi_2020)
 # matching id from nation/statewide SVI for mapping
 match_id <- pa_svi_phl$GEOID
 
-phl_svi <- phl_ct_svi_2020 %>% 
+phl_svi <- phl_ct_svi_2020 %>%
   filter(GEOID %in% match_id)
 ```
 # 3 angles of a story
@@ -127,51 +132,60 @@ For visualization, we'll create maps on the same color scale (using [tmap](https
 nation <- us_svi_phl %>%
   select(GEOID, geometry, RPL_THEMES) %>%
   drop_na() %>%
-  #using NAD83 in tmap
-  tm_shape(projection = sf::st_crs(26915))+
+  # using NAD83 in tmap
+  tm_shape(projection = sf::st_crs(26915)) +
   tm_polygons("RPL_THEMES",
-    palette = c("orange","navy"),
+    palette = c("orange", "navy"),
     style = "cont",
     breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "Nationwide SVI: \nPhiladelphia subset",
+    title = "SVI (by tract)"
+  ) +
+  tm_layout(
+    title = "Nationwide SVI: \nPhiladelphia subset",
     title.size = 1,
     title.position = c("left", "TOP"),
     legend.position = c("RIGHT", "bottom"),
     legend.title.size = 0.9,
-    legend.width = 2)
+    legend.width = 2
+  )
 
 state <- pa_svi_phl %>%
   select(GEOID, geometry, RPL_THEMES) %>%
   drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
+  tm_shape(projection = sf::st_crs(26915)) +
   tm_polygons("RPL_THEMES",
-    palette = c("orange","navy"),
+    palette = c("orange", "navy"),
     style = "cont",
     breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "Statewide SVI: \nPhiladelphia subset",
+    title = "SVI (by tract)"
+  ) +
+  tm_layout(
+    title = "Statewide SVI: \nPhiladelphia subset",
     title.size = 1,
     title.position = c("left", "TOP"),
     legend.position = c("RIGHT", "bottom"),
     legend.title.size = 0.9,
-    legend.width = 2)
+    legend.width = 2
+  )
 
 county <- phl_svi %>%
   select(GEOID, geometry, RPL_themes) %>%
   drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
+  tm_shape(projection = sf::st_crs(26915)) +
   tm_polygons("RPL_themes",
-    palette = c("orange","navy"),
+    palette = c("orange", "navy"),
     style = "cont",
     breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "County-specific SVI: \nPhiladelphia",
+    title = "SVI (by tract)"
+  ) +
+  tm_layout(
+    title = "County-specific SVI: \nPhiladelphia",
     title.size = 1,
     title.position = c("left", "TOP"),
     legend.position = c("RIGHT", "bottom"),
     legend.title.size = 0.9,
-    legend.width = 2)
+    legend.width = 2
+  )
 
 plots <- list(nation, state, county)
 
@@ -182,7 +196,6 @@ tmap_arrange(
   nrow = 1,
   width = c(0.34, 0.33, 0.33)
 )
-
 ```
 
 As we can see, while the SVI values (actual color) vary among the three maps depending on how the percentile ranking is performed to obtain the SVI, they generally show the same pattern (which tracts are darker/lighter in each map). 

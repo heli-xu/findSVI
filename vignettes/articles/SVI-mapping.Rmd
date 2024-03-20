@@ -23,18 +23,18 @@ library(leaflet)
 library(tidyr)
 library(glue)
 library(htmltools)
-library(sf) 
- 
+library(sf)
 ```
 
 # Get census data with geometry
 First, we are using `get_census_data()` to obtain ZCTA-level data with simple feature geometry for PA for 2020 (Census API required).
 ```{r, eval=FALSE}
 pa_zcta_2020_geo_data <- get_census_data(
-  year = 2020, 
-  state = "PA", 
-  geography = "zcta", 
-  geometry = TRUE)
+  year = 2020,
+  state = "PA",
+  geography = "zcta",
+  geometry = TRUE
+)
 ```
 
 Here, we are showing the first 10 rows of the data. With the `geometry = TRUE`, we'll get a tibble with an additional column containing simple feature geometry (`MULTIPOLYGON`). 
@@ -50,10 +50,9 @@ After getting the data ready, we can supply this tibble with simple feature geom
 
 ```{r, eval=FALSE}
 pa_zcta_2020_geo_svi <- get_svi(
-  year = 2020, 
+  year = 2020,
   data = pa_zcta_2020_geo_data
-  )
-
+)
 ```
 
 ```{r load_geo_svi, echo=FALSE}
@@ -66,9 +65,9 @@ pa_zcta_2020_geo_svi %>% glimpse()
 
 For visualization purposes, we'll simplify the table and keep only the GEOID, geometry and SVIs.
 ```{r geo_svi_short}
-svi <- pa_zcta_2020_geo_svi %>% 
+svi <- pa_zcta_2020_geo_svi %>%
   select(GEOID, geometry, contains("RPL_theme"))
-svi %>% head(10) 
+svi %>% head(10)
 ```
 
 # Interactive maps for overall SVI
@@ -78,7 +77,7 @@ With the simple feature geometry, we can visualize SVI patterns and perform spat
 First we'll examine the missing value. 
 
 ```{r}
-missing <- svi %>% filter(is.na(RPL_theme1)) 
+missing <- svi %>% filter(is.na(RPL_theme1))
 missing %>% glimpse()
 ```
 
@@ -89,49 +88,52 @@ To set up the interactive map for overall SVI, `leaflet()` does most of the heav
 ```{r}
 svi_clean <- svi %>% drop_na()
 
-#above shows CRS NAD83, change to 4326 (WGS84) to avoid warning as below:
-#Warning: sf layer has inconsistent datum (+proj=longlat +datum=NAD83 +no_defs).
-#Need '+proj=longlat +datum=WGS84'
+# above shows CRS NAD83, change to 4326 (WGS84) to avoid warning as below:
+# Warning: sf layer has inconsistent datum (+proj=longlat +datum=NAD83 +no_defs).
+# Need '+proj=longlat +datum=WGS84'
 st_crs(svi_clean) <- 4326
 
-#set color palette
+# set color palette
 pal <- colorNumeric(
-  palette = c("orange","navy"),
+  palette = c("orange", "navy"),
   domain = svi_clean$RPL_themes
 )
 
-#set label
+# set label
 zcta_label <- glue("<h3 style='margin: 0px'>{svi_clean$GEOID}</h3>
                     overall SVI: {svi_clean$RPL_themes}") %>%
-  map(~HTML(.x))
+  map(~ HTML(.x))
 
-leaflet(svi_clean) %>% 
-  addProviderTiles(providers$CartoDB.Voyager) %>% 
-  addPolygons(color = "white", 
-              weight = 0.5,
-              smoothFactor = 0.5,
-              opacity = 1,
-              fillColor = ~pal(RPL_themes),
-              fillOpacity = 0.8,
-              highlightOptions = highlightOptions(
-                weight = 5,
-                color = "white",
-                fillOpacity = 0.8,
-                bringToFront = TRUE),
-              label = zcta_label,
-              labelOptions = labelOptions(
-                style = list(
-                  "font-family" = "Fira Sans, sans-serif",
-                  "font-size" = "1.2em"
-                ))
-              ) %>% 
+leaflet(svi_clean) %>%
+  addProviderTiles(providers$CartoDB.Voyager) %>%
+  addPolygons(
+    color = "white",
+    weight = 0.5,
+    smoothFactor = 0.5,
+    opacity = 1,
+    fillColor = ~ pal(RPL_themes),
+    fillOpacity = 0.8,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "white",
+      fillOpacity = 0.8,
+      bringToFront = TRUE
+    ),
+    label = zcta_label,
+    labelOptions = labelOptions(
+      style = list(
+        "font-family" = "Fira Sans, sans-serif",
+        "font-size" = "1.2em"
+      )
+    )
+  ) %>%
   addLegend("bottomleft",
-            pal = pal,
-            values = ~RPL_themes,
-            title = "Overall SVI in all ZCTAs in PA (2020)",
-            #labFormat = labelFormat(prefix = "$"),
-            opacity = 1)
-
+    pal = pal,
+    values = ~RPL_themes,
+    title = "Overall SVI in all ZCTAs in PA (2020)",
+    # labFormat = labelFormat(prefix = "$"),
+    opacity = 1
+  )
 ```
 
 From the interactive map, we can visualize easily how SVI varies in different regions in PA and zoom in to examine specific ZCTAs of interest, making it a helpful approach to explore new ideas, patterns and analyses.

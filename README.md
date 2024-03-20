@@ -72,8 +72,8 @@ summarise_results <- find_svi(
   state = c("NJ", "PA"),
   geography = "county"
 )
-summarise_results %>% 
-  group_by(year, state) %>% 
+summarise_results %>%
+  group_by(year, state) %>%
   slice_head(n = 5)
 ```
 
@@ -100,20 +100,19 @@ data[1:10, 1:10]
 ```
 
     #> # A tibble: 10 × 10
-    #>    GEOID NAME    B0600…¹ B0600…² B0900…³ B0900…⁴ B1101…⁵ B1101…⁶ B1101…⁷ B1101…⁸
-    #>    <chr> <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-    #>  1 42001 Adams …    7788     602   20663      NA    1237     215     482     171
-    #>  2 42003 Allegh…   45708    1713  228296      49   24311    1147    5378     525
-    #>  3 42005 Armstr…    3973     305   12516       9     912     161     247      85
-    #>  4 42007 Beaver…    7546     640   31915      NA    3380     380     787     174
-    #>  5 42009 Bedfor…    3996     317    9386      11     468      99     213      50
-    #>  6 42011 Berks …   36488    1356   93714      44    8812     662    1695     304
-    #>  7 42013 Blair …    7292     679   24920      19    2552     363     544     169
-    #>  8 42015 Bradfo…    4395     362   13358      NA     969     177     428     117
-    #>  9 42017 Bucks …   25651    1306  128008      53    8222     749    3174     581
-    #> 10 42019 Butler…    6118     468   37577      NA    2121     337     813     198
-    #> # … with abbreviated variable names ¹​B06009_002E, ²​B06009_002M, ³​B09001_001E,
-    #> #   ⁴​B09001_001M, ⁵​B11012_010E, ⁶​B11012_010M, ⁷​B11012_015E, ⁸​B11012_015M
+    #>    GEOID NAME        B06009_002E B06009_002M B09001_001E B09001_001M B11012_010E
+    #>    <chr> <chr>             <dbl>       <dbl>       <dbl>       <dbl>       <dbl>
+    #>  1 42001 Adams Coun…        7788         602       20663          NA        1237
+    #>  2 42003 Allegheny …       45708        1713      228296          49       24311
+    #>  3 42005 Armstrong …        3973         305       12516           9         912
+    #>  4 42007 Beaver Cou…        7546         640       31915          NA        3380
+    #>  5 42009 Bedford Co…        3996         317        9386          11         468
+    #>  6 42011 Berks Coun…       36488        1356       93714          44        8812
+    #>  7 42013 Blair Coun…        7292         679       24920          19        2552
+    #>  8 42015 Bradford C…        4395         362       13358          NA         969
+    #>  9 42017 Bucks Coun…       25651        1306      128008          53        8222
+    #> 10 42019 Butler Cou…        6118         468       37577          NA        2121
+    #> # ℹ 3 more variables: B11012_010M <dbl>, B11012_015E <dbl>, B11012_015M <dbl>
 
 (First 10 rows and columns are shown, with the rest of columns being
 other census variables for SVI calculation.)
