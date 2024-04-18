@@ -19,7 +19,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL: https://github.com/heli-xu/findSVI,
     https://heli-xu.github.io/findSVI/
 BugReports: https://github.com/heli-xu/findSVI/issues
