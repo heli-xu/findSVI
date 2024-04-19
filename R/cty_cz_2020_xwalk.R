@@ -11,7 +11,7 @@
 #' @format ## A data frame with 2 columns and 3222 rows:
 #' \describe{
 #'   \item{GEOID}{US county FIPS code.}
-#'   \item{CZ20}{Commuting zone ID for the year 2020.}
+#'   \item{GEOID2}{Commuting zone ID for the year 2020.}
 #'
 #' }
 #' @source https://sites.psu.edu/psucz/data/

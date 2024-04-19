@@ -9,7 +9,7 @@
 
 \describe{
 \item{GEOID}{US county FIPS code.}
-\item{CZ20}{Commuting zone ID for the year 2020.}
+\item{GEOID2}{Commuting zone ID for the year 2020.}
 
 }
 }
