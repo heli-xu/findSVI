@@ -52,22 +52,22 @@ get_svi_x <- function(year, data, xwalk) {
 
   if ("NAME" %in% colnames(xwalk)) {
     data_custom <- data_tmp %>%
-      dplyr::select(-NAME) %>%
+      dplyr::select(-"NAME") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
-      dplyr::group_by(GEOID2) %>%
-      dplyr::summarise(dplyr::across(-c(GEOID, NAME), ~ sum(.x), .names = "{.col}")) %>%
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(dplyr::across(-c("GEOID", "NAME"), ~ sum(.x), .names = "{.col}")) %>%
       dplyr::left_join(xwalk %>%
-          dplyr::select(GEOID2, NAME) %>%
+          dplyr::select("GEOID2", "NAME") %>%
           dplyr::distinct(),
         by = "GEOID2") %>%
-      dplyr::rename(GEOID = GEOID2)
+      dplyr::rename(GEOID = "GEOID2")
   } else {
     data_custom <- data_tmp %>%
-      dplyr::select(-NAME) %>%
+      dplyr::select(-"NAME") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
-      dplyr::group_by(GEOID2) %>%
-      dplyr::summarise(dplyr::across(-GEOID, ~ sum(.x), .names = "{.col}")) %>%
-      dplyr::rename(GEOID = GEOID2) %>%
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(dplyr::across(-"GEOID", ~ sum(.x), .names = "{.col}")) %>%
+      dplyr::rename(GEOID = "GEOID2") %>%
       dplyr::mutate(NAME = "")
   }
 
@@ -75,16 +75,16 @@ get_svi_x <- function(year, data, xwalk) {
 
   if ("geometry" %in% colnames(data)) {
     xwalk_geo <- data %>%
-      dplyr::select(GEOID, geometry) %>%
+      dplyr::select("GEOID", "geometry") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
-      dplyr::group_by(GEOID2) %>%
-      dplyr::summarise(geometry = sf::st_union(geometry))
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(geometry = sf::st_union(.data$geometry))
 
     cli::cli_alert_success("Finished unionizing geometries from census data to customized geographic levels.")
 
     data2 <- xwalk_geo %>%
-      dplyr::rename(GEOID = GEOID2) %>%
-      left_join(data_custom, by = "GEOID")
+      dplyr::rename(GEOID = "GEOID2") %>%
+      dplyr::left_join(data_custom, by = "GEOID")
   } else {
     data2 <- data_custom
   }
@@ -98,7 +98,7 @@ get_svi_x <- function(year, data, xwalk) {
 
   } else {
     svi_no_name <- svi %>%
-      dplyr::select(-NAME)
+      dplyr::select(-"NAME")
 
     return(svi_no_name)
   }
