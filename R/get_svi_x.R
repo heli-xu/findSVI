@@ -74,13 +74,16 @@ get_svi_x <- function(year, data, xwalk) {
   cli::cli_alert_success("Finished aggregating census data by customized boundaries.")
 
   if ("geometry" %in% colnames(data)) {
+    cli::cli_alert_info("Merging geometries from census data to customized geographic levels.")
+
     xwalk_geo <- data %>%
       dplyr::select("GEOID", "geometry") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
       dplyr::group_by(.data$GEOID2) %>%
       dplyr::summarise(geometry = sf::st_union(.data$geometry))
 
-    cli::cli_alert_success("Finished unionizing geometries from census data to customized geographic levels.")
+    cli::cli_alert_success("Finished merging geometries.")
+    cli::cli_alert_info("Calulating SVI at the customized geographic level")
 
     data2 <- xwalk_geo %>%
       dplyr::rename(GEOID = "GEOID2") %>%
@@ -89,9 +92,8 @@ get_svi_x <- function(year, data, xwalk) {
     data2 <- data_custom
   }
 
-  cli::cli_alert_info("Calulating SVI at the customized geographic level")
-
   svi <- findSVI::get_svi(2020, data2)
+  cli::cli_alert_success("Finished SVI calculation.")
 
   if ("NAME" %in% colnames(xwalk)) {
     return(svi)
