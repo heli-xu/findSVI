@@ -17,8 +17,8 @@ level and the customized geographic level of interest. A crosswalk between
 US counties and commuting zones \code{cty_cz_2020_xwalk} is included as an
 example, and please set the column names of the crosswalk as follows:
 \describe{
-\item{GEOID}{Identifiers for the Census geographic level. Must match the column \code{GEOID} in \code{data}.}
-\item{GEOID2}{Identifiers for the customized geographic level that is larger geographic than the Census geographic level. The Census geographic level should be nested in the customized geographic level.}
+\item{GEOID}{Identifiers for the Census geographic level. Must contain values from \code{GEOID} column in \code{data}, and be in a compatible data type (character).}
+\item{GEOID2}{Identifiers (characters or numeric values) for the customized geographic level that is larger geographic than the Census geographic level. The Census geographic level should be nested in the customized geographic level.}
 \item{NAME}{An optional column of the names or description of the customized geographic level.}
 }}
 }

@@ -8,7 +8,7 @@
 #'   customized geographic units, and SVI is calculated accordingly to indicate
 #'   the relative social vulnerability of the geographic units (communities).
 #'
-#' @param year The year of interest (available 2014-2021), must match the year
+#' @param year The year of interest (available 2012-2021), must match the year
 #'   specified in retrieving census data.
 #' @param data The census data retrieved by `get_census_data()`.
 #' @param xwalk A crosswalk (relationship table) between the Census geographic
@@ -16,8 +16,8 @@
 #'   US counties and commuting zones `cty_cz_2020_xwalk` is included as an
 #'   example, and please set the column names of the crosswalk as follows:
 #'  \describe{
-#'   \item{GEOID}{Identifiers for the Census geographic level. Must match the column `GEOID` in `data`.}
-#'   \item{GEOID2}{Identifiers for the customized geographic level that is larger geographic than the Census geographic level. The Census geographic level should be nested in the customized geographic level.}
+#'   \item{GEOID}{Identifiers for the Census geographic level. Must contain values from `GEOID` column in `data`, and be in a compatible data type (character).}
+#'   \item{GEOID2}{Identifiers (characters or numeric values) for the customized geographic level that is larger geographic than the Census geographic level. The Census geographic level should be nested in the customized geographic level.}
 #'   \item{NAME}{An optional column of the names or description of the customized geographic level.}
 #' }
 #'
@@ -43,6 +43,15 @@
 #' @export
 
 get_svi_x <- function(year, data, xwalk) {
+  if (!all(c("GEOID", "GEOID2") %in% colnames(xwalk))) {
+    cli::cli_abort("The crosswalk does not contain `GEOID` (Census) and `GEOID2 (customized) columns.")
+  }
+
+  xwalk_check <- xwalk %>% dplyr::count(GEOID)
+  if (!all(xwalk_check$n <= 1)) {
+    cli::cli_abort("`GEOID`(Census) level is not completely nested in `GEOID2`(customized) level.")
+  }
+
   if ("geometry" %in% colnames(data)) {
     data_tmp <- data %>%
       sf::st_drop_geometry()
