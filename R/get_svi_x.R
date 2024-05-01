@@ -52,12 +52,45 @@ get_svi_x <- function(year, data, xwalk) {
     cli::cli_abort("`GEOID`(Census) level is not completely nested in `GEOID2`(customized) level.")
   }
 
+  ## set up theme 0 vector, because sometimes other E_var calculation refer to them
+  var_0 <- var_cal_table %>%
+    dplyr::filter(.data$theme == 0)
+
+  var_0_name <- var_0[[1]]
+  var_0_expr <- var_0[[3]]
+  names(var_0_expr) <- var_0_name
+
+  ## set up E_ vector
+  E_var <-
+    var_cal_table %>%
+    dplyr::filter(.data$theme %in% c(1:4),
+      stringr::str_detect(.[[1]], "E_"))
+
+  E_var_name <- E_var[[1]]
+  E_var_expr <- E_var[[3]]
+  names(E_var_expr) <- E_var_name
+
+  ## set up EP_ vector
+  EP_var <-
+    var_cal_table %>%
+    dplyr::filter(.data$theme %in% c(1:4),
+      stringr::str_detect(.[[1]], "EP_"))
+
+  EP_var_name <- EP_var[[1]]
+  EP_var_expr <- EP_var[[3]]
+  names(EP_var_expr) <- EP_var_name
+
+
+
   if ("geometry" %in% colnames(data)) {
     data_tmp <- data %>%
       sf::st_drop_geometry()
   } else {
     data_tmp <- data
   }
+
+
+
 
   if ("NAME" %in% colnames(xwalk)) {
     data_custom <- data_tmp %>%
