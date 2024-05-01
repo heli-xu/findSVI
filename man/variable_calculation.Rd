@@ -13,10 +13,12 @@
 \alias{variable_e_ep_calculation_2019}
 \alias{variable_e_ep_calculation_2020}
 \alias{variable_e_ep_calculation_2021}
+\alias{variable_e_denom_2020}
 \title{Table of census variables and formula for SVI calculation}
 \format{
-\subsection{A data frame with 3 columns and various number of rows, depending on the year:}{
+\subsection{A data frame with 3 columns and various number of rows, depending}{
 
+on the year:
 \describe{
 \item{_variable_name}{With a prefix "x" followed by the year, eg. x2018_variable_name, this column is the SVI variable name}
 \item{theme}{SVI variables are categorized into four themes/domains:
@@ -27,7 +29,7 @@ included in calculation). Adjunct variables are not included in 2012 due to
 unavailable data/documentation.}
 \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 this column contains the corresponding census variable names, and/or the calculation
-using SVI/census variables.}
+using SVI/census variables. \code{variable_e_denom_2020} uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
 }
 }
 
@@ -42,6 +44,8 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
 
@@ -73,6 +77,8 @@ variable_e_ep_calculation_2019
 variable_e_ep_calculation_2020
 
 variable_e_ep_calculation_2021
+
+variable_e_denom_2020
 }
 \description{
 Each of these datasets contains a table of SVI variable names, related census

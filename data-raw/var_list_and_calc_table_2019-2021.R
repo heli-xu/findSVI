@@ -110,3 +110,41 @@ census_variables_2021 <- census_variables_2020
 
 usethis::use_data(variable_e_ep_calculation_2021, overwrite = TRUE)
 usethis::use_data(census_variables_2021, overwrite = TRUE)
+
+# Modify using explicitly defined denominator (2020) -----------------
+#EP_UNEMP
+variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /	DP03_0003) * 100"
+#EP_NOHSDP/25year and over
+variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /	S0501_C01_038) * 100"
+#EP_UNINSUR/noninstitutionalized civilian
+variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR / S2701_C01_001) * 100"
+#EP_AGE65
+variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 / E_TOTPOP) * 100"
+#EP_DISABL/noninsti
+variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL / S2701_C01_001) * 100"
+#EP_MOBILE/total housing unit (DP05_0086?)
+variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE / DP04_0001) * 100"
+#EP_NOVEH/Occupied housing units!DP04_0002
+variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH / DP04_0002) * 100"
+
+variable_e_denom_2020 <- variable_e_ep_calculation_2020
+
+var_denom <- variable_e_denom_2020 %>%
+  mutate(census_var = str_replace_all(x2020_table_field_calculation,
+    "[^[:alnum:][:blank:]_]",
+    " "))
+
+theme_var_df <- function(n){
+  var_denom %>%  #different df, otherwise same as above
+    filter(theme == n) %>%
+    select(x2020_variable_name, census_var) %>%
+    separate_rows(census_var, sep = " ")  %>%
+    filter(!str_starts(census_var, "E_"),
+      !census_var%in%c("","100")) %>%
+    pull(census_var)
+}
+
+census_variables_2020_new <- map(0:5, theme_var_df)
+
+usethis::use_data(variable_e_denom_2020, overwrite = TRUE)
+usethis::use_data(census_variables_2020_new, overwrite = TRUE)

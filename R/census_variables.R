@@ -4,8 +4,8 @@
 #' between 2012-2021.
 #'
 #' @name census_variables
-#' @format ## a list of census variables, grouped into sublists named t0-t5 or t0-t4 (for 2012).
-#'   t1-t4 represent the 4 themes the corresponding SVI
+#' @format ## a list of census variables, grouped into sublists named t0-t5 or
+#'   t0-t4 (for 2012). t1-t4 represent the 4 themes the corresponding SVI
 #'   variables are categorized into:
 #'   * Socioeconomic
 #'   * Household Composition/Disability
@@ -18,6 +18,10 @@
 #'   not used in SVI calculation. For 2012, adjunct variables are not included,
 #'   as the variable listed in 2014 documentation was not in 2012 Census data,
 #'   and there's no adjunct variables in 2010 documentation.
+#'
+#'   `census_variables_2020_new` contains variables corresponding to
+#'   `variable_e_denom_2020`, where denominators for "EP_" variables are
+#'   explicitly defined using census variables.
 
 #' @source CDC/ATSDR SVI Documentation
 #'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
@@ -49,3 +53,6 @@
 
 #' @rdname census_variables
 "census_variables_2021"
+
+#' @rdname census_variables
+"census_variables_2020_new"

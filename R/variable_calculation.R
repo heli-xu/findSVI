@@ -8,7 +8,8 @@
 #' times one or more census variable(s) are included to derive an SVI variable.
 #'
 #' @name variable_calculation
-#' @format ## A data frame with 3 columns and various number of rows, depending on the year:
+#' @format ## A data frame with 3 columns and various number of rows, depending
+#'   on the year:
 #' \describe{
 #'   \item{_variable_name}{With a prefix "x" followed by the year, eg. x2018_variable_name, this column is the SVI variable name}
 #'   \item{theme}{SVI variables are categorized into four themes/domains:
@@ -19,7 +20,7 @@
 #'   unavailable data/documentation.}
 #'   \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 #'   this column contains the corresponding census variable names, and/or the calculation
-#'   using SVI/census variables.}
+#'   using SVI/census variables. `variable_e_denom_2020` uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
 #' }
 #' @source CDC/ATSDR SVI Documentation
 #'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
@@ -51,3 +52,6 @@
 
 #' @rdname variable_calculation
 "variable_e_ep_calculation_2021"
+
+#' @rdname variable_calculation
+"variable_e_denom_2020"
