@@ -40,7 +40,11 @@ the relative social vulnerability of the geographic units (communities).
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Census API key required
-cty2020 <- get_census_data(year = 2020, geography = "county")
+cty2020 <- get_census_data(
+    year = 2020,
+    geography = "county",
+    exp = TRUE
+   )
 
 get_svi_x(year = 2020, data = cty2020, xwalk = cty_cz_2020_xwalk)
 \dontshow{\}) # examplesIf}

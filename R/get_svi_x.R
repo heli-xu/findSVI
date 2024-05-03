@@ -34,7 +34,11 @@
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required
-#' cty2020 <- get_census_data(year = 2020, geography = "county")
+#' cty2020 <- get_census_data(
+#'     year = 2020,
+#'     geography = "county",
+#'     exp = TRUE
+#'    )
 #'
 #' get_svi_x(year = 2020, data = cty2020, xwalk = cty_cz_2020_xwalk)
 #'
@@ -47,12 +51,16 @@ get_svi_x <- function(year, data, xwalk) {
     cli::cli_abort("The crosswalk does not contain `GEOID` (Census) and `GEOID2 (customized) columns.")
   }
 
-  xwalk_check <- xwalk %>% dplyr::count(GEOID)
+  xwalk_check <- xwalk %>% dplyr::count(.data$GEOID)
   if (!all(xwalk_check$n <= 1)) {
     cli::cli_abort("`GEOID`(Census) level is not completely nested in `GEOID2`(customized) level.")
   }
 
-  ## set up theme 0 vector, because sometimes other E_var calculation refer to them
+  filename <- paste0("variable_cal_exp_", year)
+
+  var_cal_table <- get(filename)
+
+  ## set up theme 0 vector
   var_0 <- var_cal_table %>%
     dplyr::filter(.data$theme == 0)
 
@@ -81,7 +89,6 @@ get_svi_x <- function(year, data, xwalk) {
   names(EP_var_expr) <- EP_var_name
 
 
-
   if ("geometry" %in% colnames(data)) {
     data_tmp <- data %>%
       sf::st_drop_geometry()
@@ -89,11 +96,29 @@ get_svi_x <- function(year, data, xwalk) {
     data_tmp <- data
   }
 
+  ## iterate with E_ vector
+  svi0 <-
+    purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr){
+      data_tmp %>%
+        dplyr::transmute(
+          {{var_0_name}} := eval(str2lang({{var_0_expr}}))
+        )
+    }) %>%
+    dplyr::bind_cols(data_tmp, .)
 
+  svi_e <-
+    purrr::map2_dfc(E_var_name, E_var_expr, function(E_var_name, E_var_expr){
+      svi0 %>%
+        dplyr::transmute(
+          {{E_var_name}} := eval(str2lang({{E_var_expr}}))
+        )
+    }) %>%
+    dplyr::bind_cols(svi0, .)
+  #important: keep all retrieved census var (in their original name)
 
 
   if ("NAME" %in% colnames(xwalk)) {
-    data_custom <- data_tmp %>%
+    data_custom <- svi_e %>%
       dplyr::select(-"NAME") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
       dplyr::group_by(.data$GEOID2) %>%
@@ -104,7 +129,7 @@ get_svi_x <- function(year, data, xwalk) {
         by = "GEOID2") %>%
       dplyr::rename(GEOID = "GEOID2")
   } else {
-    data_custom <- data_tmp %>%
+    data_custom <- svi_e %>%
       dplyr::select(-"NAME") %>%
       dplyr::left_join(xwalk, by = "GEOID") %>%
       dplyr::group_by(.data$GEOID2) %>%
@@ -113,7 +138,109 @@ get_svi_x <- function(year, data, xwalk) {
       dplyr::mutate(NAME = "")
   }
 
-  cli::cli_alert_success("Finished aggregating census data by customized boundaries.")
+  svi_e_ep <-
+    purrr::map2(EP_var_name, EP_var_expr, function(EP_var_name, EP_var_expr){
+      data_custom %>%
+        dplyr::transmute(
+          {{EP_var_name}} := eval(str2lang({{EP_var_expr}}))
+        )
+    }) %>%
+    dplyr::bind_cols(data_custom, .) %>%
+    #keep the new columns, GEOID, NAME
+    dplyr::select("GEOID", "NAME", tidyselect::all_of(var_0_name), tidyselect::all_of(E_var_name), tidyselect::all_of(EP_var_name)) %>%
+    dplyr::mutate(dplyr::across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
+      E_AGE65 = dplyr::case_when(year >= 2017 ~ E_AGE65,
+        TRUE ~ round(E_AGE65, 0)))
+
+
+  cli::cli_alert_success("Finished aggregating census variables by customized boundaries.")
+
+  # EPL_ --------------------------------------------------------------------
+
+  svi_epl <-
+    svi_e_ep %>%
+    dplyr::filter(.data$E_TOTPOP > 0) %>%  #added according to documentation (removed from ranking, but kept in table)
+    dplyr::select("GEOID", "NAME", tidyselect::all_of(EP_var_name)) %>%   #tidyselect, column or external vector
+    tidyr::pivot_longer(!c("GEOID", "NAME"),   #all but GEOID and NAME - no need to know total columns
+      names_to = "svi_var",
+      values_to = "value") %>%
+    tidyr::drop_na("value") %>%  # in case there's *some* variables missing in some tracts
+    dplyr::group_by(.data$svi_var) %>%
+    dplyr::mutate(rank =  rank(.data$value, ties.method = "min")) %>%
+    #check out count() "wt" arg, if NULL, count rows
+    dplyr::add_count(.data$svi_var) %>%
+    dplyr::mutate(EPL_var = dplyr::case_when(
+      year >= 2019 ~(rank - 1) / (n - 1),
+      .data$svi_var == "EP_PCI"~ 1 - ((rank - 1) / (n - 1)),
+      TRUE ~ (rank - 1) / (n - 1)),
+      EPL_var = round(EPL_var, 4)
+    )  %>%
+    dplyr::ungroup()
+
+
+  # SPL_ and RPL_ for each theme --------------------------------------------
+
+  xwalk_theme_var <- EP_var %>%
+    dplyr::select(-3) %>%
+    dplyr::rename(svi_var = 1)
+
+
+  svi_spl_rpl <-
+    svi_epl %>%
+    #SPL_each theme
+    dplyr::left_join(xwalk_theme_var, by = "svi_var") %>%
+    dplyr::group_by(.data$theme, .data$GEOID, .data$NAME) %>%
+    dplyr::summarise(SPL_theme = sum(EPL_var),
+      .groups = "drop") %>%
+    dplyr::ungroup() %>%
+    #RPL_
+    dplyr::group_by(.data$theme) %>%
+    dplyr::mutate(rank_theme = rank(.data$SPL_theme, ties.method = "min")) %>%
+    dplyr::add_count(.data$theme) %>%  #rows per group, count the group_by param
+    dplyr::mutate(RPL_theme = (.data$rank_theme-1)/(.data$n-1),
+      RPL_theme = round(.data$RPL_theme, 4)) %>%
+    dplyr::ungroup()
+
+
+  # SPL_ and RPL_ for all themes --------------------------------------------
+
+  svi_spls_rpls <-
+    svi_spl_rpl %>%
+    dplyr::group_by(.data$GEOID, .data$NAME) %>%
+    dplyr::summarise(SPL_themes = sum(SPL_theme),
+      .groups = "drop") %>%
+    dplyr::add_count() %>%
+    dplyr::mutate(rank_themes = rank(.data$SPL_themes, ties.method = "min"),
+      RPL_themes = (.data$rank_themes-1)/(.data$n-1),
+      RPL_themes = round(.data$RPL_themes, 4)) %>%
+    dplyr::ungroup()
+
+
+  # merge all variabels to svi ----------------------------------------------
+
+  EPL_var <-
+    svi_epl %>%
+    dplyr::mutate(EPL_var_name = paste0("EPL_", stringr::str_remove(.data$svi_var, "EP_")),
+      .before = EPL_var) %>%
+    dplyr::select(-c("svi_var", "value", "rank", "n")) %>%
+    tidyr::pivot_wider(names_from = "EPL_var_name",
+      values_from = "EPL_var")
+
+  SPL_theme <- svi_spl_rpl %>%
+    dplyr::select(-c("RPL_theme", "rank_theme", "n")) %>%
+    tidyr::pivot_wider(names_from = "theme",
+      names_prefix = "SPL_theme",
+      values_from = "SPL_theme")
+
+  RPL_theme <- svi_spl_rpl %>%
+    dplyr::select(-c("SPL_theme", "rank_theme", "n")) %>%
+    tidyr::pivot_wider(names_from = "theme",
+      names_prefix = "RPL_theme",
+      values_from = "RPL_theme")
+
+  SPL_RPL_themes <- svi_spls_rpls %>%
+    dplyr::select(-c("n", "rank_themes"))
+
 
   if ("geometry" %in% colnames(data)) {
     cli::cli_alert_info("Merging geometries from census data to customized geographic levels.")
@@ -125,26 +252,57 @@ get_svi_x <- function(year, data, xwalk) {
       dplyr::summarise(geometry = sf::st_union(.data$geometry))
 
     cli::cli_alert_success("Finished merging geometries.")
-    cli::cli_alert_info("Calulating SVI at the customized geographic level")
 
-    data2 <- xwalk_geo %>%
-      dplyr::rename(GEOID = "GEOID2") %>%
-      dplyr::left_join(data_custom, by = "GEOID")
+    if ("NAME" %in% colnames(xwalk)) {
+      xwalk_geo_name <- xwalk_geo %>%
+        dplyr::left_join(xwalk %>%
+            dplyr::select("GEOID2", "NAME"), by = "GEOID2") %>%
+        dplyr::rename(GEOID = "GEOID2")
+
+      svi_complete_geo <-
+        list(xwalk_geo_name,
+          svi_e_ep,
+          EPL_var,
+          SPL_theme,
+          RPL_theme,
+          SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+
+    } else {
+      xwalk_geo_name <- xwalk_geo %>%
+        dplyr::mutate(NAME = "") %>%
+        dplyr::rename(GEOID = "GEOID2")
+
+      svi_complete_geo <-
+        list(xwalk_geo_name,
+          svi_e_ep,
+          EPL_var,
+          SPL_theme,
+          RPL_theme,
+          SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME")) %>%
+        dplyr::select(-"NAME")
+    }
+    cli::cli_alert_success("Finished SVI calculation with geometries.")
+    return(svi_complete_geo)
+
+
   } else {
-    data2 <- data_custom
-  }
+    if ("NAME" %in% colnames(xwalk)) {
+      svi_complete <-
+        list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
 
-  svi <- findSVI::get_svi(2020, data2)
-  cli::cli_alert_success("Finished SVI calculation.")
+    } else {
+      svi_complete <-
+        list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME")) %>%
+        dplyr::select(-"NAME")
+    }
 
-  if ("NAME" %in% colnames(xwalk)) {
-    return(svi)
+    cli::cli_alert_success("Finished SVI calculation.")
+    return(svi_complete)
 
-  } else {
-    svi_no_name <- svi %>%
-      dplyr::select(-"NAME")
-
-    return(svi_no_name)
   }
 
 }
