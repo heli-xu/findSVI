@@ -112,20 +112,21 @@ usethis::use_data(variable_e_ep_calculation_2021, overwrite = TRUE)
 usethis::use_data(census_variables_2021, overwrite = TRUE)
 
 # Modify using explicitly defined denominator (2020) -----------------
+#DON'T KEEP SPACE/TAB BEFORE VAR NAME `\t`in extracted strings
 #EP_UNEMP
-variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /	DP03_0003E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /DP03_0003E) * 100"
 #EP_NOHSDP/25year and over
-variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /	S0501_C01_038E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /S0501_C01_038E) * 100"
 #EP_UNINSUR/noninstitutionalized civilian
-variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR / S2701_C01_001E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR /S2701_C01_001E) * 100"
 #EP_AGE65
-variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 / E_TOTPOP) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 /E_TOTPOP) * 100"
 #EP_DISABL/noninsti
-variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL / S2701_C01_001E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL /S2701_C01_001E) * 100"
 #EP_MOBILE/total housing unit (DP05_0086?)
-variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE / DP04_0001E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE /DP04_0001E) * 100"
 #EP_NOVEH/Occupied housing units!DP04_0002
-variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH / DP04_0002E) * 100"
+variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH /DP04_0002E) * 100"
 
 variable_cal_exp_2020 <- variable_e_ep_calculation_2020
 
@@ -133,6 +134,8 @@ var_denom <- variable_cal_exp_2020 %>%
   mutate(census_var = str_replace_all(x2020_table_field_calculation,
     "[^[:alnum:][:blank:]_]",
     " "))
+#check random strings:
+#var_denom$census_var
 
 theme_var_df <- function(n){
   var_denom %>%  #different df, otherwise same as above
