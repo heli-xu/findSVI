@@ -104,7 +104,7 @@ get_census_data <- function(year,
 
 #after input validated
     if (exp == TRUE) {
-      filename <- paste0("census_variable_exp_", year)
+      filename <- paste0("census_variables_exp_", year)
       var_list <- get(filename) %>%
         unlist() %>%
         unname()
@@ -129,6 +129,7 @@ if (length(state) == 1) {
       variables = var_list,
       output = "wide",
       geometry = geometry,
+      exp = exp,
       ...
     )
     return(raw_data)
@@ -149,6 +150,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     variables = var_list,
     output = "wide",
     geometry = geometry,
+    exp = exp,
     ...
   )
 
@@ -183,6 +185,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
+      exp = exp,
       ...
     )
     return(raw_data)
@@ -213,6 +216,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
+      exp = exp,
       ...
     )
 
@@ -237,6 +241,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     variables = var_list,
     output = "wide",
     geometry = geometry,
+    exp = exp,
     ...
   )
   return(raw_data)
@@ -251,6 +256,7 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
+      exp = exp,
       ...
     )
     return(raw_data)
