@@ -115,16 +115,23 @@ usethis::use_data(census_variables_2021, overwrite = TRUE)
 #DON'T KEEP SPACE/TAB BEFORE VAR NAME `\t`in extracted strings
 #EP_UNEMP
 variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /DP03_0003E) * 100"
-#EP_NOHSDP/25year and over
-variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /S0501_C01_038E) * 100"
+
+#EP_NOHSDP/25year and over, look closer variables in the same table
+variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /B06009_001E) * 100"
+##compare formula with existing percent
+
 #EP_UNINSUR/noninstitutionalized civilian
 variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR /S2701_C01_001E) * 100"
+
 #EP_AGE65
 variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 /E_TOTPOP) * 100"
+
 #EP_DISABL/noninsti
 variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL /S2701_C01_001E) * 100"
+
 #EP_MOBILE/total housing unit (DP05_0086?)
 variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE /DP04_0001E) * 100"
+
 #EP_NOVEH/Occupied housing units!DP04_0002
 variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH /DP04_0002E) * 100"
 
