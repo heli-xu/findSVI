@@ -129,7 +129,6 @@ if (length(state) == 1) {
       variables = var_list,
       output = "wide",
       geometry = geometry,
-      exp = exp,
       ...
     )
     return(raw_data)
@@ -150,7 +149,6 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     variables = var_list,
     output = "wide",
     geometry = geometry,
-    exp = exp,
     ...
   )
 
@@ -185,7 +183,6 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
-      exp = exp,
       ...
     )
     return(raw_data)
@@ -216,7 +213,6 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
-      exp = exp,
       ...
     )
 
@@ -241,7 +237,6 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
     variables = var_list,
     output = "wide",
     geometry = geometry,
-    exp = exp,
     ...
   )
   return(raw_data)
@@ -256,7 +251,6 @@ Getting nation-based data and selecting ZCTAs in {state}...(it might take a bit 
       variables = var_list,
       output = "wide",
       geometry = geometry,
-      exp = exp,
       ...
     )
     return(raw_data)
