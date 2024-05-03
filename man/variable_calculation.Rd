@@ -13,7 +13,7 @@
 \alias{variable_e_ep_calculation_2019}
 \alias{variable_e_ep_calculation_2020}
 \alias{variable_e_ep_calculation_2021}
-\alias{variable_e_denom_2020}
+\alias{variable_cal_exp_2020}
 \title{Table of census variables and formula for SVI calculation}
 \format{
 \subsection{A data frame with 3 columns and various number of rows, depending}{
@@ -29,7 +29,7 @@ included in calculation). Adjunct variables are not included in 2012 due to
 unavailable data/documentation.}
 \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 this column contains the corresponding census variable names, and/or the calculation
-using SVI/census variables. \code{variable_e_denom_2020} uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
+using SVI/census variables. \code{variable_cal_exp_2020} uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
 }
 }
 
@@ -78,7 +78,7 @@ variable_e_ep_calculation_2020
 
 variable_e_ep_calculation_2021
 
-variable_e_denom_2020
+variable_cal_exp_2020
 }
 \description{
 Each of these datasets contains a table of SVI variable names, related census

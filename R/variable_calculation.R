@@ -20,7 +20,7 @@
 #'   unavailable data/documentation.}
 #'   \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 #'   this column contains the corresponding census variable names, and/or the calculation
-#'   using SVI/census variables. `variable_e_denom_2020` uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
+#'   using SVI/census variables. `variable_cal_exp_2020` uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
 #' }
 #' @source CDC/ATSDR SVI Documentation
 #'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
@@ -54,4 +54,4 @@
 "variable_e_ep_calculation_2021"
 
 #' @rdname variable_calculation
-"variable_e_denom_2020"
+"variable_cal_exp_2020"

@@ -13,7 +13,7 @@
 \alias{census_variables_2019}
 \alias{census_variables_2020}
 \alias{census_variables_2021}
-\alias{census_variables_2020_new}
+\alias{census_variables_exp_2020}
 \title{List of census variables for SVI calculation}
 \format{
 \subsection{a list of census variables, grouped into sublists named t0-t5 or}{
@@ -34,8 +34,8 @@ not used in SVI calculation. For 2012, adjunct variables are not included,
 as the variable listed in 2014 documentation was not in 2012 Census data,
 and there's no adjunct variables in 2010 documentation.
 
-\code{census_variables_2020_new} contains variables corresponding to
-\code{variable_e_denom_2020}, where denominators for "EP_" variables are
+\code{census_variables_exp_2020} contains variables corresponding to
+\code{variable_cal_exp_2020}, where denominators for "EP_" variables are
 explicitly defined using census variables.
 }
 
@@ -84,7 +84,7 @@ census_variables_2020
 
 census_variables_2021
 
-census_variables_2020_new
+census_variables_exp_2020
 }
 \description{
 Each of these datasets contains a list of census variable names for a year

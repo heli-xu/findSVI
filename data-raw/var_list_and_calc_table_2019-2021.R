@@ -127,7 +127,7 @@ variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE /
 #EP_NOVEH/Occupied housing units!DP04_0002
 variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH / DP04_0002) * 100"
 
-variable_e_denom_2020 <- variable_e_ep_calculation_2020
+variable_cal_exp_2020 <- variable_e_ep_calculation_2020
 
 var_denom <- variable_e_denom_2020 %>%
   mutate(census_var = str_replace_all(x2020_table_field_calculation,
@@ -144,7 +144,7 @@ theme_var_df <- function(n){
     pull(census_var)
 }
 
-census_variables_2020_new <- map(0:5, theme_var_df)
+census_variables_exp_2020 <- map(0:5, theme_var_df)
 
-usethis::use_data(variable_e_denom_2020, overwrite = TRUE)
-usethis::use_data(census_variables_2020_new, overwrite = TRUE)
+usethis::use_data(variable_cal_exp_2020, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2020, overwrite = TRUE)
