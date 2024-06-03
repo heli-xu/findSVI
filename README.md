@@ -187,3 +187,15 @@ glimpse(restult)
     #> $ RPL_theme4  <dbl> 0.1212, 0.5606, 0.1515, 0.2576, 0.0455, 0.5152, 0.4848, 0.…
     #> $ SPL_themes  <dbl> 6.6062, 6.9848, 5.6514, 6.6516, 6.0911, 10.1666, 7.8788, 8…
     #> $ RPL_themes  <dbl> 0.2273, 0.2879, 0.0909, 0.2424, 0.1667, 0.9545, 0.5152, 0.…
+
+## Contributing
+
+For questions, bugs and feature suggestions, please file an issue to let
+us know. For typos or grammatical errors, you can also fix them directly
+using GitHub web interface.
+
+If you’re interested in developing a new feature, we ask that you file
+an issue to discuss it with us first. Once we agree on the proposed
+changes, you’re welcome to create a branch for your [pull
+request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+to collaborate (linking the issue#).

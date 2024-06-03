@@ -48,7 +48,7 @@ install.packages("findSVI")
 
 Alternatively, you can install the development version of findSVI from [GitHub](https://github.com/) with:
 
-``` {r, eval=FALSE}
+```{r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("heli-xu/findSVI")
 ```
@@ -102,3 +102,9 @@ glimpse(restult)
 load(system.file("testdata", "pa_cty_result2020.rda", package = "findSVI"))
 glimpse(pa_cty_result2020)
 ```
+
+## Contributing
+
+For questions, bugs and feature suggestions, please file an issue to let us know. For typos or grammatical errors, you can also fix them directly using GitHub web interface.
+
+If you're interested in developing a new feature, we ask that you file an issue to discuss it with us first. Once we agree on the proposed changes, you're welcome to create a branch for your [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) to collaborate (linking the issue#).
