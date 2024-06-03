@@ -14,6 +14,15 @@
 \alias{variable_e_ep_calculation_2020}
 \alias{variable_e_ep_calculation_2021}
 \alias{variable_cal_exp_2020}
+\alias{variable_cal_exp_2021}
+\alias{variable_cal_exp_2019}
+\alias{variable_cal_exp_2018}
+\alias{variable_cal_exp_2017}
+\alias{variable_cal_exp_2016}
+\alias{variable_cal_exp_2015}
+\alias{variable_cal_exp_2014}
+\alias{variable_cal_exp_2013}
+\alias{variable_cal_exp_2012}
 \title{Table of census variables and formula for SVI calculation}
 \format{
 \subsection{A data frame with 3 columns and various number of rows, depending}{
@@ -29,7 +38,7 @@ included in calculation). Adjunct variables are not included in 2012 due to
 unavailable data/documentation.}
 \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 this column contains the corresponding census variable names, and/or the calculation
-using SVI/census variables. \code{variable_cal_exp_2020} uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
+using SVI/census variables. }
 }
 }
 
@@ -52,6 +61,24 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 33 rows and 3 columns.
 }
 \source{
 CDC/ATSDR SVI Documentation
@@ -79,6 +106,24 @@ variable_e_ep_calculation_2020
 variable_e_ep_calculation_2021
 
 variable_cal_exp_2020
+
+variable_cal_exp_2021
+
+variable_cal_exp_2019
+
+variable_cal_exp_2018
+
+variable_cal_exp_2017
+
+variable_cal_exp_2016
+
+variable_cal_exp_2015
+
+variable_cal_exp_2014
+
+variable_cal_exp_2013
+
+variable_cal_exp_2012
 }
 \description{
 Each of these datasets contains a table of SVI variable names, related census
@@ -86,6 +131,6 @@ variable names and their corresponding calculation formula for a year between
 2012-2021. This is used to construct SVI results for the variables starting
 with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 Sometimes SVI variables are directly linked to census variables, and other
-times one or more census variable(s) are included to derive an SVI variable.
+times one or more census variable(s) are included to derive an SVI variable. \code{variable_cal_exp_} series of dataset uses census variables explicitly as denominators, whereas \code{variable_e_ep_calculation_} series of dataset retrieves percent from ACS when available (as described by CDC SVI documentation).
 }
 \keyword{datasets}

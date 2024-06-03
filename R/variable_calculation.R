@@ -5,7 +5,7 @@
 #' 2012-2021. This is used to construct SVI results for the variables starting
 #' with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 #' Sometimes SVI variables are directly linked to census variables, and other
-#' times one or more census variable(s) are included to derive an SVI variable.
+#' times one or more census variable(s) are included to derive an SVI variable. `variable_cal_exp_` series of dataset uses census variables explicitly as denominators, whereas `variable_e_ep_calculation_` series of dataset retrieves percent from ACS when available (as described by CDC SVI documentation).
 #'
 #' @name variable_calculation
 #' @format ## A data frame with 3 columns and various number of rows, depending
@@ -20,7 +20,7 @@
 #'   unavailable data/documentation.}
 #'   \item{_table_field_calculation}{With a prefix "x" followed by the year, eg. x2018_table_field_calculation,
 #'   this column contains the corresponding census variable names, and/or the calculation
-#'   using SVI/census variables. `variable_cal_exp_2020` uses census variables explicitly as denominators, as opposed to retrieving percent from ACS when available (as described by CDC SVI documentation).}
+#'   using SVI/census variables. }
 #' }
 #' @source CDC/ATSDR SVI Documentation
 #'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
@@ -55,3 +55,30 @@
 
 #' @rdname variable_calculation
 "variable_cal_exp_2020"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2021"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2019"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2018"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2017"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2016"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2015"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2014"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2013"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2012"

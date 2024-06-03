@@ -14,6 +14,15 @@
 \alias{census_variables_2020}
 \alias{census_variables_2021}
 \alias{census_variables_exp_2020}
+\alias{census_variables_exp_2021}
+\alias{census_variables_exp_2019}
+\alias{census_variables_exp_2018}
+\alias{census_variables_exp_2017}
+\alias{census_variables_exp_2016}
+\alias{census_variables_exp_2015}
+\alias{census_variables_exp_2014}
+\alias{census_variables_exp_2013}
+\alias{census_variables_exp_2012}
 \title{List of census variables for SVI calculation}
 \format{
 \subsection{a list of census variables, grouped into sublists named t0-t5 or}{
@@ -34,8 +43,11 @@ not used in SVI calculation. For 2012, adjunct variables are not included,
 as the variable listed in 2014 documentation was not in 2012 Census data,
 and there's no adjunct variables in 2010 documentation.
 
-\code{census_variables_exp_2020} contains variables corresponding to
-\code{variable_cal_exp_2020}, where denominators for "EP_" variables are
+Datasets starting with \code{census_variable_} contains variables corresponding
+to \code{variable_e_ep_calculation_} series of tables, where "EP_" (percent)
+variables are retrieved directly from Census when available; Datasets
+starting with \code{census_variables_exp_} contains variables corresponding to
+\code{variable_cal_exp_} tables, where denominators for "EP_" variables are
 explicitly defined using census variables.
 }
 
@@ -58,6 +70,24 @@ An object of class \code{list} of length 6.
 An object of class \code{list} of length 6.
 
 An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 5.
 }
 \source{
 CDC/ATSDR SVI Documentation
@@ -85,6 +115,24 @@ census_variables_2020
 census_variables_2021
 
 census_variables_exp_2020
+
+census_variables_exp_2021
+
+census_variables_exp_2019
+
+census_variables_exp_2018
+
+census_variables_exp_2017
+
+census_variables_exp_2016
+
+census_variables_exp_2015
+
+census_variables_exp_2014
+
+census_variables_exp_2013
+
+census_variables_exp_2012
 }
 \description{
 Each of these datasets contains a list of census variable names for a year

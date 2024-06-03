@@ -19,8 +19,11 @@
 #'   as the variable listed in 2014 documentation was not in 2012 Census data,
 #'   and there's no adjunct variables in 2010 documentation.
 #'
-#'   `census_variables_exp_2020` contains variables corresponding to
-#'   `variable_cal_exp_2020`, where denominators for "EP_" variables are
+#'   Datasets starting with `census_variable_` contains variables corresponding
+#'   to `variable_e_ep_calculation_` series of tables, where "EP_" (percent)
+#'   variables are retrieved directly from Census when available; Datasets
+#'   starting with `census_variables_exp_` contains variables corresponding to
+#'   `variable_cal_exp_` tables, where denominators for "EP_" variables are
 #'   explicitly defined using census variables.
 
 #' @source CDC/ATSDR SVI Documentation
@@ -56,3 +59,30 @@
 
 #' @rdname census_variables
 "census_variables_exp_2020"
+
+#' @rdname census_variables
+"census_variables_exp_2021"
+
+#' @rdname census_variables
+"census_variables_exp_2019"
+
+#' @rdname census_variables
+"census_variables_exp_2018"
+
+#' @rdname census_variables
+"census_variables_exp_2017"
+
+#' @rdname census_variables
+"census_variables_exp_2016"
+
+#' @rdname census_variables
+"census_variables_exp_2015"
+
+#' @rdname census_variables
+"census_variables_exp_2014"
+
+#' @rdname census_variables
+"census_variables_exp_2013"
+
+#' @rdname census_variables
+"census_variables_exp_2012"

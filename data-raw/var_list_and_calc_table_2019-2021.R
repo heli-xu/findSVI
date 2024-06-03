@@ -70,8 +70,8 @@ variable_e_ep_calculation_2020 <- var_cal2 %>%
   select(-census_var)
 
 # SAVE: List of variables from each theme----------------------
-theme_var_df <- function(n){
-  var_cal2 %>%
+theme_var_df <- function(n, data){
+  data %>%
     filter(theme == n) %>%
     select(x2020_variable_name, census_var) %>%
     separate_rows(census_var, sep = " ")  %>%
@@ -80,7 +80,7 @@ theme_var_df <- function(n){
     pull(census_var)
 }
 
-census_variables_2020 <- map(0:5, theme_var_df)
+census_variables_2020 <- map(0:5, \(x) theme_var_df(x, data = var_cal2))
 
 ##name elements in the list by theme (t0 = total, t5 = adjunct)
 names(census_variables_2020) <- c("t0","t1","t2","t3","t4","t5")
@@ -111,31 +111,56 @@ census_variables_2021 <- census_variables_2020
 usethis::use_data(variable_e_ep_calculation_2021, overwrite = TRUE)
 usethis::use_data(census_variables_2021, overwrite = TRUE)
 
-# Modify using explicitly defined denominator (2020) -----------------
+# Modify:explicit denominator -----------------
+## 2020 ------------------
+var_name <- c(
+  "EP_UNEMP",
+  "EP_NOHSDP",
+  "EP_UNINSUR",
+  "EP_AGE65",
+  "EP_DISABL",
+  "EP_MOBILE",
+  "EP_NOVEH"
+)
+
 #DON'T KEEP SPACE/TAB BEFORE VAR NAME `\t`in extracted strings
-#EP_UNEMP
-variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /DP03_0003E) * 100"
+math <- c(
+  "(E_UNEMP /DP03_0003E) * 100",
+  "(E_NOHSDP /B06009_001E) * 100",
+  "(E_UNINSUR /S2701_C01_001E) * 100",
+  "(E_AGE65 /E_TOTPOP) * 100",
+  "(E_DISABL /S2701_C01_001E) * 100",
+  "(E_MOBILE /DP04_0001E) * 100",
+  "(E_NOVEH /DP04_0002E) * 100"
+)
 
-#EP_NOHSDP/25year and over, look closer variables in the same table
-variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /B06009_001E) * 100"
-##compare formula with existing percent
+variable_cal_exp_2020 <- variable_e_ep_calculation_2020 %>%
+  rows_update(tibble(x2020_variable_name = var_name, x2020_table_field_calculation = math))
 
-#EP_UNINSUR/noninstitutionalized civilian
-variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR /S2701_C01_001E) * 100"
-
-#EP_AGE65
-variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 /E_TOTPOP) * 100"
-
-#EP_DISABL/noninsti
-variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL /S2701_C01_001E) * 100"
-
-#EP_MOBILE/total housing unit (DP05_0086?)
-variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE /DP04_0001E) * 100"
-
-#EP_NOVEH/Occupied housing units!DP04_0002
-variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH /DP04_0002E) * 100"
-
-variable_cal_exp_2020 <- variable_e_ep_calculation_2020
+# below replaced by rows_update()
+# #EP_UNEMP
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[21] <- "(E_UNEMP /DP03_0003E) * 100"
+#
+# #EP_NOHSDP/25year and over, look closer variables in the same table
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[23] <- "(E_NOHSDP /B06009_001E) * 100"
+# ##compare formula with existing percent
+#
+# #EP_UNINSUR/noninstitutionalized civilian
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[24] <- "(E_UNINSUR /S2701_C01_001E) * 100"
+#
+# #EP_AGE65
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[25] <- "(E_AGE65 /E_TOTPOP) * 100"
+#
+# #EP_DISABL/noninsti
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[27] <- "(E_DISABL /S2701_C01_001E) * 100"
+#
+# #EP_MOBILE/total housing unit (DP05_0086?)
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[32] <- "(E_MOBILE /DP04_0001E) * 100"
+#
+# #EP_NOVEH/Occupied housing units!DP04_0002
+# variable_e_ep_calculation_2020$x2020_table_field_calculation[34] <- "(E_NOVEH /DP04_0002E) * 100"
+#
+# variable_cal_exp_2020 <- variable_e_ep_calculation_2020
 
 var_denom <- variable_cal_exp_2020 %>%
   mutate(census_var = str_replace_all(x2020_table_field_calculation,
@@ -144,8 +169,9 @@ var_denom <- variable_cal_exp_2020 %>%
 #check random strings:
 #var_denom$census_var
 
-theme_var_df <- function(n){
-  var_denom %>%  #different df, otherwise same as above
+#same as above
+theme_var_df <- function(n, data){
+  data %>%
     filter(theme == n) %>%
     select(x2020_variable_name, census_var) %>%
     separate_rows(census_var, sep = " ")  %>%
@@ -155,7 +181,28 @@ theme_var_df <- function(n){
     unique()
 }
 
-census_variables_exp_2020 <- map(0:5, theme_var_df)
+census_variables_exp_2020 <- map(0:5, \(x) theme_var_df(x, data = var_denom))
+names(census_variables_exp_2020) <- c("t0","t1","t2","t3","t4","t5")
 
 usethis::use_data(variable_cal_exp_2020, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2020, overwrite = TRUE)
+
+## 2019---------------
+# no difference
+
+variable_cal_exp_2019 <- variable_e_ep_calculation_2019 %>%
+  rows_update(tibble(x2019_variable_name = var_name, x2019_table_field_calculation = math))
+
+census_variables_exp_2019 <- census_variables_exp_2020
+
+usethis::use_data(variable_cal_exp_2019, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2019, overwrite = TRUE)
+
+## 2021 ------------------------
+variable_cal_exp_2021 <- variable_e_ep_calculation_2021 %>%
+  rows_update(tibble(x2021_variable_name = var_name, x2021_table_field_calculation = math))
+
+census_variables_exp_2021 <- census_variables_exp_2020
+
+usethis::use_data(variable_cal_exp_2021, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2021, overwrite = TRUE)
