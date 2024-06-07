@@ -65,15 +65,15 @@ var_cal2 <-
     #replace with blank instead of nothing:
     #100 will be separated by at least one blank with string
 
-# SAVE: Table for svi calculation ----------------------------
+# 2020 Table for svi calculation ----------------------------
 variable_e_ep_calculation_2020 <- var_cal2 %>%
   select(-census_var)
 
-# SAVE: List of variables from each theme----------------------
+# 2020 List of variables from each theme----------------------
 theme_var_df <- function(n, data){
   data %>%
     filter(theme == n) %>%
-    select(x2020_variable_name, census_var) %>%
+    select(1, census_var) %>% #1st col is var_name, adaptable to year
     separate_rows(census_var, sep = " ")  %>%
     filter(!str_starts(census_var, "E_"),
       !census_var%in%c("","100")) %>%
@@ -90,7 +90,7 @@ usethis::use_data(variable_e_ep_calculation_2020, overwrite = TRUE)
 usethis::use_data(census_variables_2020, overwrite = TRUE)
 
 
-# Modify datasets for 2019 ------------------------------------------------
+# Modify for 2019 ------------------------------------------------
 variable_e_ep_calculation_2019 <- variable_e_ep_calculation_2020 %>%
   rename(x2019_variable_name = x2020_variable_name,
     x2019_table_field_calculation = x2020_table_field_calculation)
@@ -101,7 +101,7 @@ usethis::use_data(variable_e_ep_calculation_2019, overwrite = TRUE)
 usethis::use_data(census_variables_2019, overwrite = TRUE)
 
 
-# Modify datasets for 2021 ------------------------------------------------
+# Modify for 2021 ------------------------------------------------
 variable_e_ep_calculation_2021 <- variable_e_ep_calculation_2020 %>%
   rename(x2021_variable_name = x2020_variable_name,
     x2021_table_field_calculation = x2020_table_field_calculation)
@@ -111,7 +111,79 @@ census_variables_2021 <- census_variables_2020
 usethis::use_data(variable_e_ep_calculation_2021, overwrite = TRUE)
 usethis::use_data(census_variables_2021, overwrite = TRUE)
 
-# Modify:explicit denominator -----------------
+# Modify for 2022 ---------------------------
+var_name <- c(
+  "E_AGE17",
+  "E_SNGPNT",
+  "E_MINRTY",
+  "EP_AGE17",
+  "EP_SNGPNT",
+  "EP_MINRTY",
+  "EP_MUNIT",
+  "EP_CROWD",
+  "E_NOINT",
+  "E_AFAM",
+  "E_HISP",
+  "E_ASIAN",
+  "E_AIAN",
+  "E_NHPI",
+  "E_TWOMORE",
+  "E_OTHERRACE",
+  "EP_NOINT",
+  "EP_AFAM",
+  "EP_HISP",
+  "EP_ASIAN",
+  "EP_AIAN",
+  "EP_NHPI",
+  "EP_TWOMORE",
+  "EP_OTHERRACE"
+)
+
+
+math <- c(
+  "DP05_0019E",
+  "DP02_0007E +DP02_0011E",
+  "DP05_0001E -DP05_0079E",
+  "DP05_0019PE", #keep 2020 for explicit
+  "DP02_0007PE +DP02_0011PE", #keep 2020 for explicit
+  "100.0 -DP05_0079PE",
+  "DP04_0012PE +DP04_0013PE",
+  "DP04_0078PE +DP04_0079PE",
+  "S2801_C01_019E",
+  "DP05_0080E",
+  "DP05_0073E",
+  "DP05_0082E",
+  "DP05_0081E",
+  "DP05_0083E",
+  "DP05_0085E",
+  "DP05_0084E",
+  "S2801_C02_019E",
+  "DP05_0080PE",
+  "DP05_0073PE",
+  "DP05_0082PE",
+  "DP05_0081PE",
+  "DP05_0083PE",
+  "DP05_0085PE",
+  "DP05_0084PE"
+)
+
+variable_e_ep_calculation_2022 <- variable_e_ep_calculation_2020 %>%
+  rename(x2022_variable_name = x2020_variable_name,
+    x2022_table_field_calculation = x2020_table_field_calculation) %>%
+  rows_update(tibble(x2022_variable_name = var_name, x2022_table_field_calculation = math))
+
+var_list <- variable_e_ep_calculation_2022 %>%
+  mutate(census_var = str_replace_all(x2022_table_field_calculation,
+    "[^[:alnum:][:blank:]_]",
+    " "))
+
+census_variables_2022 <- map(0:5, \(x) theme_var_df(x, data = var_list))
+names(census_variables_2022) <- c("t0","t1","t2","t3","t4","t5")
+
+usethis::use_data(variable_e_ep_calculation_2022, overwrite = TRUE)
+usethis::use_data(census_variables_2022, overwrite = TRUE)
+
+# Explicit denominator -----------------
 ## 2020 ------------------
 var_name <- c(
   "EP_UNEMP",
@@ -173,7 +245,7 @@ var_denom <- variable_cal_exp_2020 %>%
 theme_var_df <- function(n, data){
   data %>%
     filter(theme == n) %>%
-    select(x2020_variable_name, census_var) %>%
+    select(1, census_var) %>% #1st col is var_name, adaptable to year
     separate_rows(census_var, sep = " ")  %>%
     filter(!str_starts(census_var, "E_"),
       !census_var%in%c("","100")) %>%

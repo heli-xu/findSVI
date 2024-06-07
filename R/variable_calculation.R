@@ -2,7 +2,7 @@
 #'
 #' Each of these datasets contains a table of SVI variable names, related census
 #' variable names and their corresponding calculation formula for a year between
-#' 2012-2021. This is used to construct SVI results for the variables starting
+#' 2012-2022. This is used to construct SVI results for the variables starting
 #' with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 #' Sometimes SVI variables are directly linked to census variables, and other
 #' times one or more census variable(s) are included to derive an SVI variable. `variable_cal_exp_` series of dataset uses census variables explicitly as denominators, whereas `variable_e_ep_calculation_` series of dataset retrieves percent from ACS when available (as described by CDC SVI documentation).
@@ -52,6 +52,9 @@
 
 #' @rdname variable_calculation
 "variable_e_ep_calculation_2021"
+
+#' @rdname variable_calculation
+"variable_e_ep_calculation_2022"
 
 #' @rdname variable_calculation
 "variable_cal_exp_2020"

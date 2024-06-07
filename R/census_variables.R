@@ -1,7 +1,7 @@
 #' List of census variables for SVI calculation
 #'
 #' Each of these datasets contains a list of census variable names for a year
-#' between 2012-2021.
+#' between 2012-2022.
 #'
 #' @name census_variables
 #' @format ## a list of census variables, grouped into sublists named t0-t5 or
@@ -56,6 +56,9 @@
 
 #' @rdname census_variables
 "census_variables_2021"
+
+#' @rdname census_variables
+"census_variables_2022"
 
 #' @rdname census_variables
 "census_variables_exp_2020"
