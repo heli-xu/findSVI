@@ -13,6 +13,7 @@
 \alias{variable_e_ep_calculation_2019}
 \alias{variable_e_ep_calculation_2020}
 \alias{variable_e_ep_calculation_2021}
+\alias{variable_e_ep_calculation_2022}
 \alias{variable_cal_exp_2020}
 \alias{variable_cal_exp_2021}
 \alias{variable_cal_exp_2019}
@@ -66,6 +67,8 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
 
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
+
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
@@ -105,6 +108,8 @@ variable_e_ep_calculation_2020
 
 variable_e_ep_calculation_2021
 
+variable_e_ep_calculation_2022
+
 variable_cal_exp_2020
 
 variable_cal_exp_2021
@@ -128,7 +133,7 @@ variable_cal_exp_2012
 \description{
 Each of these datasets contains a table of SVI variable names, related census
 variable names and their corresponding calculation formula for a year between
-2012-2021. This is used to construct SVI results for the variables starting
+2012-2022. This is used to construct SVI results for the variables starting
 with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 Sometimes SVI variables are directly linked to census variables, and other
 times one or more census variable(s) are included to derive an SVI variable. \code{variable_cal_exp_} series of dataset uses census variables explicitly as denominators, whereas \code{variable_e_ep_calculation_} series of dataset retrieves percent from ACS when available (as described by CDC SVI documentation).

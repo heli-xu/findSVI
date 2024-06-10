@@ -13,6 +13,7 @@
 \alias{census_variables_2019}
 \alias{census_variables_2020}
 \alias{census_variables_2021}
+\alias{census_variables_2022}
 \alias{census_variables_exp_2020}
 \alias{census_variables_exp_2021}
 \alias{census_variables_exp_2019}
@@ -87,6 +88,8 @@ An object of class \code{list} of length 6.
 
 An object of class \code{list} of length 6.
 
+An object of class \code{list} of length 6.
+
 An object of class \code{list} of length 5.
 }
 \source{
@@ -114,6 +117,8 @@ census_variables_2020
 
 census_variables_2021
 
+census_variables_2022
+
 census_variables_exp_2020
 
 census_variables_exp_2021
@@ -136,6 +141,6 @@ census_variables_exp_2012
 }
 \description{
 Each of these datasets contains a list of census variable names for a year
-between 2012-2021.
+between 2012-2022.
 }
 \keyword{datasets}
