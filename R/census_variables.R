@@ -24,7 +24,7 @@
 #'   variables are retrieved directly from Census when available; Datasets
 #'   starting with `census_variables_exp_` contains variables corresponding to
 #'   `variable_cal_exp_` tables, where denominators for "EP_" variables are
-#'   explicitly defined using census variables.
+#'   explicitly defined using census variables (adjunct variables are not modified).
 
 #' @source CDC/ATSDR SVI Documentation
 #'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
@@ -61,31 +61,34 @@
 "census_variables_2022"
 
 #' @rdname census_variables
+"census_variables_exp_2012"
+
+#' @rdname census_variables
+"census_variables_exp_2013"
+
+#' @rdname census_variables
+"census_variables_exp_2014"
+
+#' @rdname census_variables
+"census_variables_exp_2015"
+
+#' @rdname census_variables
+"census_variables_exp_2016"
+
+#' @rdname census_variables
+"census_variables_exp_2017"
+
+#' @rdname census_variables
+"census_variables_exp_2018"
+
+#' @rdname census_variables
+"census_variables_exp_2019"
+
+#' @rdname census_variables
 "census_variables_exp_2020"
 
 #' @rdname census_variables
 "census_variables_exp_2021"
 
 #' @rdname census_variables
-"census_variables_exp_2019"
-
-#' @rdname census_variables
-"census_variables_exp_2018"
-
-#' @rdname census_variables
-"census_variables_exp_2017"
-
-#' @rdname census_variables
-"census_variables_exp_2016"
-
-#' @rdname census_variables
-"census_variables_exp_2015"
-
-#' @rdname census_variables
-"census_variables_exp_2014"
-
-#' @rdname census_variables
-"census_variables_exp_2013"
-
-#' @rdname census_variables
-"census_variables_exp_2012"
+"census_variables_exp_2022"

@@ -5,7 +5,13 @@
 #' 2012-2022. This is used to construct SVI results for the variables starting
 #' with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 #' Sometimes SVI variables are directly linked to census variables, and other
-#' times one or more census variable(s) are included to derive an SVI variable. `variable_cal_exp_` series of dataset uses census variables explicitly as denominators, whereas `variable_e_ep_calculation_` series of dataset retrieves percent from ACS when available (as described by CDC SVI documentation).
+#' times one or more census variable(s) are included to derive an SVI variable.
+#' Two series of calculation tables are included with different approaches to
+#' construct `EP_` variables. `variable_cal_exp_` series of dataset uses census
+#' variables explicitly as denominators, whereas `variable_e_ep_calculation_`
+#' series of dataset retrieves percent from ACS when available (as described by
+#' CDC SVI documentation). Variables in theme 5 (adjunct variables) follow CDC
+#' SVI documentation and remain the same across both series of tables.
 #'
 #' @name variable_calculation
 #' @format ## A data frame with 3 columns and various number of rows, depending
@@ -57,31 +63,34 @@
 "variable_e_ep_calculation_2022"
 
 #' @rdname variable_calculation
+"variable_cal_exp_2012"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2013"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2014"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2015"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2016"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2017"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2018"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2019"
+
+#' @rdname variable_calculation
 "variable_cal_exp_2020"
 
 #' @rdname variable_calculation
 "variable_cal_exp_2021"
 
 #' @rdname variable_calculation
-"variable_cal_exp_2019"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2018"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2017"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2016"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2015"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2014"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2013"
-
-#' @rdname variable_calculation
-"variable_cal_exp_2012"
+"variable_cal_exp_2022"
