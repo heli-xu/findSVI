@@ -49,3 +49,6 @@
 
 #' @rdname census_variables
 "census_variables_2021"
+
+#' @rdname census_variables
+"census_variables_2022"
