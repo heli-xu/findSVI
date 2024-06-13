@@ -9,7 +9,7 @@
 #'   ranking within a region to indicate the relative social vulnerability of
 #'   the geographic units (communities) in that region.
 #'
-#' @param year The year of interest (available 2014-2021), must match the year
+#' @param year The year of interest (available 2014-2022), must match the year
 #'   specified in retrieving census data.
 #' @param data The census data retrieved by `get_census_data()`.
 #'
@@ -33,13 +33,13 @@
 #'
 #' @export
 get_svi <- function(year, data) {
-  # E_&EP_
+  # E_ & EP_
 
   filename <- paste0("variable_e_ep_calculation_", year)
 
   var_cal_table <- get(filename)
 
-  ## set up theme 0 vector, because sometimes other E_var calculation refer to them
+  ## set up theme 0 vector for E_var calculations
   var_0 <- var_cal_table %>%
     dplyr::filter(.data$theme == 0)
 
@@ -80,7 +80,6 @@ get_svi <- function(year, data) {
     data_tmp <- data
   }
 
-
   ## iterate with E_ vector and THEN EP_ vector
   svi0 <-
     purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr) {
@@ -116,7 +115,8 @@ get_svi <- function(year, data) {
       tidyselect::all_of(E_var_name),
       tidyselect::all_of(EP_var_name)
     ) %>%
-    dplyr::mutate(dplyr::across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
+    dplyr::mutate(
+      dplyr::across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
       E_AGE65 = dplyr::case_when(
         year >= 2017 ~ E_AGE65,
         TRUE ~ round(E_AGE65, 0)
@@ -127,27 +127,30 @@ get_svi <- function(year, data) {
 
   svi_epl <-
     svi_e_ep %>%
-    dplyr::filter(.data$E_TOTPOP > 0) %>% # added according to documentation (removed from ranking, but kept in table)
-    dplyr::select("GEOID", "NAME", tidyselect::all_of(EP_var_name)) %>% # tidyselect, column or external vector
-    tidyr::pivot_longer(!c("GEOID", "NAME"), # all but GEOID and NAME - no need to know total columns
+    dplyr::filter(
+      .data$E_TOTPOP > 0,
+      .data$E_HU > 0
+    ) %>% # remove from ranking, but keep in table
+    dplyr::select(
+      "GEOID",
+      "NAME",
+      tidyselect::all_of(EP_var_name)
+    ) %>%
+    tidyr::pivot_longer(!c("GEOID", "NAME"),
       names_to = "svi_var",
       values_to = "value"
     ) %>%
-    tidyr::drop_na("value") %>% # in case there's *some* variables missing in some tracts
+    tidyr::drop_na("value") %>% # in case of variables missing in tracts
     dplyr::group_by(.data$svi_var) %>%
-    dplyr::mutate(rank = rank(.data$value, ties.method = "min")) %>%
-    # check out count() "wt" arg, if NULL, count rows
-    dplyr::add_count(.data$svi_var) %>%
     dplyr::mutate(
       EPL_var = dplyr::case_when(
-        year >= 2019 ~ (rank - 1) / (n - 1),
-        .data$svi_var == "EP_PCI" ~ 1 - ((rank - 1) / (n - 1)),
-        TRUE ~ (rank - 1) / (n - 1)
+        year >= 2019 ~ dplyr::percent_rank(.data$value),
+        .data$svi_var == "EP_PCI" ~ 1 - dplyr::percent_rank(.data$value),
+        TRUE ~ dplyr::percent_rank(.data$value)
       ),
       EPL_var = round(EPL_var, 4)
     ) %>%
     dplyr::ungroup()
-
 
   # y <- svi_epl(2014, eep_data = x)
 
@@ -156,7 +159,6 @@ get_svi <- function(year, data) {
   xwalk_theme_var <- EP_var %>%
     dplyr::select(-3) %>%
     dplyr::rename(svi_var = 1)
-
 
   svi_spl_rpl <-
     svi_epl %>%
@@ -170,14 +172,11 @@ get_svi <- function(year, data) {
     dplyr::ungroup() %>%
     # RPL_
     dplyr::group_by(.data$theme) %>%
-    dplyr::mutate(rank_theme = rank(.data$SPL_theme, ties.method = "min")) %>%
-    dplyr::add_count(.data$theme) %>% # rows per group, count the group_by param
     dplyr::mutate(
-      RPL_theme = (.data$rank_theme - 1) / (.data$n - 1),
+      RPL_theme = dplyr::percent_rank(.data$SPL_theme),
       RPL_theme = round(.data$RPL_theme, 4)
     ) %>%
     dplyr::ungroup()
-
 
   # z <- spl_rpl_tm(2014, epl_data = y)
 
@@ -190,14 +189,10 @@ get_svi <- function(year, data) {
       SPL_themes = sum(SPL_theme),
       .groups = "drop"
     ) %>%
-    dplyr::add_count() %>%
     dplyr::mutate(
-      rank_themes = rank(.data$SPL_themes, ties.method = "min"),
-      RPL_themes = (.data$rank_themes - 1) / (.data$n - 1),
-      RPL_themes = round(.data$RPL_themes, 4)
+      RPL_themes = round(dplyr::percent_rank(.data$SPL_themes), 4)
     ) %>%
     dplyr::ungroup()
-
 
   # merge all variabels to svi ----------------------------------------------
 
@@ -207,14 +202,14 @@ get_svi <- function(year, data) {
       EPL_var_name = paste0("EPL_", stringr::str_remove(.data$svi_var, "EP_")),
       .before = EPL_var
     ) %>%
-    dplyr::select(-c("svi_var", "value", "rank", "n")) %>%
+    dplyr::select(-c("svi_var", "value")) %>%
     tidyr::pivot_wider(
       names_from = "EPL_var_name",
       values_from = "EPL_var"
     )
 
   SPL_theme <- svi_spl_rpl %>%
-    dplyr::select(-c("RPL_theme", "rank_theme", "n")) %>%
+    dplyr::select(-"RPL_theme") %>%
     tidyr::pivot_wider(
       names_from = "theme",
       names_prefix = "SPL_theme",
@@ -222,15 +217,14 @@ get_svi <- function(year, data) {
     )
 
   RPL_theme <- svi_spl_rpl %>%
-    dplyr::select(-c("SPL_theme", "rank_theme", "n")) %>%
+    dplyr::select(-"SPL_theme") %>%
     tidyr::pivot_wider(
       names_from = "theme",
       names_prefix = "RPL_theme",
       values_from = "RPL_theme"
     )
 
-  SPL_RPL_themes <- svi_spls_rpls %>%
-    dplyr::select(-c("n", "rank_themes"))
+  SPL_RPL_themes <- svi_spls_rpls
 
   svi_complete <- list(
     svi_e_ep,
