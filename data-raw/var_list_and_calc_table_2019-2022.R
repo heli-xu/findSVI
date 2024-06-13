@@ -278,3 +278,54 @@ census_variables_exp_2021 <- census_variables_exp_2020
 
 usethis::use_data(variable_cal_exp_2021, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2021, overwrite = TRUE)
+
+## 2022 -----------------------------
+var_name <- c(
+  "EP_UNEMP",
+  "EP_NOHSDP",
+  "EP_UNINSUR",
+  "EP_AGE65",
+  "EP_AGE17", # keep 2020
+  "EP_DISABL",
+  "EP_SNGPNT", # keep 2020
+  "EP_MINRTY",# keep 2020
+  "EP_MUNIT", # keep 2020
+  "EP_MOBILE",
+  "EP_CROWD", # keep 2020
+  "EP_NOVEH"
+)
+
+math <- c(
+  "(E_UNEMP /DP03_0003E) * 100",
+  "(E_NOHSDP /B06009_001E) * 100",
+  "(E_UNINSUR /S2701_C01_001E) * 100",
+  "(E_AGE65 /E_TOTPOP) * 100",
+  "(E_AGE17 /E_TOTPOP) * 100",
+  "(E_DISABL /S2701_C01_001E) * 100",
+  "(E_SNGPNT /E_HH) * 100",
+  "(E_MINRTY /E_TOTPOP) * 100",
+  "(E_MUNIT /E_HU) * 100",
+  "(E_MOBILE /DP04_0001E) * 100",
+  "(E_CROWD /DP04_0002E) * 100",
+  "(E_NOVEH /DP04_0002E) * 100"
+)
+
+#df <- data.frame(var = var_name, cal = math)
+
+variable_cal_exp_2022 <- variable_e_ep_calculation_2022 %>%
+  rows_update(tibble(x2022_variable_name = var_name, x2022_table_field_calculation = math))
+
+## extract variable list
+var_denom <- variable_cal_exp_2022 %>%
+  mutate(census_var = str_replace_all(x2022_table_field_calculation,
+    "[^[:alnum:][:blank:]_]",
+    " "))
+#check random strings:
+#var_denom$census_var
+
+# theme_var_df() as above
+census_variables_exp_2022 <- map(0:5, \(x) theme_var_df(x, data = var_denom))
+names(census_variables_exp_2022) <- c("t0","t1","t2","t3","t4","t5")
+
+usethis::use_data(variable_cal_exp_2022, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2022, overwrite = TRUE)
