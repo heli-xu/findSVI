@@ -6,7 +6,7 @@
 #'   at <https://api.census.gov/data/key_signup.html> and set up using
 #'   [tidycensus::census_api_key()].
 #'
-#' @param year The year of interest (available 2012-2021).
+#' @param year The year of interest (available 2012-2022).
 #' @param state (Optional) Specify the state of interest. If data for multiple
 #'   states are retrieved together, ranking for SVI calculation will be
 #'   performed among all states. `state = NULL` as default, or `state = 'US'`
@@ -54,7 +54,7 @@ get_census_data <- function(year,
   ...)
 {
   #predicate
-  year_valid <- 2012:2021
+  year_valid <- 2012:2022
 
   state_valid <- state_valid
 
@@ -80,7 +80,7 @@ get_census_data <- function(year,
     if (!(year %in% year_valid)) {
     cli::cli_abort(c(
       "x" = "{year} is not a valid input for `year`.",
-      "i" = "Years available for census data retrieval: 2012-2021."
+      "i" = "Years available for census data retrieval: 2012-2022."
       ))
     }
 
