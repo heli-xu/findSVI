@@ -75,15 +75,7 @@ variable_e_ep_calculation_2018 <- var_cal2 %>%
   select(-census_var)
 
 # SAVE: List of variables from each theme----------------------
-theme_var_df <- function(n, data){
-  data %>%
-    filter(theme == n) %>%
-    select(1, census_var) %>%  #first column is the var_name
-    separate_rows(census_var, sep = " ")  %>%
-    filter(!str_starts(census_var, "E_"),
-      !census_var%in%c("","100")) %>%
-    pull(census_var)
-}
+source("theme_var_df.R")
 
 census_variables_2018 <- map(0:5, \(x) theme_var_df(x, data = var_cal2))
 
@@ -210,7 +202,7 @@ var_name <- c(
 
 #DON'T KEEP SPACE/TAB BEFORE VAR NAME `\t`in extracted strings
 math <- c(
-  "(E_POV /S1701_C01_001) * 100",
+  "(E_POV /S1701_C01_001E) * 100",
   "(E_UNEMP /DP03_0003E) * 100",
   "(E_NOHSDP /B06009_001E) * 100",
   "(E_UNINSUR /S2701_C01_001E) * 100",
@@ -230,13 +222,15 @@ var_denom <- variable_cal_exp_2018 %>%
 #check random strings:
 #var_denom$census_var
 
+source("theme_var_df.R")
+
 census_variables_exp_2018 <- map(0:5, \(x) theme_var_df(x, data = var_denom))
 names(census_variables_exp_2018) <- c("t0","t1","t2","t3","t4","t5")
 
 usethis::use_data(variable_cal_exp_2018, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2018, overwrite = TRUE)
 
-## 2017---------------
+## 2017 (same as 2018)---------------
 variable_cal_exp_2017 <- variable_e_ep_calculation_2017 %>%
   rows_update(tibble(x2017_variable_name = var_name, x2017_table_field_calculation = math))
 
@@ -245,7 +239,7 @@ census_variables_exp_2017 <- census_variables_exp_2018
 usethis::use_data(variable_cal_exp_2017, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2017, overwrite = TRUE)
 
-## 2016 --------------------
+## 2016 (based on 2018)--------------------
 variable_cal_exp_2016 <- variable_e_ep_calculation_2016 %>%
   rows_update(tibble(x2016_variable_name = var_name, x2016_table_field_calculation = math))
 
@@ -254,6 +248,8 @@ var_denom2016 <- variable_cal_exp_2016 %>%
   mutate(census_var = str_replace_all(x2016_table_field_calculation,
     "[^[:alnum:][:blank:]_]",
     " "))
+#check random strings:
+#var_denom2016$census_var
 
 census_variables_exp_2016 <- map(0:5, \(x) theme_var_df(x, data = var_denom2016))
 names(census_variables_exp_2016) <- c("t0","t1","t2","t3","t4","t5")
@@ -261,16 +257,18 @@ names(census_variables_exp_2016) <- c("t0","t1","t2","t3","t4","t5")
 usethis::use_data(variable_cal_exp_2016, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2016, overwrite = TRUE)
 
-## 2015 ------------
+## 2015 (same as 2016)------------
+#cal table modify from same year original
 variable_cal_exp_2015 <- variable_e_ep_calculation_2015 %>%
   rows_update(tibble(x2015_variable_name = var_name, x2015_table_field_calculation = math))
 
+# var list can copy from another modified year
 census_variables_exp_2015 <- census_variables_exp_2016
 
 usethis::use_data(variable_cal_exp_2015, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2015, overwrite = TRUE)
 
-## 2014------------------
+## 2014 (based on 2016)------------------
 #adjusted only E var, no need to change here
 variable_cal_exp_2014 <- variable_e_ep_calculation_2014 %>%
   rows_update(tibble(x2014_variable_name = var_name, x2014_table_field_calculation = math))
@@ -287,7 +285,7 @@ names(census_variables_exp_2014) <- c("t0","t1","t2","t3","t4","t5")
 usethis::use_data(variable_cal_exp_2014, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2014, overwrite = TRUE)
 
-## 2013 ----------------
+## 2013 (same as 2014)----------------
 variable_cal_exp_2013 <- variable_e_ep_calculation_2013 %>%
   rows_update(tibble(x2013_variable_name = var_name, x2013_table_field_calculation = math))
 
@@ -296,11 +294,12 @@ census_variables_exp_2013 <- census_variables_exp_2014
 usethis::use_data(variable_cal_exp_2013, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2013, overwrite = TRUE)
 
-## 2012 ----------------------
+## 2012 (same as 2014, no Adjunct)----------------------
 variable_cal_exp_2012 <- variable_cal_exp_2013 %>%
   rename(x2012_variable_name = x2013_variable_name,
     x2012_table_field_calculation = x2013_table_field_calculation) %>%
   filter(!theme == 5)
+#suddenly tried another approach?.. ok..
 
 census_variables_exp_2012 <- census_variables_exp_2013[1:5] # no theme 5
 
