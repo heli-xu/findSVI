@@ -6,7 +6,7 @@
 #'   at <https://api.census.gov/data/key_signup.html> and set up using
 #'   [tidycensus::census_api_key()].
 #'
-#' @param year The year of interest (available 2012-2021).
+#' @param year The year of interest (available 2012-2022).
 #' @param state (Optional) Specify the state of interest. If data for multiple
 #'   states are retrieved together, ranking for SVI calculation will be
 #'   performed among all states. `state = NULL` as default, or `state = 'US'`
@@ -16,10 +16,17 @@
 #'   with a value supplied to "state".
 #' @param key Your Census API key. Obtain one at
 #'   <https://api.census.gov/data/key_signup.html>. Include it in this argument
-#'   or set up your key using `tidycensus::census_api_key("YOUR KEY GOES HERE")`.
-#' @param geometry Default as `FALSE` for a regular tibble of census data. If set
-#'   as `TRUE`, returns a tibble with an additional `geometry` column containing
-#'   simple feature geometry.
+#'   or set up your key using `tidycensus::census_api_key("YOUR KEY GOES
+#'   HERE")`.
+#' @param geometry Default as `FALSE` for a regular tibble of census data. If
+#'   set as `TRUE`, returns a tibble with an additional `geometry` column
+#'   containing simple feature geometry.
+#' @param exp Default as `FALSE` for retrieving `EP_`(percent estimate)
+#'   variables directly from ACS when available (as described in [CDC/ADSTR SVI
+#'   dictionary](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
+#'   If set as `TRUE`, uses explicitly defined denominators and retrieves the
+#'   ACS data to calculate the `EP` variables for easier aggregation in
+#'   downstream analysis (e.g. `get_svi_x()`).
 #' @param ... Other arguments; more details please see [tidycensus::get_acs()]
 #'
 #' @returns A tibble of ACS data with each row represents an enumeration
@@ -28,9 +35,11 @@
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required
-#'  get_census_data(year = 2018,
-#'   geography = "county",
-#'   state = "PA")
+#'  get_census_data(
+#'     year = 2018,
+#'     geography = "county",
+#'     state = "PA"
+#'   )
 #'
 #' @importFrom rlang .data
 #' @export
@@ -41,10 +50,11 @@ get_census_data <- function(year,
   county = NULL,
   key = NULL,
   geometry = FALSE,
+  exp = FALSE,
   ...)
 {
   #predicate
-  year_valid <- 2012:2021
+  year_valid <- 2012:2022
 
   state_valid <- state_valid
 
@@ -70,7 +80,7 @@ get_census_data <- function(year,
     if (!(year %in% year_valid)) {
     cli::cli_abort(c(
       "x" = "{year} is not a valid input for `year`.",
-      "i" = "Years available for census data retrieval: 2012-2021."
+      "i" = "Years available for census data retrieval: 2012-2022."
       ))
     }
 
@@ -93,11 +103,19 @@ get_census_data <- function(year,
   }
 
 #after input validated
-  filename <- paste0("census_variables_", year)
+    if (exp == TRUE) {
+      filename <- paste0("census_variables_exp_", year)
+      var_list <- get(filename) %>%
+        unlist() %>%
+        unname()
+    } else {
 
-  var_list <- get(filename) %>%
-    unlist() %>%
-    unname()
+      filename <- paste0("census_variables_", year)
+
+      var_list <- get(filename) %>%
+        unlist() %>%
+        unname()
+    }
 
 #state = 1
 if (length(state) == 1) {

@@ -1,45 +1,66 @@
-#' Calculate SVI for communities in a region from census data
+#' Calculate SVI for communities from census data using customized boundaries
 #'
-#' @description `get_svi()` calculates and constructs an SVI table for a
-#'   geographic level of interest based on [CDC/ATSDR SVI
+#' @description `get_svi_x()` calculates and constructs an SVI table for a
+#'   *customized* geographic level of interest based on [CDC/ATSDR SVI
 #'   documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
-#'   Briefly, by taking into account 4 themes of census variables that represent
-#'   challenges in socioeconomic status, household characteristics, racial and
-#'   ethnic minority status and housing/transportation, SVI uses percentile
-#'   ranking within a region to indicate the relative social vulnerability of
-#'   the geographic units (communities) in that region.
+#'   By supplying a crosswalk (relationship table) between a Census geographic
+#'   level and a customized geographic level, census data are summed across the
+#'   customized geographic units, and SVI is calculated accordingly to indicate
+#'   the relative social vulnerability of the geographic units (communities).
 #'
 #' @param year The year of interest (available 2012-2021), must match the year
 #'   specified in retrieving census data.
 #' @param data The census data retrieved by `get_census_data()`.
+#' @param xwalk A crosswalk (relationship table) between the Census geographic
+#'   level and the customized geographic level of interest. A crosswalk between
+#'   US counties and commuting zones `cty_cz_2020_xwalk` is included as an
+#'   example, and please set the column names of the crosswalk as follows:
+#'  \describe{
+#'   \item{GEOID}{Identifiers for the Census geographic level. Must contain values from `GEOID` column in `data`, and be in a compatible data type (character).}
+#'   \item{GEOID2}{Identifiers (characters or numeric values) for the customized geographic level that is larger geographic than the Census geographic level. The Census geographic level should be nested in the customized geographic level.}
+#'   \item{NAME}{An optional column of the names or description of the customized geographic level.}
+#' }
 #'
-#' @returns A tibble of SVI with rows representing geographic units, and columns
-#'   indicating variable names (first two columns containing geographic
-#'   information). For detailed description of the variable names (column
-#'   names), please refer to [CDC/ATSDR
+#' @seealso [get_svi()] for SVI calculation from census data at a Census
+#'   geographic level, and [find_svi()] for retrieving census data and
+#'   calculating SVI for multiple year-state pairs.
+#'
+#' @returns A tibble of SVI with rows representing the customized geographic
+#'   units (with a column name of `GEOID`), and columns indicating variable
+#'   names (first two columns containing geographic information). For detailed
+#'   description of the variable names (column names), please refer to
+#'   [CDC/ATSDR
 #'   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required
-#'  pa2018 <- get_census_data(
-#'     year = 2018,
+#' cty2020 <- get_census_data(
+#'     year = 2020,
 #'     geography = "county",
-#'     state = "PA")
+#'     exp = TRUE
+#'    )
 #'
-#'  get_svi(2018, pa2018)
+#' get_svi_x(year = 2020, data = cty2020, xwalk = cty_cz_2020_xwalk)
 #'
 #' @importFrom rlang .data
 #'
 #' @export
-get_svi <- function(year, data){
 
-  # E_&EP_
+get_svi_x <- function(year, data, xwalk) {
+  if (!all(c("GEOID", "GEOID2") %in% colnames(xwalk))) {
+    cli::cli_abort("The crosswalk does not contain `GEOID` (Census) and `GEOID2 (customized) columns.")
+  }
 
-  filename <- paste0("variable_e_ep_calculation_", year)
+  xwalk_check <- xwalk %>% dplyr::count(.data$GEOID)
+  if (!all(xwalk_check$n <= 1)) {
+    cli::cli_abort("`GEOID`(Census) level is not completely nested in `GEOID2`(customized) level.")
+  }
+
+  filename <- paste0("variable_cal_exp_", year)
 
   var_cal_table <- get(filename)
 
-  ## set up theme 0 vector, because sometimes other E_var calculation refer to them
+  ## set up theme 0 vector
   var_0 <- var_cal_table %>%
     dplyr::filter(.data$theme == 0)
 
@@ -67,18 +88,15 @@ get_svi <- function(year, data){
   EP_var_expr <- EP_var[[3]]
   names(EP_var_expr) <- EP_var_name
 
-  if ("geometry" %in% colnames(data)) {
 
+  if ("geometry" %in% colnames(data)) {
     data_tmp <- data %>%
-      as.data.frame() %>%
-      dplyr::select(-"geometry") %>%
-      dplyr::as_tibble()
+      sf::st_drop_geometry()
   } else {
     data_tmp <- data
   }
 
-
-  ## iterate with E_ vector and THEN EP_ vector
+  ## iterate with E_ vector
   svi0 <-
     purrr::map2_dfc(var_0_name, var_0_expr, function(var_0_name, var_0_expr){
       data_tmp %>%
@@ -96,22 +114,46 @@ get_svi <- function(year, data){
         )
     }) %>%
     dplyr::bind_cols(svi0, .)
+  #important: keep all retrieved census var (in their original name)
 
+
+  if ("NAME" %in% colnames(xwalk)) {
+    data_custom <- svi_e %>%
+      dplyr::select(-"NAME") %>%
+      dplyr::left_join(xwalk, by = "GEOID") %>%
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(dplyr::across(-c("GEOID", "NAME"), ~ sum(.x), .names = "{.col}")) %>%
+      dplyr::left_join(xwalk %>%
+          dplyr::select("GEOID2", "NAME") %>%
+          dplyr::distinct(),
+        by = "GEOID2") %>%
+      dplyr::rename(GEOID = "GEOID2")
+  } else {
+    data_custom <- svi_e %>%
+      dplyr::select(-"NAME") %>%
+      dplyr::left_join(xwalk, by = "GEOID") %>%
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(dplyr::across(-"GEOID", ~ sum(.x), .names = "{.col}")) %>%
+      dplyr::rename(GEOID = "GEOID2") %>%
+      dplyr::mutate(NAME = "")
+  }
 
   svi_e_ep <-
     purrr::map2(EP_var_name, EP_var_expr, function(EP_var_name, EP_var_expr){
-      svi_e %>%
+      data_custom %>%
         dplyr::transmute(
           {{EP_var_name}} := eval(str2lang({{EP_var_expr}}))
         )
     }) %>%
-    dplyr::bind_cols(svi_e, .) %>%
+    dplyr::bind_cols(data_custom, .) %>%
     #keep the new columns, GEOID, NAME
     dplyr::select("GEOID", "NAME", tidyselect::all_of(var_0_name), tidyselect::all_of(E_var_name), tidyselect::all_of(EP_var_name)) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(EP_var_name), ~ round(.x, 1)),
       E_AGE65 = dplyr::case_when(year >= 2017 ~ E_AGE65,
         TRUE ~ round(E_AGE65, 0)))
 
+
+  cli::cli_alert_success("Finished aggregating census variables by customized boundaries.")
 
   # EPL_ --------------------------------------------------------------------
 
@@ -136,8 +178,6 @@ get_svi <- function(year, data){
     dplyr::ungroup()
 
 
-  #y <- svi_epl(2014, eep_data = x)
-
   # SPL_ and RPL_ for each theme --------------------------------------------
 
   xwalk_theme_var <- EP_var %>%
@@ -161,8 +201,6 @@ get_svi <- function(year, data){
       RPL_theme = round(.data$RPL_theme, 4)) %>%
     dplyr::ungroup()
 
-
-  #z <- spl_rpl_tm(2014, epl_data = y)
 
   # SPL_ and RPL_ for all themes --------------------------------------------
 
@@ -203,17 +241,68 @@ get_svi <- function(year, data){
   SPL_RPL_themes <- svi_spls_rpls %>%
     dplyr::select(-c("n", "rank_themes"))
 
-  svi_complete <- list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
-    purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
 
   if ("geometry" %in% colnames(data)) {
-    data_geo <- data %>%
-      dplyr::select("GEOID", "NAME", "geometry")
-    svi_complete_geo <- list(data_geo, svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
-      purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+    cli::cli_alert_info("Merging geometries from census data to customized geographic levels.")
 
+    xwalk_geo <- data %>%
+      dplyr::select("GEOID", "geometry") %>%
+      dplyr::left_join(xwalk, by = "GEOID") %>%
+      dplyr::group_by(.data$GEOID2) %>%
+      dplyr::summarise(geometry = sf::st_union(.data$geometry))
+
+    cli::cli_alert_success("Finished merging geometries.")
+
+    if ("NAME" %in% colnames(xwalk)) {
+      xwalk_geo_name <- xwalk_geo %>%
+        dplyr::left_join(xwalk %>%
+            dplyr::select("GEOID2", "NAME"), by = "GEOID2") %>%
+        dplyr::rename(GEOID = "GEOID2")
+
+      svi_complete_geo <-
+        list(xwalk_geo_name,
+          svi_e_ep,
+          EPL_var,
+          SPL_theme,
+          RPL_theme,
+          SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+
+    } else {
+      xwalk_geo_name <- xwalk_geo %>%
+        dplyr::mutate(NAME = "") %>%
+        dplyr::rename(GEOID = "GEOID2")
+
+      svi_complete_geo <-
+        list(xwalk_geo_name,
+          svi_e_ep,
+          EPL_var,
+          SPL_theme,
+          RPL_theme,
+          SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME")) %>%
+        dplyr::select(-"NAME")
+    }
+    cli::cli_alert_success("Finished SVI calculation with geometries.")
     return(svi_complete_geo)
+
+
+  } else {
+    if ("NAME" %in% colnames(xwalk)) {
+      svi_complete <-
+        list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME"))
+
+    } else {
+      svi_complete <-
+        list(svi_e_ep, EPL_var, SPL_theme, RPL_theme, SPL_RPL_themes) %>%
+        purrr::reduce(dplyr::left_join, by = c("GEOID", "NAME")) %>%
+        dplyr::select(-"NAME")
+    }
+
+    cli::cli_alert_success("Finished SVI calculation.")
+    return(svi_complete)
+
   }
 
-  return(svi_complete)
 }

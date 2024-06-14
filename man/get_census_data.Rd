@@ -11,11 +11,12 @@ get_census_data(
   county = NULL,
   key = NULL,
   geometry = FALSE,
+  exp = FALSE,
   ...
 )
 }
 \arguments{
-\item{year}{The year of interest (available 2012-2021).}
+\item{year}{The year of interest (available 2012-2022).}
 
 \item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 
@@ -31,9 +32,15 @@ with a value supplied to "state".}
 \url{https://api.census.gov/data/key_signup.html}. Include it in this argument
 or set up your key using \code{tidycensus::census_api_key("YOUR KEY GOES HERE")}.}
 
-\item{geometry}{Default as \code{FALSE} for a regular tibble of census data. If set
-as \code{TRUE}, returns a tibble with an additional \code{geometry} column containing
-simple feature geometry.}
+\item{geometry}{Default as \code{FALSE} for a regular tibble of census data. If
+set as \code{TRUE}, returns a tibble with an additional \code{geometry} column
+containing simple feature geometry.}
+
+\item{exp}{Default as \code{FALSE} for retrieving \code{EP_}(percent estimate)
+variables directly from ACS when available (as described in \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ADSTR SVI dictionary}).
+If set as \code{TRUE}, uses explicitly defined denominators and retrieves the
+ACS data to calculate the \code{EP} variables for easier aggregation in
+downstream analysis (e.g. \code{get_svi_x()}).}
 
 \item{...}{Other arguments; more details please see \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}}
 }
@@ -52,8 +59,10 @@ at \url{https://api.census.gov/data/key_signup.html} and set up using
 \examples{
 \dontshow{if (Sys.getenv("CENSUS_API_KEY") != "") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Census API key required
- get_census_data(year = 2018,
-  geography = "county",
-  state = "PA")
+ get_census_data(
+    year = 2018,
+    geography = "county",
+    state = "PA"
+  )
 \dontshow{\}) # examplesIf}
 }

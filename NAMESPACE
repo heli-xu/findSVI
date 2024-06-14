@@ -2,8 +2,10 @@
 
 export("%>%")
 export(find_svi)
+export(find_svi_x)
 export(get_census_data)
 export(get_svi)
+export(get_svi_x)
 importFrom(magrittr,"%>%")
 importFrom(rlang,":=")
 importFrom(rlang,.data)
