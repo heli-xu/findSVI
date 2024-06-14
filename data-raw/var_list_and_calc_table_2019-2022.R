@@ -70,15 +70,7 @@ variable_e_ep_calculation_2020 <- var_cal2 %>%
   select(-census_var)
 
 # 2020 List of variables from each theme----------------------
-theme_var_df <- function(n, data){
-  data %>%
-    filter(theme == n) %>%
-    select(1, census_var) %>% #1st col is var_name, adaptable to year
-    separate_rows(census_var, sep = " ")  %>%
-    filter(!str_starts(census_var, "E_"),
-      !census_var%in%c("","100")) %>%
-    pull(census_var)
-}
+source("theme_var_df.R")
 
 census_variables_2020 <- map(0:5, \(x) theme_var_df(x, data = var_cal2))
 
@@ -242,16 +234,7 @@ var_denom <- variable_cal_exp_2020 %>%
 #var_denom$census_var
 
 #same as above
-theme_var_df <- function(n, data){
-  data %>%
-    filter(theme == n) %>%
-    select(1, census_var) %>% #1st col is var_name, adaptable to year
-    separate_rows(census_var, sep = " ")  %>%
-    filter(!str_starts(census_var, "E_"),
-      !census_var%in%c("","100")) %>%
-    pull(census_var) %>%
-    unique()
-}
+source("theme_var_df.R")
 
 census_variables_exp_2020 <- map(0:5, \(x) theme_var_df(x, data = var_denom))
 names(census_variables_exp_2020) <- c("t0","t1","t2","t3","t4","t5")
