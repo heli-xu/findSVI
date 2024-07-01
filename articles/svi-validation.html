@@ -81,7 +81,7 @@
 
 
 
-<script src="svi-validation_files/core-js-2.5.3/shim.min.js"></script><script src="svi-validation_files/react-18.2.0/react.min.js"></script><script src="svi-validation_files/react-18.2.0/react-dom.min.js"></script><script src="svi-validation_files/reactwidget-1.0.0/react-tools.js"></script><link href="svi-validation_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="svi-validation_files/core-js-2.5.3/shim.min.js"></script><script src="svi-validation_files/react-18.2.0/react.min.js"></script><script src="svi-validation_files/react-18.2.0/react-dom.min.js"></script><script src="svi-validation_files/reactwidget-2.0.0/react-tools.umd.cjs"></script><link href="svi-validation_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="svi-validation_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="svi-validation_files/reactable-0.4.4/reactable.css" rel="stylesheet">
 <script src="svi-validation_files/reactable-binding-0.4.4/reactable.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
@@ -101,16 +101,8 @@ calculate SVI from Census data, where we’ll include the tables for
 retrieving census variables and normalizing data, as well as a
 comparison between findSVI calculations and <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR
 SVI data</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glin.github.io/reactable/" class="external-link">reactable</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="svi-variables-and-census-variables">SVI variables and Census variables<a class="anchor" aria-label="anchor" href="#svi-variables-and-census-variables"></a>
+<h2 id="svi-variables-and-corresponding-census-variables">SVI variables and corresponding Census variables<a class="anchor" aria-label="anchor" href="#svi-variables-and-corresponding-census-variables"></a>
 </h2>
 <p>For each year between 2012-2021, we include a dataset in the package
 containing the SVI variable names, their theme group and corresponding
@@ -121,15 +113,33 @@ years that the CDC/ATSDR SVI database does not cover (if Census variable
 names are different, otherwise information of the adjacent year is
 used). These datasets are documented in
 <code><a href="../reference/variable_calculation.html">?variable_calculation</a></code>.</p>
+<p>Here we show all the datasets as one table for easier search and
+reference, with the columns represent: - year: The year that the other
+columns of data correspond to. - SVI_var: SVI variable names (“E_xx” for
+counts, “EP_xx” for normalized values). - Theme: SVI variables are
+categorized into four themes/domains: 1) Socioeconomic Status, 2)
+Household Characteristics, 3) Racial &amp; Ethnic Minority Status and 4)
+Housing Type/Transportation. Theme 0 is used for 3 variables
+representing total counts, while theme 5 is used for adjunct variables
+(not included in calculation). - Census_var_calculation: Census variable
+name(s) corresponding to the SVI variable, and/or the calculation using
+SVI/census variables.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glin.github.io/reactable/" class="external-link">reactable</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span> </span>
+<code class="sourceCode R"><span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="va">variable_e_ep_calculation_2012</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2013</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2014</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2015</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2016</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2017</span>,</span>
-<span>  <span class="va">variable_e_ep_calculation_2018</span>, </span>
+<span>  <span class="va">variable_e_ep_calculation_2018</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2019</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2020</span>,</span>
 <span>  <span class="va">variable_e_ep_calculation_2021</span></span>
@@ -138,36 +148,23 @@ used). These datasets are documented in
 <span><span class="va">process_file</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">file</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">data_tmp</span> <span class="op">&lt;-</span> <span class="va">file</span></span>
 <span>  <span class="va">year_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">data_tmp</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">year_info</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span>, <span class="fl">5</span><span class="op">)</span>, .before <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>SVI_var <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>    Theme <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    Census_var <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> </span>
+<span></span>
+<span>  <span class="va">data_tmp</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">year_info</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span>, <span class="fl">5</span><span class="op">)</span>, .before <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>      SVI_var <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      Theme <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>      Census_var <span class="op">=</span> <span class="fl">4</span></span>
+<span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span>  </span>
-<span><span class="va">all_datasets</span> <span class="op">&lt;-</span> <span class="va">datasets</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">process_file</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span></span>
+<span><span class="va">all_datasets</span> <span class="op">&lt;-</span> <span class="va">datasets</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">process_file</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/list_c.html" class="external-link">list_rbind</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Here we show all the datasets as one table for easier search and
-reference, with the columns represent:</p>
-<ul>
-<li><p><strong>year</strong>: The year that the other columns of data
-correspond to.</p></li>
-<li><p><strong>SVI_var</strong>: SVI variable names (“E_xx” for counts,
-“EP_xx” for normalized values).</p></li>
-<li><p><strong>Theme</strong>: SVI variables are categorized into four
-themes/domains: 1) Socioeconomic Status, 2) Household Characteristics,
-3) Racial &amp; Ethnic Minority Status and 4) Housing
-Type/Transportation. Theme 0 is used for 3 variables representing total
-counts, while theme 5 is used for adjunct variables (not included in
-calculation).</p></li>
-<li><p><strong>Census_var</strong>: Census variable name(s)
-corresponding to the SVI variable, and/or the calculation using
-SVI/census variables.</p></li>
-</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://glin.github.io/reactable/reference/reactable.html" class="external-link">reactable</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glin.github.io/reactable/" class="external-link">reactable</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://glin.github.io/reactable/reference/reactable.html" class="external-link">reactable</a></span><span class="op">(</span></span>
 <span>  <span class="va">all_datasets</span>,</span>
 <span>  filterable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  searchable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -176,7 +173,7 @@ SVI/census variables.</p></li>
 <span>  minRows <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  highlight <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  showPageSizeOptions <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  pageSizeOptions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">20</span>,<span class="fl">30</span><span class="op">)</span>,</span>
+<span>  pageSizeOptions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span>
 <span>  defaultPageSize <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="reactable html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:auto;height:auto;"></div>
@@ -192,91 +189,101 @@ the tests are considered passed when correlation coefficient is higher
 than 0.9995.</p>
 <p>For example, comparing two versions of SVIs for 2020:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#source:https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html</span></span>
-<span><span class="co">#rename FIPS to GEOID</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>,<span class="st">"cdc_pa_cty_svi2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># source:https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html</span></span>
+<span><span class="co"># rename FIPS to GEOID</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>, <span class="st">"cdc_pa_cty_svi2020.rda"</span>, package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Census API key required for raw data retrieval</span></span>
-<span><span class="va">pa_cty_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>,<span class="st">"pa_cty_raw2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Census API key required for raw data retrieval</span></span>
+<span><span class="va">pa_cty_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>, <span class="st">"pa_cty_raw2020.rda"</span>, package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">pa_cty_raw</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">join_RPL</span> <span class="op">&lt;-</span> <span class="va">cdc_pa_cty_svi2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>      cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
-<span>      cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
-<span>      cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
-<span>      cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
-<span>      cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">output</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>          <span class="va">RPL_themes</span>,</span>
-<span>          <span class="va">RPL_theme1</span>,</span>
-<span>          <span class="va">RPL_theme2</span>,</span>
-<span>          <span class="va">RPL_theme3</span>,</span>
-<span>          <span class="va">RPL_theme4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co">## remove NA rows</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
+<span>    cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
+<span>    cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
+<span>    cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
+<span>    cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
+<span>    cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">output</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">GEOID</span>,</span>
+<span>      <span class="va">RPL_themes</span>,</span>
+<span>      <span class="va">RPL_theme1</span>,</span>
+<span>      <span class="va">RPL_theme2</span>,</span>
+<span>      <span class="va">RPL_theme3</span>,</span>
+<span>      <span class="va">RPL_theme4</span></span>
+<span>    <span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## remove NA rows</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(GEOID)`</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">coeff1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">join_RPL</span><span class="op">$</span><span class="va">cdc_RPL_themes</span>, <span class="va">join_RPL</span><span class="op">$</span><span class="va">RPL_themes</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">join_RPL</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">join_RPL</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cdc_RPL_themes</span>, y <span class="op">=</span> <span class="va">RPL_themes</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"CDC vs. findSVI CTY-level SVI for Pennsylvania in 2020"</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"CDC vs. findSVI CTY-level SVI for PA in 2020"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Comparison of overall percentile ranking (RPLs), correlation coefficient = "</span>, <span class="va">coeff1</span><span class="op">)</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"findSVI"</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"CDC"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    x <span class="op">=</span> <span class="st">"CDC"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="svi-validation_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>Similarly, we could visualize the two versions of census tract-level
-SVIs for Delaware for 2020. (For considerations of datasets size in the
-package, census tract-level SVI comparisons are not included in the
-automated testing.)</p>
+SVIs for Delaware for 2020. (For considerations of dataset size in the
+package, census tract-level SVI comparisons are not included in the unit
+testing.)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,<span class="st">"cdc_de_ct_svi2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"cdc_de_ct_svi2020.rda"</span>, package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">de_ct_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,<span class="st">"de_ct_raw2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">de_ct_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"de_ct_raw2020.rda"</span>, package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">output2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">de_ct_raw</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">join_RPL2</span> <span class="op">&lt;-</span> <span class="va">cdc_de_ct_svi2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>      cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
-<span>      cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
-<span>      cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
-<span>      cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
-<span>      cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">output2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>          <span class="va">RPL_themes</span>,</span>
-<span>          <span class="va">RPL_theme1</span>,</span>
-<span>          <span class="va">RPL_theme2</span>,</span>
-<span>          <span class="va">RPL_theme3</span>,</span>
-<span>          <span class="va">RPL_theme4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co">## remove NA rows</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
+<span>    cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
+<span>    cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
+<span>    cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
+<span>    cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
+<span>    cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">output2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">GEOID</span>,</span>
+<span>      <span class="va">RPL_themes</span>,</span>
+<span>      <span class="va">RPL_theme1</span>,</span>
+<span>      <span class="va">RPL_theme2</span>,</span>
+<span>      <span class="va">RPL_theme3</span>,</span>
+<span>      <span class="va">RPL_theme4</span></span>
+<span>    <span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## remove NA rows</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(GEOID)`</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">coeff2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">join_RPL2</span><span class="op">$</span><span class="va">cdc_RPL_themes</span>, <span class="va">join_RPL2</span><span class="op">$</span><span class="va">RPL_themes</span><span class="op">)</span>,<span class="fl">6</span><span class="op">)</span></span>
+<span><span class="va">coeff2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">join_RPL2</span><span class="op">$</span><span class="va">cdc_RPL_themes</span>, <span class="va">join_RPL2</span><span class="op">$</span><span class="va">RPL_themes</span><span class="op">)</span>, <span class="fl">6</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">join_RPL2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">join_RPL2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cdc_RPL_themes</span>, y <span class="op">=</span> <span class="va">RPL_themes</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"CDC vs. findSVI CT-level SVI for Delaware in 2020"</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"CDC vs. findSVI CT-level SVI for Delaware in 2020"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Comparison of overall percentile ranking (RPLs), correlation coefficient = "</span>, <span class="va">coeff2</span><span class="op">)</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"findSVI"</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"CDC"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    x <span class="op">=</span> <span class="st">"CDC"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="svi-validation_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

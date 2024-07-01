@@ -137,8 +137,8 @@ may be more convenient to download the data from <a href="https://www.atsdr.cdc.
 Social Vulnerability Index (SVI) database</a>, especially for nationwide
 census tract-level data with geometry.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html</span></span>
-<span><span class="co">#choose map data (recently changed to ESTI geodatabase), unzip files</span></span>
+<code class="sourceCode R"><span><span class="co"># source: https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html</span></span>
+<span><span class="co"># choose map data (recently changed to ESTI geodatabase), unzip files</span></span>
 <span></span>
 <span><span class="co"># nationwide</span></span>
 <span><span class="va">us_svi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="st">"../../SVI2020_US_tract.gdb/"</span><span class="op">)</span></span>
@@ -148,11 +148,11 @@ census tract-level data with geometry.</p>
 <span><span class="co"># old format: pa_svi &lt;- st_read("pa_ct_2020_shapefile/SVI2020_PENNSYLVANIA_tract.shp")</span></span>
 <span></span>
 <span><span class="co"># alternative: findSVI</span></span>
-<span><span class="co"># us_data &lt;- get_census_data(2020, </span></span>
+<span><span class="co"># us_data &lt;- get_census_data(2020,</span></span>
 <span><span class="co">#   state = "US", #"PA" for statewide data</span></span>
-<span><span class="co">#   geography = "tract", </span></span>
+<span><span class="co">#   geography = "tract",</span></span>
 <span><span class="co">#   geometry = TRUE)</span></span>
-<span><span class="co"># </span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># us_svi &lt;- get_svi(2020, us_data)</span></span></code></pre></div>
 <p>After obtaining the nationwide and statewide(Pennsylvania) SVI by
 either findSVI or CDC’s database, we could filter the result by the
@@ -161,13 +161,17 @@ county and only keep the data for Philadelphia.</p>
 <code class="sourceCode R"><span><span class="co"># nationwide</span></span>
 <span><span class="va">us_svi_phl</span> <span class="op">&lt;-</span> <span class="va">us_svi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL_THEME"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="va">FIPS</span>,</span>
-<span>    <span class="co">#format switched to ESRI gdb, col name change -7/28/23</span></span>
-<span>    geometry <span class="op">=</span> <span class="va">Shape</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="co">#CDC use -999 as NAs</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">RPL_THEMES</span> <span class="op">&gt;=</span> <span class="fl">0</span>,</span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>    GEOID <span class="op">=</span> <span class="va">FIPS</span>,</span>
+<span>    <span class="co"># format switched to ESRI gdb, col name change -7/28/23</span></span>
+<span>    geometry <span class="op">=</span> <span class="va">Shape</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># CDC use -999 as NAs</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">RPL_THEMES</span> <span class="op">&gt;=</span> <span class="fl">0</span>,</span>
 <span>    <span class="va">ST_ABBR</span> <span class="op">==</span> <span class="st">"PA"</span>,</span>
-<span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span><span class="op">)</span></span>
+<span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">us_svi_phl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; Rows: 388</span></span>
@@ -190,8 +194,10 @@ county and only keep the data for Philadelphia.</p>
 <span><span class="va">pa_svi_phl</span> <span class="op">&lt;-</span> <span class="va">pa_svi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL_THEME"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="va">FIPS</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">RPL_THEMES</span><span class="op">&gt;=</span> <span class="fl">0</span>,</span>
-<span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">RPL_THEMES</span> <span class="op">&gt;=</span> <span class="fl">0</span>,</span>
+<span>    <span class="va">COUNTY</span> <span class="op">==</span> <span class="st">"Philadelphia"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">pa_svi_phl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; Rows: 388</span></span>
@@ -220,14 +226,14 @@ without geometry, the easiest option is one-step
 <code><a href="../reference/find_svi.html">find_svi()</a></code>.)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">phl_ct_2020_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_census_data.html">get_census_data</a></span><span class="op">(</span></span>
-<span>  <span class="fl">2020</span>, </span>
+<span>  <span class="fl">2020</span>,</span>
 <span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
 <span>  county <span class="op">=</span> <span class="st">"Philadelphia"</span>,</span>
 <span>  geography <span class="op">=</span> <span class="st">"tract"</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">phl_ct_svi_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">phl_ct_2020_data</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">phl_ct_svi_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">phl_ct_2020_data</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL_theme"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -246,7 +252,7 @@ without geometry, the easiest option is one-step
 <span><span class="co"># matching id from nation/statewide SVI for mapping</span></span>
 <span><span class="va">match_id</span> <span class="op">&lt;-</span> <span class="va">pa_svi_phl</span><span class="op">$</span><span class="va">GEOID</span></span>
 <span></span>
-<span><span class="va">phl_svi</span> <span class="op">&lt;-</span> <span class="va">phl_ct_svi_2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">phl_svi</span> <span class="op">&lt;-</span> <span class="va">phl_ct_svi_2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">GEOID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">match_id</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -258,51 +264,60 @@ without geometry, the easiest option is one-step
 <code class="sourceCode R"><span><span class="va">nation</span> <span class="op">&lt;-</span> <span class="va">us_svi_phl</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="va">geometry</span>, <span class="va">RPL_THEMES</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="co">#using NAD83 in tmap</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="co"># using NAD83 in tmap</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span><span class="st">"RPL_THEMES"</span>,</span>
-<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>,<span class="st">"navy"</span><span class="op">)</span>,</span>
+<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"navy"</span><span class="op">)</span>,</span>
 <span>    style <span class="op">=</span> <span class="st">"cont"</span>,</span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Nationwide SVI: \nPhiladelphia subset"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Nationwide SVI: \nPhiladelphia subset"</span>,</span>
 <span>    title.size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    title.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"TOP"</span><span class="op">)</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RIGHT"</span>, <span class="st">"bottom"</span><span class="op">)</span>,</span>
 <span>    legend.title.size <span class="op">=</span> <span class="fl">0.9</span>,</span>
-<span>    legend.width <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    legend.width <span class="op">=</span> <span class="fl">2</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">state</span> <span class="op">&lt;-</span> <span class="va">pa_svi_phl</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="va">geometry</span>, <span class="va">RPL_THEMES</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span><span class="st">"RPL_THEMES"</span>,</span>
-<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>,<span class="st">"navy"</span><span class="op">)</span>,</span>
+<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"navy"</span><span class="op">)</span>,</span>
 <span>    style <span class="op">=</span> <span class="st">"cont"</span>,</span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Statewide SVI: \nPhiladelphia subset"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Statewide SVI: \nPhiladelphia subset"</span>,</span>
 <span>    title.size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    title.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"TOP"</span><span class="op">)</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RIGHT"</span>, <span class="st">"bottom"</span><span class="op">)</span>,</span>
 <span>    legend.title.size <span class="op">=</span> <span class="fl">0.9</span>,</span>
-<span>    legend.width <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    legend.width <span class="op">=</span> <span class="fl">2</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">county</span> <span class="op">&lt;-</span> <span class="va">phl_svi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="va">geometry</span>, <span class="va">RPL_themes</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>projection <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span><span class="st">"RPL_themes"</span>,</span>
-<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>,<span class="st">"navy"</span><span class="op">)</span>,</span>
+<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"navy"</span><span class="op">)</span>,</span>
 <span>    style <span class="op">=</span> <span class="st">"cont"</span>,</span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"County-specific SVI: \nPhiladelphia"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"SVI (by tract)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html" class="external-link">tm_layout</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"County-specific SVI: \nPhiladelphia"</span>,</span>
 <span>    title.size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    title.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"TOP"</span><span class="op">)</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RIGHT"</span>, <span class="st">"bottom"</span><span class="op">)</span>,</span>
 <span>    legend.title.size <span class="op">=</span> <span class="fl">0.9</span>,</span>
-<span>    legend.width <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    legend.width <span class="op">=</span> <span class="fl">2</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">nation</span>, <span class="va">state</span>, <span class="va">county</span><span class="op">)</span></span>
 <span></span>
