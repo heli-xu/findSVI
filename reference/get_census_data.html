@@ -82,6 +82,7 @@ at <a href="https://api.census.gov/data/key_signup.html" class="external-link">h
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  exp <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -89,7 +90,7 @@ at <a href="https://api.census.gov/data/key_signup.html" class="external-link">h
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>year</dt>
-<dd><p>The year of interest (available 2012-2021).</p></dd>
+<dd><p>The year of interest (available 2012-2022).</p></dd>
 
 
 <dt>geography</dt>
@@ -115,9 +116,17 @@ or set up your key using <code>tidycensus::census_api_key("YOUR KEY GOES HERE")<
 
 
 <dt>geometry</dt>
-<dd><p>Default as <code>FALSE</code> for a regular tibble of census data. If set
-as <code>TRUE</code>, returns a tibble with an additional <code>geometry</code> column containing
-simple feature geometry.</p></dd>
+<dd><p>Default as <code>FALSE</code> for a regular tibble of census data. If
+set as <code>TRUE</code>, returns a tibble with an additional <code>geometry</code> column
+containing simple feature geometry.</p></dd>
+
+
+<dt>exp</dt>
+<dd><p>Default as <code>FALSE</code> for retrieving <code>EP_</code>(percent estimate)
+variables directly from ACS when available (as described in <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ADSTR SVI dictionary</a>).
+If set as <code>TRUE</code>, uses explicitly defined denominators and retrieves the
+ACS data to calculate the <code>EP</code> variables for easier aggregation in
+downstream analysis (e.g. <code><a href="get_svi_x.html">get_svi_x()</a></code>).</p></dd>
 
 
 <dt>...</dt>
@@ -137,9 +146,11 @@ form).</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># Sys.getenv("CENSUS_API_KEY") != ""</span></span></span>
 <span class="r-in"><span><span class="co"># Census API key required</span></span></span>
-<span class="r-in"><span> <span class="fu">get_census_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2018</span>,</span></span>
-<span class="r-in"><span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span></span>
-<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"PA"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">get_census_data</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    year <span class="op">=</span> <span class="fl">2018</span>,</span></span>
+<span class="r-in"><span>    geography <span class="op">=</span> <span class="st">"county"</span>,</span></span>
+<span class="r-in"><span>    state <span class="op">=</span> <span class="st">"PA"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
