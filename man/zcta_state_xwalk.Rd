@@ -6,6 +6,7 @@
 \alias{zcta_state_xwalk2021}
 \alias{zcta_state_xwalk2020}
 \alias{zcta_state_xwalk2019}
+\alias{zcta_state_xwalk2022}
 \title{Relationship file (crosswalk) for ZCTAs by state}
 \format{
 \subsection{A data frame with 5 columns and various number of rows, depending on the year:}{
@@ -19,16 +20,18 @@
 }
 }
 
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 542995 rows and 5 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 538426 rows and 5 columns.
 
-An object of class \code{data.frame} with 523727 rows and 5 columns.
+An object of class \code{data.frame} with 519726 rows and 5 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 538152 rows and 5 columns.
 }
 \source{
 Census ZCTA-county relationship file (2010)
 https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2010.html#list-tab-1709067297
 Geocorr ZCTA-county relationship file (2020)
 https://mcdc.missouri.edu/applications/geocorr2022.html
-County-state reference file (2019, 2020, 2021)
+County-state reference file (2019, 2020, 2021, 2022)
 https://www.census.gov/programs-surveys/popest/geographies/reference-files.html
 }
 \usage{
@@ -37,6 +40,8 @@ zcta_state_xwalk2021
 zcta_state_xwalk2020
 
 zcta_state_xwalk2019
+
+zcta_state_xwalk2022
 }
 \description{
 Each of these tables contains ZIP Code Tabulation Areas (ZCTAs), their

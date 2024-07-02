@@ -20,7 +20,7 @@
 #'   https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2010.html#list-tab-1709067297
 #'   Geocorr ZCTA-county relationship file (2020)
 #'   https://mcdc.missouri.edu/applications/geocorr2022.html
-#'   County-state reference file (2019, 2020, 2021)
+#'   County-state reference file (2019, 2020, 2021, 2022)
 #'   https://www.census.gov/programs-surveys/popest/geographies/reference-files.html
 "zcta_state_xwalk2021"
 
@@ -29,3 +29,6 @@
 
 #' @rdname zcta_state_xwalk
 "zcta_state_xwalk2019"
+
+#' @rdname zcta_state_xwalk
+"zcta_state_xwalk2022"
