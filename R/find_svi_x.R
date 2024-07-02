@@ -10,7 +10,7 @@
 #'   <https://api.census.gov/data/key_signup.html> and set up using
 #'   [tidycensus::census_api_key()].
 #'
-#' @param year A year of interest (available 2012-2021).
+#' @param year A year of interest (available 2012-2022).
 #' @param geography The Census geography level of interest (e.g."county",
 #'   "zcta", "tract").
 #' @param state (Optional) Specify the state of interest. Default `state = NULL`
@@ -65,8 +65,53 @@ find_svi_x  <- function(
   county = NULL,
   key = NULL,
   geometry = FALSE,
-  xwalk
-  ) {
+  xwalk)
+{
+  if (!length(year) == 1) {
+    cli::cli_abort(c(
+      "x" = "Multiple years are not valid input for `year`.",
+      "i" = "Please supply one year between 2012-2022."
+    ))
+  }
+
+
+  year_valid <- 2012:2022
+  if (!(year %in% year_valid)) {
+    cli::cli_abort(c(
+      "x" = "{year} is not a valid input for `year`.",
+      "i" = "Years available for census data retrieval: 2012-2022."
+    ))
+  }
+
+
+  state_valid <- state_valid
+
+  state_valid_chr <- state_valid %>%
+    dplyr::select("st_abbr", "st_name") %>%
+    unlist(use.names = FALSE)
+  state_valid_chr_us <- c("US", state_valid_chr)
+
+  state_valid_dbl <- state_valid %>%
+    dplyr::select("fips_code") %>%
+    unlist(use.names = FALSE)
+
+  if (inherits(state, "numeric")) {
+    if (any(!(state %in% state_valid_dbl))) {
+      cli::cli_abort(c(
+        "x" = "One or more elements of {state} is not a valid input for `state`.",
+        "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
+      ))
+    }
+  }
+
+  if(inherits(state, "character")) {
+    if (any(!(state %in% state_valid_chr_us))) {
+      cli::cli_abort(c(
+        "x" = "One or more elements of {state} is not a valid input for `state`.",
+        "i" = "Use `state_valid` for a table of valid input (besides 'US'). Note state full names/abbreviations are characters; FIPS codes are numbers."
+      ))
+    }
+  }
 
   census_data <- findSVI::get_census_data(
     year = year,

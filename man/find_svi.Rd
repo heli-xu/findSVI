@@ -7,7 +7,7 @@
 find_svi(year, state = NULL, geography, key = NULL, full.table = FALSE)
 }
 \arguments{
-\item{year}{A vector containing years of interest (available 2012-2021).
+\item{year}{A vector containing years of interest (available 2012-2022).
 Length >=1. Acting as pairs with \code{state}, \code{year} should be of the same
 length as \code{state}. The exception is when it's a single year entry (length
 1), other than providing one state of interest, supply \code{state = NULL} as
