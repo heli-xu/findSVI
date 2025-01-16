@@ -1,14 +1,13 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   findSVI: findSVI.html
-  geo_context_of_svi: geo_context_of_svi.html
-  svi-covid: svi-covid.html
-  SVI-mapping: SVI-mapping.html
-  svi-validation: svi-validation.html
-last_built: 2024-07-02T21:10Z
+  articles/geo_context_of_svi: geo_context_of_svi.html
+  articles/svi-covid: svi-covid.html
+  articles/SVI-mapping: SVI-mapping.html
+  articles/svi-validation: svi-validation.html
+last_built: 2025-01-16T18:57Z
 urls:
   reference: https://heli-xu.github.io/findSVI/reference
   article: https://heli-xu.github.io/findSVI/articles
-

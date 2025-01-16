@@ -1,78 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/404.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/SVI-mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/findSVI.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/geo_context_of_svi.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/svi-covid.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/articles/svi-validation.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/index.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/census_variables.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/cty_cz_2020_xwalk.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/findSVI-package.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/find_svi.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/find_svi_x.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/get_census_data.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/get_svi.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/get_svi_x.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/state_valid.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/variable_calculation.html</loc>
-  </url>
-  <url>
-    <loc>https://heli-xu.github.io/findSVI/reference/zcta_state_xwalk.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://heli-xu.github.io/findSVI/404.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/LICENSE-text.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/LICENSE.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/SVI-mapping.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/findSVI.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/geo_context_of_svi.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/index.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/svi-covid.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/articles/svi-validation.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/authors.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/index.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/news/index.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/census_variables.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/cty_cz_2020_xwalk.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/findSVI-package.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/find_svi.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/find_svi_x.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/get_census_data.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/get_svi.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/get_svi_x.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/index.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/pipe.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/state_valid.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/variable_calculation.html</loc></url>
+<url><loc>https://heli-xu.github.io/findSVI/reference/zcta_state_xwalk.html</loc></url>
 </urlset>
+
