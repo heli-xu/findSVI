@@ -28,7 +28,7 @@ library(ggplot2)
 
 For retrieving census data with geometry, we'll use `get_census_data()` and `get_svi()` to obtain SVI. We'll keep the GEOID(ZCTA) and SVI-related columns in the resulting SVI table.
 ```{r, eval=FALSE}
-phl_zcta_data_geo_2020 <- get_census_data(
+phl_zcta_2020_geo_data <- get_census_data(
   2020,
   geography = "zcta",
   state = "PA",
@@ -36,16 +36,17 @@ phl_zcta_data_geo_2020 <- get_census_data(
   geometry = TRUE
 )
 
-phl_zcta_svi_geo_2020 <- get_svi(2020,
+phl_zcta_2020_geo_svi <- get_svi(2020,
   data = phl_zcta_data_geo_2020) %>%
   select(GEOID, contains("RPL_theme"))
 
-phl_zcta_svi_geo_2020 %>% glimpse()
+phl_zcta_2020_geo_svi
 ```
 
 ```{r, echo=FALSE}
-load(system.file("extdata", "phl_zcta_svi_geo_2020.rda", package = "findSVI"))
-glimpse(phl_zcta_svi_geo_2020)
+load(system.file("extdata", "phl_zcta_2020_geo_svi.rda", package = "findSVI"))
+phl_zcta_2020_geo_svi %>%
+  select(GEOID, contains("RPL_theme"))
 ```
 
 ## ZCTA-level COVID-19 data in Philadelphia
@@ -76,7 +77,7 @@ Once we have the ZCTA-level SVI and COVID-19 data ready, we can join them togeth
 
 ```{r}
 phl_svi_covid <- phl_hosp %>%
-  left_join(phl_zcta_svi_geo_2020, by = "GEOID") %>%
+  left_join(phl_zcta_2020_geo_svi, by = "GEOID") %>%
   #although geometry sticky, after wrangling, class() become df
   st_as_sf(sf_column_name = "geometry")
 
