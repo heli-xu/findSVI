@@ -46,6 +46,7 @@ Suggests:
     sf,
     ggplot2,
     tmap,
-    reactable
+    reactable,
+    cowplot
 Config/testthat/edition: 3
 VignetteBuilder: knitr
