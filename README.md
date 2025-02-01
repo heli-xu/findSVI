@@ -120,7 +120,7 @@ other census variables for SVI calculation.)
 
 ``` r
 result <- get_svi(2020, data)
-glimpse(restult)
+glimpse(result)
 ```
 
     #> Rows: 67
