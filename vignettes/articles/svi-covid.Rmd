@@ -20,8 +20,8 @@ library(findSVI)
 library(dplyr)
 library(sf)
 library(tidyr)
-library(tmap)
 library(ggplot2)
+library(cowplot)
 ```
 
 ## ZCTA-level SVI in Philadelphia for 2020
@@ -88,46 +88,52 @@ To visualize their spatial pattern directly, we can plot the SVI and COVID-19 da
 
 ```{r fig.cap = 'SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs). COVID-19 data are cumulative till 8/2022.'}
 
-covid_hosp <- phl_svi_covid %>%
-  select(GEOID, geometry, hosp_per_100k) %>%
-  drop_na() %>% 
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("hosp_per_100k",
-    style = "quantile",
-    title = "Hospitalizations/100k")+
-  tm_layout(title = "COVID-19 Hospitalizations",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 2)
+plot_data <- phl_svi_covid %>%
+  select(GEOID, geometry, RPL_themes, hosp_per_100k) %>%
+  drop_na()
 
-svi <- phl_svi_covid %>%
-  select(GEOID, geometry, RPL_themes) %>%
-  drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("RPL_themes",
-    style = "quantile",
-    title = "Overall SVI (2020)",
-    palette = "Blues")+
-  tm_layout(title = "Social Vulnerability",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 2)
+plot_phl <- function(data, var){
+  ggplot(data)+
+    geom_sf(aes(fill=cut({{var}},
+      breaks = quantile({{var}}, probs = seq(0, 1, 0.2)), dig.lab = 4, include.lowest = TRUE)),
+      size = 0.1)+
+    coord_sf(crs = st_crs(26915))+
+    theme_minimal()+
+    theme(
+      plot.title = element_text(size = 12, hjust = 0.05, vjust = -10),
+      plot.title.position = "panel",
+      legend.title = element_text(size = 9),
+      axis.text = element_blank(),
+      panel.grid = element_blank(),
+      legend.position = "inside",
+      legend.position.inside = c(0.8, 0.15),
+      legend.key.size = unit(0.4, "cm"),
+      #legend.key.spacing.y = unit(0.01, "mm"),
+      legend.box.margin = margin(0, 0.2, 0, 0, "cm"),
+      #plot.background = element_rect(color = "black", fill=NA, size = 0.1),
+      panel.border = element_rect(color = "black",fill = NA, size = 0.1)
+    )
+}
 
-plots <- list(svi, covid_hosp)
+covid_hosp <- plot_phl(plot_data, hosp_per_100k)+
+  scale_fill_brewer(
+    name = "Hospitalizations/100k",
+    labels = c("194 -1,038", "1,038 -1,336", "1,336 -1,654", "1,654 -1,921", "1,921 -2,913"),
+    palette = "YlOrBr"
+  )+
+  labs(title = "COVID-19 Hospitalizations")+
+  theme(plot.margin = unit(c(0, 0, 0.3, 0.5), "cm"))
 
-current.mode <- tmap_mode("plot")
-#> tmap mode set to plotting
-
-tmap_arrange(
-  plots, 
-  nrow = 1,
-  width = c(0.5, 0.5)
-  ) 
-
+svi <- plot_phl(plot_data, RPL_themes)+
+  scale_fill_brewer(
+    name = "Overall SVI (2020)",
+    labels = c("0.0 -0.2", "0.2 -0.4", "0.4 -0.6", "0.6 -0.8", "0.8 -1.0"),
+    palette = "Blues"
+  )+
+  labs(title = "Social Vulnerability")+
+  theme(plot.margin = unit(c(0, 0.5, 0.3, 0), "cm"))
+  
+plot_grid(covid_hosp, svi)
 ```
 
 #### Correlation

@@ -45,7 +45,6 @@ Suggests:
     glue,
     sf,
     ggplot2,
-    tmap,
     reactable,
     cowplot
 Config/testthat/edition: 3
