@@ -1,5 +1,5 @@
 ---
-title: "SVI Calculation for Customized Boundaries"
+title: "SVI Calculation for Custom Geographic Boundaries"
 subtitle: "An example using US commuting zones for 2020"
 ---
 
