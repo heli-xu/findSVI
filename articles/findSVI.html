@@ -34,7 +34,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/custom_geo.html">SVI Calculation for Customized Boundaries</a></li>
+<li><a class="dropdown-item" href="../articles/custom_geo.html">SVI Calculation for Custom Geographic Boundaries</a></li>
     <li><a class="dropdown-item" href="../articles/geo_context_of_svi.html">Geographic Context of SVI</a></li>
     <li><a class="dropdown-item" href="../articles/svi-covid.html">SVI and health outcome</a></li>
     <li><a class="dropdown-item" href="../articles/SVI-mapping.html">Mapping SVI for Spatial Analysis</a></li>
@@ -100,7 +100,7 @@ questions about ZCTA-level SVI of Pennsylvania in 2021, or census
 tract-level SVI within a few counties in Pennsylvania in 2020, we might
 need to calculate SVI from the census data ourselves.</p>
 <p>findSVI aims to support more flexible and specific SVI analysis in
-these cases with additional options for years (2012-2021) and geographic
+these cases with additional options for years (2012-2022) and geographic
 levels (eg. ZCTA/places, combining multiple states).</p>
 <p>This document introduces you to the datasets and basic tools of
 findSVI for census data retrieval and SVI calculation.</p>
@@ -115,9 +115,9 @@ findSVI for census data retrieval and SVI calculation.</p>
 documentation, a series of lists and tables containing census variables
 information are included in the package.</p>
 <ul>
-<li>census_variables_(2012-2021): Each list contains the year-specific
+<li>census_variables_(2012-2022): Each list contains the year-specific
 census variables needed for SVI calculation.</li>
-<li>variable_ep_calculation_(2012-2021): Each table contains the SVI
+<li>variable_ep_calculation_(2012-2022): Each table contains the SVI
 variable names, their theme group and corresponding census variable(s)
 and calculation formula.</li>
 </ul>
@@ -191,7 +191,7 @@ with census variables directly, or basic summation/percentage
 calculation of census variables. For each SVI variable,a geographic unit
 is ranked against the others in the selected region, followed by summing
 up rankings for variables within each theme to perform percentile
-ranking again as the SVI for each theme and overall SVI.</p>
+ranking again as the SVI for theme-specific and overall SVI.</p>
 <p>For example, to obtain ZCTA-level SVI for Rhode Island for 2018:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2018</span>, <span class="va">data</span><span class="op">)</span></span>
@@ -410,6 +410,50 @@ the counties in the 6 year-state pairs from the columns of
 <code>info_table</code>. This will likely make things easier especially
 there’s a long list of year-state combinations to process.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="custom-boundaries-find_svi_x">Custom Boundaries: <code>find_svi_x()</code><a class="anchor" aria-label="anchor" href="#custom-boundaries-find_svi_x"></a>
+</h2>
+<p>To calculate SVI for custom geographic boundaries, we could use
+<code><a href="../reference/find_svi_x.html">find_svi_x()</a></code> and supply an additional crosswalk
+(relationship table) between the custom boundaries and a Census
+geographic level. The census geographic level should be fully nested in
+the custom geographic boundaries, so that the census data can be
+aggregated to the custom level for SVI calculation.</p>
+<p>As an example and a template, the crosswalk of US counties and
+commuting zones for 2020 is stored in the package and documented in
+<code>?cty_cz_2020_xwalk2020</code>. Using <code><a href="../reference/find_svi_x.html">find_svi_x()</a></code>, we
+can retrieve the census data at the county level, aggregate the data to
+the commuting zone level, and calculate the SVI for commuting zones.
+Below shows the overall and theme-specific SVIs for commuting zones 1-10
+(GEOID represents the commuting zone IDs).</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cz_svi2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi_x.html">find_svi_x</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="va">cty_cz_2020_xwalk</span> <span class="co">#county-commuting zone crosswalk</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cz_svi2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
+<span><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1      0.778      0.833      0.885     0.730       0.826</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2      0.734      0.436      0.698     0.388       0.625</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3      0.871      0.892      0.703     0.570       0.833</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4      0.881      0.498      0.838     0.947       0.876</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5      0.560      0.675      0.684     0.333       0.606</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6      0.799      0.813      0.605     0.302       0.720</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7      0.821      0.680      0.802     0.875       0.842</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8      0.694      0.888      0.438     0.084<span style="text-decoration: underline;">2</span>      0.570</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9      0.899      0.969      0.838     0.918       0.962</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10      0.357      0.507      0.589     0.134       0.335</span></span></code></pre>
+<p>Alternatively, we could also use <code><a href="../reference/get_census_data.html">get_census_data()</a></code> with
+<code>exp=TRUE</code> and <code><a href="../reference/get_svi_x.html">get_svi_x()</a></code>. For more details,
+please see <a href="articles/custom_geo.html">SVI Calculation for Custom
+Geographic Boundaries</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

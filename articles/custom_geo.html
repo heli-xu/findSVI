@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SVI Calculation for Customized Boundaries • findSVI</title>
+<title>SVI Calculation for Custom Geographic Boundaries • findSVI</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SVI Calculation for Customized Boundaries">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SVI Calculation for Custom Geographic Boundaries">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,7 +34,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/custom_geo.html">SVI Calculation for Customized Boundaries</a></li>
+<li><a class="dropdown-item" href="../articles/custom_geo.html">SVI Calculation for Custom Geographic Boundaries</a></li>
     <li><a class="dropdown-item" href="../articles/geo_context_of_svi.html">Geographic Context of SVI</a></li>
     <li><a class="dropdown-item" href="../articles/svi-covid.html">SVI and health outcome</a></li>
     <li><a class="dropdown-item" href="../articles/SVI-mapping.html">Mapping SVI for Spatial Analysis</a></li>
@@ -60,7 +60,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>SVI Calculation for Customized Boundaries</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>SVI Calculation for Custom Geographic Boundaries</h1>
             <h3 data-toc-skip class="subtitle">An example using US
 commuting zones for 2020</h3>
             
@@ -216,7 +216,88 @@ to obtain only the SVI variables.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="why-exp-true">Why <code>exp = TRUE</code><a class="anchor" aria-label="anchor" href="#why-exp-true"></a>
+<h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+</h2>
+<p>In <a href="svi-validation.html">Validation of SVI results</a>, we
+have documented the comparison between SVI results from findSVI and CDC
+database in standard operation. To validate the modified variable list
+and the calculation table when <code>exp=TRUE</code>, we’ll use a
+pseudo-crosswalk with replicating the county IDs (county-county
+crosswalk) and compare the results from <code><a href="../reference/find_svi_x.html">find_svi_x()</a></code> with
+CDC SVI.</p>
+<p>The first 10 rows of the pseudo-crosswalk look like this:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ps_xwalk</span> <span class="op">&lt;-</span> <span class="va">cty_cz_2020_xwalk</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID2 <span class="op">=</span> <span class="va">GEOID</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ps_xwalk</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    GEOID GEOID2</span></span>
+<span><span class="co">#&gt; 1  01069  01069</span></span>
+<span><span class="co">#&gt; 2  01023  01023</span></span>
+<span><span class="co">#&gt; 3  01005  01005</span></span>
+<span><span class="co">#&gt; 4  01107  01107</span></span>
+<span><span class="co">#&gt; 5  01033  01033</span></span>
+<span><span class="co">#&gt; 6  04012  04012</span></span>
+<span><span class="co">#&gt; 7  04001  04001</span></span>
+<span><span class="co">#&gt; 8  05081  05081</span></span>
+<span><span class="co">#&gt; 9  05121  05121</span></span>
+<span><span class="co">#&gt; 10 06037  06037</span></span></code></pre></div>
+<p>Supplying the crosswalk to <code><a href="../reference/find_svi_x.html">find_svi_x()</a></code>, we are
+“aggregating” each county to itself, producing county-level SVIs for
+comparison with CDC SVI. The main goal is to validate that our modified
+variable calculations using explicit denominators for percent estimates
+produce results consistent with the CDC database.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pa_cty_svi_x2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi_x.html">find_svi_x</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="va">ps_xwalk</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Now we are ready to compare this result with CDC’s county-level SVI
+for PA for 2020 downloaded from <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR
+SVI data</a></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>,<span class="st">"cdc_pa_cty_svi2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#FIPS renamed to GEOID </span></span>
+<span></span>
+<span><span class="va">join_RPL</span> <span class="op">&lt;-</span> <span class="va">cdc_pa_cty_svi2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
+<span>      cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
+<span>      cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
+<span>      cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
+<span>      cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
+<span>      cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">pa_cty_svi_x2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
+<span>          <span class="va">RPL_themes</span>,</span>
+<span>          <span class="va">RPL_theme1</span>,</span>
+<span>          <span class="va">RPL_theme2</span>,</span>
+<span>          <span class="va">RPL_theme3</span>,</span>
+<span>          <span class="va">RPL_theme4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co">## remove NA rows</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
+<span><span class="co">#&gt; Joining with `by = join_by(GEOID)`</span></span>
+<span></span>
+<span><span class="va">coeff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">join_RPL</span><span class="op">$</span><span class="va">cdc_RPL_themes</span>, <span class="va">join_RPL</span><span class="op">$</span><span class="va">RPL_themes</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">join_RPL</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cdc_RPL_themes</span>, y <span class="op">=</span> <span class="va">RPL_themes</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"CDC vs. find_svi_x() county-level SVI for PA, 2020"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Comparison of overall percentile rankings (RPLs), correlation coefficient = "</span>, <span class="va">coeff</span><span class="op">)</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"find_svi_x()"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"CDC"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="custom_geo_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="appendix-mapping-svi-percentage-variables-to-census-variables">Appendix: mapping SVI (percentage) variables to census
+variables<a class="anchor" aria-label="anchor" href="#appendix-mapping-svi-percentage-variables-to-census-variables"></a>
 </h2>
 <p>Currently, the variable retrieval process by
 <code><a href="../reference/get_census_data.html">get_census_data()</a></code> follows the <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR
@@ -230,7 +311,7 @@ and a calculation formula for <code>EP_POV150</code>. As a result,
 <code>EP_UNEMP</code>, whereas <code>S1701_C01_001E</code> is obtained
 from Census and used to calculate <code>EP_POV150</code> (along with
 <code>E_POV150</code>).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">variable_e_ep_calculation_2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>    <span class="op">!</span><span class="va">theme</span> <span class="op">==</span> <span class="fl">5</span>, </span>
@@ -262,7 +343,7 @@ to calculate the CZ-level percent. Therefore, we need to modify
 variables like <code>DP03_0009PE</code> for <code>EP_UNEMP</code> so
 that the calculation field for all “EP_” variables are formula with
 explicitly defined denominator (total counts). For example:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">variable_cal_exp_2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>    <span class="op">!</span><span class="va">theme</span> <span class="op">==</span> <span class="fl">5</span>, </span>
@@ -299,86 +380,6 @@ denominator.</p></li>
 </ul>
 <p>For use with <code><a href="../reference/get_svi_x.html">get_svi_x()</a></code>, <code>exp = TRUE</code> is
 recommended.</p>
-</div>
-<div class="section level2">
-<h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
-</h2>
-<p>In <a href="svi-validation.html">Validation of SVI results</a>, we
-have documented the comparison between SVI results from findSVI and CDC
-database in standard operation. To validate the modified variable list
-and the calculation table when <code>exp=TRUE</code>, we’ll use a
-pseudo-crosswalk with replicating the county IDs (county-county
-crosswalk) and compare the results from <code><a href="../reference/find_svi_x.html">find_svi_x()</a></code> with
-CDC SVI.</p>
-<p>The first 10 rows of the pseudo-crosswalk look like this:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps_xwalk</span> <span class="op">&lt;-</span> <span class="va">cty_cz_2020_xwalk</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID2 <span class="op">=</span> <span class="va">GEOID</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ps_xwalk</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    GEOID GEOID2</span></span>
-<span><span class="co">#&gt; 1  01069  01069</span></span>
-<span><span class="co">#&gt; 2  01023  01023</span></span>
-<span><span class="co">#&gt; 3  01005  01005</span></span>
-<span><span class="co">#&gt; 4  01107  01107</span></span>
-<span><span class="co">#&gt; 5  01033  01033</span></span>
-<span><span class="co">#&gt; 6  04012  04012</span></span>
-<span><span class="co">#&gt; 7  04001  04001</span></span>
-<span><span class="co">#&gt; 8  05081  05081</span></span>
-<span><span class="co">#&gt; 9  05121  05121</span></span>
-<span><span class="co">#&gt; 10 06037  06037</span></span></code></pre></div>
-<p>Supplying the crosswalk to <code><a href="../reference/find_svi_x.html">find_svi_x()</a></code>, we are
-“aggregating” each county to itself, producing county-level SVIs for
-comparison with CDC SVI. The main goal is to validate that our modified
-variable calculations using explicit denominators for percent estimates
-produce results consistent with the CDC database.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pa_cty_svi_x2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_svi_x.html">find_svi_x</a></span><span class="op">(</span></span>
-<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
-<span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
-<span>  state <span class="op">=</span> <span class="st">"PA"</span>,</span>
-<span>  xwalk <span class="op">=</span> <span class="va">ps_xwalk</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Now we are ready to compare this result with CDC’s county-level SVI
-for PA for 2020 downloaded from <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR
-SVI data</a></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>,<span class="st">"cdc_pa_cty_svi2020.rda"</span>,package <span class="op">=</span> <span class="st">"findSVI"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#FIPS renamed to GEOID </span></span>
-<span></span>
-<span><span class="va">join_RPL</span> <span class="op">&lt;-</span> <span class="va">cdc_pa_cty_svi2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>      cdc_RPL_themes <span class="op">=</span> <span class="va">RPL_THEMES</span>,</span>
-<span>      cdc_RPL_theme1 <span class="op">=</span> <span class="va">RPL_THEME1</span>,</span>
-<span>      cdc_RPL_theme2 <span class="op">=</span> <span class="va">RPL_THEME2</span>,</span>
-<span>      cdc_RPL_theme3 <span class="op">=</span> <span class="va">RPL_THEME3</span>,</span>
-<span>      cdc_RPL_theme4 <span class="op">=</span> <span class="va">RPL_THEME4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>GEOID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">pa_cty_svi_x2020</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>,</span>
-<span>          <span class="va">RPL_themes</span>,</span>
-<span>          <span class="va">RPL_theme1</span>,</span>
-<span>          <span class="va">RPL_theme2</span>,</span>
-<span>          <span class="va">RPL_theme3</span>,</span>
-<span>          <span class="va">RPL_theme4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   <span class="co">## remove NA rows</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">all_vars</a></span><span class="op">(</span><span class="va">.</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co">#-999 in cdc data</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(GEOID)`</span></span>
-<span></span>
-<span><span class="va">coeff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">join_RPL</span><span class="op">$</span><span class="va">cdc_RPL_themes</span>, <span class="va">join_RPL</span><span class="op">$</span><span class="va">RPL_themes</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">join_RPL</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cdc_RPL_themes</span>, y <span class="op">=</span> <span class="va">RPL_themes</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#004C54"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"CDC vs. find_svi_x() county-level SVI for PA, 2020"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Comparison of overall percentile rankings (RPLs), correlation coefficient = "</span>, <span class="va">coeff</span><span class="op">)</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"find_svi_x()"</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"CDC"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="custom_geo_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

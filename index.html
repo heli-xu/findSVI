@@ -37,7 +37,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/custom_geo.html">SVI Calculation for Customized Boundaries</a></li>
+<li><a class="dropdown-item" href="articles/custom_geo.html">SVI Calculation for Custom Geographic Boundaries</a></li>
     <li><a class="dropdown-item" href="articles/geo_context_of_svi.html">Geographic Context of SVI</a></li>
     <li><a class="dropdown-item" href="articles/svi-covid.html">SVI and health outcome</a></li>
     <li><a class="dropdown-item" href="articles/SVI-mapping.html">Mapping SVI for Spatial Analysis</a></li>
@@ -66,12 +66,13 @@
 </div>
 <!-- badges: start -->
 
+
 <!-- badges: end -->
 <p>The goal of findSVI is to calculate regional <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" class="external-link">CDC/ATSDR Social Vulnerability Index (SVI)</a> at a geographic level of interest using US census data from American Community Survey.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">here</a>). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (e.g., ZCTA/places, combining multiple states).</p>
+<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">here</a>). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2022) and geographic levels (e.g., ZCTA/places, combining multiple states).</p>
 <p>To find SVI for one or multiple year-state pair(s):</p>
 <ul>
 <li>
@@ -100,6 +101,7 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<p><strong>To find county-level SVI for New Jersey (NJ) for 2017, and for Pennsylvania (PA) for 2018:</strong></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/heli-xu/findSVI" class="external-link">findSVI</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -126,29 +128,29 @@
 <span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;  8 42005      0.621     0.530      0.0152      0.167      0.227  2018 PA   </span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;  9 42007      0.182     0.409      0.530       0.348      0.197  2018 PA   </span></span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 10 42009      0.712     0.606      0.0758      0.288      0.394  2018 PA</span></span></code></pre></div>
-<p>(First 5 rows of results for 2017-NJ and 2018-PA are shown.)</p>
+<p>(First 5 rows of results for 2017-NJ and 2018-PA are shown. ‘RPL_themes` indicates overall SVI, and ’RPL_theme1’ to ‘RPL_theme4’ indicate theme-specific SVIs.)</p>
+<p><strong>To retrieve county-level census data <em>and then</em> get SVI for PA for 2020:</strong></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_census_data.html">get_census_data</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="st">"county"</span>, <span class="st">"PA"</span><span class="op">)</span></span>
 <span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 10</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;    GEOID NAME    B0600…¹ B0600…² B0900…³ B0900…⁴ B1101…⁵ B1101…⁶ B1101…⁷ B1101…⁸</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;  1 42001 Adams …    7788     602   20663      NA    1237     215     482     171</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;  2 42003 Allegh…   45708    1713  228296      49   24311    1147    5378     525</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt;  3 42005 Armstr…    3973     305   12516       9     912     161     247      85</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;  4 42007 Beaver…    7546     640   31915      NA    3380     380     787     174</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;  5 42009 Bedfor…    3996     317    9386      11     468      99     213      50</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;  6 42011 Berks …   36488    1356   93714      44    8812     662    1695     304</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;  7 42013 Blair …    7292     679   24920      19    2552     363     544     169</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;  8 42015 Bradfo…    4395     362   13358      NA     969     177     428     117</span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;  9 42017 Bucks …   25651    1306  128008      53    8222     749    3174     581</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; 10 42019 Butler…    6118     468   37577      NA    2121     337     813     198</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; # … with abbreviated variable names ¹​B06009_002E, ²​B06009_002M, ³​B09001_001E,</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; #   ⁴​B09001_001M, ⁵​B11012_010E, ⁶​B11012_010M, ⁷​B11012_015E, ⁸​B11012_015M</span></span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;    GEOID NAME        B06009_002E B06009_002M B09001_001E B09001_001M B11012_010E</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;  1 42001 Adams Coun…        7788         602       20663          NA        1237</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;  2 42003 Allegheny …       45708        1713      228296          49       24311</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt;  3 42005 Armstrong …        3973         305       12516           9         912</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;  4 42007 Beaver Cou…        7546         640       31915          NA        3380</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;  5 42009 Bedford Co…        3996         317        9386          11         468</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;  6 42011 Berks Coun…       36488        1356       93714          44        8812</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;  7 42013 Blair Coun…        7292         679       24920          19        2552</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;  8 42015 Bradford C…        4395         362       13358          NA         969</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;  9 42017 Bucks Coun…       25651        1306      128008          53        8222</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; 10 42019 Butler Cou…        6118         468       37577          NA        2121</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; # ℹ 3 more variables: B11012_010M &lt;dbl&gt;, B11012_015E &lt;dbl&gt;, B11012_015M &lt;dbl&gt;</span></span></code></pre></div>
 <p>(First 10 rows and columns are shown, with the rest of columns being other census variables for SVI calculation.)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_svi.html">get_svi</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">restult</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt; Rows: 67</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; Columns: 63</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; $ GEOID       &lt;chr&gt; "42001", "42003", "42005", "42007", "42009", "42011", "420…</span></span>
@@ -214,6 +216,45 @@
 <span id="cb8-63"><a href="#cb8-63" tabindex="-1"></a><span class="co">#&gt; $ RPL_theme4  &lt;dbl&gt; 0.1212, 0.5606, 0.1515, 0.2576, 0.0455, 0.5152, 0.4848, 0.…</span></span>
 <span id="cb8-64"><a href="#cb8-64" tabindex="-1"></a><span class="co">#&gt; $ SPL_themes  &lt;dbl&gt; 6.6062, 6.9848, 5.6514, 6.6516, 6.0911, 10.1666, 7.8788, 8…</span></span>
 <span id="cb8-65"><a href="#cb8-65" tabindex="-1"></a><span class="co">#&gt; $ RPL_themes  &lt;dbl&gt; 0.2273, 0.2879, 0.0909, 0.2424, 0.1667, 0.9545, 0.5152, 0.…</span></span></code></pre></div>
+<p><strong>To find SVI for custom geographic boundaries:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cz_svi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_svi_x.html">find_svi_x</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="va">cty_cz_2020_xwalk</span> <span class="co">#county-commuting zone crosswalk</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>…where <code>xwalk</code> is supplied by users to define the relationship between a Census geography (‘GEOID’) and the custom geographic level (‘GEOID2’). The Census geography should be fully nested in the custom geographic level of interest. As an example, first 10 rows of the county-commuting zone crosswalk are shown below:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cty_cz_2020_xwalk</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    GEOID GEOID2</span></span>
+<span><span class="co">#&gt; 1  01069      3</span></span>
+<span><span class="co">#&gt; 2  01023      9</span></span>
+<span><span class="co">#&gt; 3  01005      3</span></span>
+<span><span class="co">#&gt; 4  01107      4</span></span>
+<span><span class="co">#&gt; 5  01033     10</span></span>
+<span><span class="co">#&gt; 6  04012     37</span></span>
+<span><span class="co">#&gt; 7  04001     32</span></span>
+<span><span class="co">#&gt; 8  05081     55</span></span>
+<span><span class="co">#&gt; 9  05121     46</span></span>
+<span><span class="co">#&gt; 10 06037     37</span></span></code></pre></div>
+<p>With the crosswalk, county-level census data are aggregated to the commuting zone-level, and SVI is calculated for each commuting zone. Below shows the overall and theme-specific SVI of the first 10 rows, with GEOIDs representing the commuting zone IDs.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cz_svi</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"RPL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 6</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt;    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt;  1     1      0.778      0.833      0.885     0.730       0.826</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt;  2     2      0.734      0.436      0.698     0.388       0.625</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;  3     3      0.871      0.892      0.703     0.570       0.833</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;  4     4      0.881      0.498      0.838     0.947       0.876</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt;  5     5      0.560      0.675      0.684     0.333       0.606</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt;  6     6      0.799      0.813      0.605     0.302       0.720</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt;  7     7      0.821      0.680      0.802     0.875       0.842</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;  8     8      0.694      0.888      0.438     0.0842      0.570</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt;  9     9      0.899      0.969      0.838     0.918       0.962</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 10    10      0.357      0.507      0.589     0.134       0.335</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -253,6 +294,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://doi.org/10.21105/joss.06525" class="external-link"><img src="https://joss.theoj.org/papers/10.21105/joss.06525/status.svg" alt="DOI"></a></li>
 </ul>
 </div>
 
