@@ -129,41 +129,6 @@ ggdraw(continent) +
 
 If spatial information is not needed, we can leave out the `geometry` argument (`geometry = FALSE` is default) in `find_svi_x()` or `get_census_data()` to obtain only the SVI variables.
 
-# Why `exp = TRUE`
-
-Currently, the variable retrieval process by `get_census_data()` follows the [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) strictly, where SVI variables starting with "EP\_" (percent estimate) are sometimes obtained directly from Census, while in other cases are values computed from Census variables.
-
-For example, in the variable table below for 2020, the calculation field (the last column) for `EP_UNEMP` is a Census variable and a calculation formula for `EP_POV150`. As a result, `DP03_0009PE` from Census is directly used as `EP_UNEMP`, whereas `S1701_C01_001E` is obtained from Census and used to calculate `EP_POV150` (along with `E_POV150`).
-
-```{r}
-#| fig-cap: "Table 1: 'EP_' variables in `variable_e_ep_calculation_2020` (`exp = FALSE`)"
-variable_e_ep_calculation_2020 %>%
-  filter(
-    !theme == 5, 
-    str_starts(x2020_variable_name, "EP_")
-    ) 
-```
-
-However, for aggregation purposes, percent estimates cannot be summed up directly to a larger geographic level. Instead, we need to use summed "E\_" SVI variables (count estimate) and the corresponding "total" count to calculate the CZ-level percent. Therefore, we need to modify variables like `DP03_0009PE` for `EP_UNEMP` so that the calculation field for all "EP\_" variables are formula with explicitly defined denominator (total counts). For example:
-
-```{r}
-#| fig-cap: "Table 2: 'EP_' variables in `variable_cal_exp_2020` (`exp = TRUE`)"
-
-variable_cal_exp_2020 %>% 
-  filter(
-    !theme == 5, 
-    str_starts(x2020_variable_name, "EP_")
-    ) 
-```
-
-To integrate the modified variable lists to `get_census_data()`, we introduce another argument `exp`, where we can specify which of the two variables list is used:
-
--   (Default) `exp = FALSE`: use variables following CDC/ATSDR documentation.
-
--   `exp = TRUE`: use variables with explicitly defined denominator.
-
-For use with `get_svi_x()`, `exp = TRUE` is recommended.
-
 # Validation
 
 In [Validation of SVI results](svi-validation.html), we have documented the comparison between SVI results from findSVI and CDC database in standard operation. To validate the modified variable list and the calculation table when `exp=TRUE`, we'll use a pseudo-crosswalk with replicating the county IDs (county-county crosswalk) and compare the results from `find_svi_x()` with CDC SVI.
@@ -231,3 +196,40 @@ join_RPL %>%
 
 
 ```
+
+# Appendix: mapping SVI (percentage) variables to census variables
+
+Currently, the variable retrieval process by `get_census_data()` follows the [CDC/ATSDR SVI documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) strictly, where SVI variables starting with "EP\_" (percent estimate) are sometimes obtained directly from Census, while in other cases are values computed from Census variables.
+
+For example, in the variable table below for 2020, the calculation field (the last column) for `EP_UNEMP` is a Census variable and a calculation formula for `EP_POV150`. As a result, `DP03_0009PE` from Census is directly used as `EP_UNEMP`, whereas `S1701_C01_001E` is obtained from Census and used to calculate `EP_POV150` (along with `E_POV150`).
+
+```{r}
+#| fig-cap: "Table 1: 'EP_' variables in `variable_e_ep_calculation_2020` (`exp = FALSE`)"
+variable_e_ep_calculation_2020 %>%
+  filter(
+    !theme == 5, 
+    str_starts(x2020_variable_name, "EP_")
+    ) 
+```
+
+However, for aggregation purposes, percent estimates cannot be summed up directly to a larger geographic level. Instead, we need to use summed "E\_" SVI variables (count estimate) and the corresponding "total" count to calculate the CZ-level percent. Therefore, we need to modify variables like `DP03_0009PE` for `EP_UNEMP` so that the calculation field for all "EP\_" variables are formula with explicitly defined denominator (total counts). For example:
+
+```{r}
+#| fig-cap: "Table 2: 'EP_' variables in `variable_cal_exp_2020` (`exp = TRUE`)"
+
+variable_cal_exp_2020 %>% 
+  filter(
+    !theme == 5, 
+    str_starts(x2020_variable_name, "EP_")
+    ) 
+```
+
+To integrate the modified variable lists to `get_census_data()`, we introduce another argument `exp`, where we can specify which of the two variables list is used:
+
+-   (Default) `exp = FALSE`: use variables following CDC/ATSDR documentation.
+
+-   `exp = TRUE`: use variables with explicitly defined denominator.
+
+For use with `get_svi_x()`, `exp = TRUE` is recommended.
+
+
