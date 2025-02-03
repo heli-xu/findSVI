@@ -113,7 +113,7 @@ plot_phl <- function(data, var){
       #legend.key.spacing.y = unit(0.01, "mm"),
       legend.box.margin = margin(0, 0.2, 0, 0, "cm"),
       #plot.background = element_rect(color = "black", fill=NA, size = 0.1),
-      panel.border = element_rect(color = "black",fill = NA, size = 0.1)
+      panel.border = element_rect(color = "black",fill = NA, linewidth = 0.1)
     )
 }
 
