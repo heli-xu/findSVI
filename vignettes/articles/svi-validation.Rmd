@@ -37,7 +37,8 @@ datasets <- list(
   variable_e_ep_calculation_2018, 
   variable_e_ep_calculation_2019,
   variable_e_ep_calculation_2020,
-  variable_e_ep_calculation_2021
+  variable_e_ep_calculation_2021,
+  variable_e_ep_calculation_2022
 )
 
 process_file <- function(file) {
