@@ -81,7 +81,9 @@ phl_svi_covid <- phl_hosp %>%
   #although geometry sticky, after wrangling, class() become df
   st_as_sf(sf_column_name = "geometry")
 
-phl_svi_covid %>% head(10)
+phl_svi_covid %>% 
+  select(GEOID, NAME, hosp_per_100k, RPL_themes, geometry) %>% 
+  head(10)
 ```
 #### Maps
 To visualize their spatial pattern directly, we can plot the SVI and COVID-19 data in Philadelphia neighborhoods (ZCTAs) directly on maps:
