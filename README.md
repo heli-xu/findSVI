@@ -7,6 +7,8 @@
 
 [![R-CMD-check](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml)
 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06525/status.svg)](https://doi.org/10.21105/joss.06525)
+
 <!-- badges: end -->
 
 The goal of findSVI is to calculate regional [CDC/ATSDR Social
@@ -21,7 +23,7 @@ CDC/ATSDR releases SVI biannually at the counties/census tracts level
 for US or an individual state (which can be downloaded
 [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 findSVI aims to support more flexible and specific SVI analysis with
-additional options for years (2012-2021) and geographic levels (e.g.,
+additional options for years (2012-2022) and geographic levels (e.g.,
 ZCTA/places, combining multiple states).
 
 To find SVI for one or multiple year-state pair(s):
@@ -63,6 +65,9 @@ devtools::install_github("heli-xu/findSVI")
 
 ## Usage
 
+**To find county-level SVI for New Jersey (NJ) for 2017, and for
+Pennsylvania (PA) for 2018:**
+
 ``` r
 library(findSVI)
 library(dplyr)
@@ -92,7 +97,12 @@ summarise_results %>%
     #>  9 42007      0.182     0.409      0.530       0.348      0.197  2018 PA   
     #> 10 42009      0.712     0.606      0.0758      0.288      0.394  2018 PA
 
-(First 5 rows of results for 2017-NJ and 2018-PA are shown.)
+(First 5 rows of results for 2017-NJ and 2018-PA are shown.
+‘RPL_themes\` indicates overall SVI, and ’RPL_theme1’ to ‘RPL_theme4’
+indicate theme-specific SVIs.)
+
+**To retrieve county-level census data *and then* get SVI for PA for
+2020:**
 
 ``` r
 data <- get_census_data(2020, "county", "PA")
@@ -100,27 +110,26 @@ data[1:10, 1:10]
 ```
 
     #> # A tibble: 10 × 10
-    #>    GEOID NAME    B0600…¹ B0600…² B0900…³ B0900…⁴ B1101…⁵ B1101…⁶ B1101…⁷ B1101…⁸
-    #>    <chr> <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-    #>  1 42001 Adams …    7788     602   20663      NA    1237     215     482     171
-    #>  2 42003 Allegh…   45708    1713  228296      49   24311    1147    5378     525
-    #>  3 42005 Armstr…    3973     305   12516       9     912     161     247      85
-    #>  4 42007 Beaver…    7546     640   31915      NA    3380     380     787     174
-    #>  5 42009 Bedfor…    3996     317    9386      11     468      99     213      50
-    #>  6 42011 Berks …   36488    1356   93714      44    8812     662    1695     304
-    #>  7 42013 Blair …    7292     679   24920      19    2552     363     544     169
-    #>  8 42015 Bradfo…    4395     362   13358      NA     969     177     428     117
-    #>  9 42017 Bucks …   25651    1306  128008      53    8222     749    3174     581
-    #> 10 42019 Butler…    6118     468   37577      NA    2121     337     813     198
-    #> # … with abbreviated variable names ¹​B06009_002E, ²​B06009_002M, ³​B09001_001E,
-    #> #   ⁴​B09001_001M, ⁵​B11012_010E, ⁶​B11012_010M, ⁷​B11012_015E, ⁸​B11012_015M
+    #>    GEOID NAME        B06009_002E B06009_002M B09001_001E B09001_001M B11012_010E
+    #>    <chr> <chr>             <dbl>       <dbl>       <dbl>       <dbl>       <dbl>
+    #>  1 42001 Adams Coun…        7788         602       20663          NA        1237
+    #>  2 42003 Allegheny …       45708        1713      228296          49       24311
+    #>  3 42005 Armstrong …        3973         305       12516           9         912
+    #>  4 42007 Beaver Cou…        7546         640       31915          NA        3380
+    #>  5 42009 Bedford Co…        3996         317        9386          11         468
+    #>  6 42011 Berks Coun…       36488        1356       93714          44        8812
+    #>  7 42013 Blair Coun…        7292         679       24920          19        2552
+    #>  8 42015 Bradford C…        4395         362       13358          NA         969
+    #>  9 42017 Bucks Coun…       25651        1306      128008          53        8222
+    #> 10 42019 Butler Cou…        6118         468       37577          NA        2121
+    #> # ℹ 3 more variables: B11012_010M <dbl>, B11012_015E <dbl>, B11012_015M <dbl>
 
 (First 10 rows and columns are shown, with the rest of columns being
 other census variables for SVI calculation.)
 
 ``` r
 result <- get_svi(2020, data)
-glimpse(restult)
+glimpse(result)
 ```
 
     #> Rows: 67
@@ -188,3 +197,59 @@ glimpse(restult)
     #> $ RPL_theme4  <dbl> 0.1212, 0.5606, 0.1515, 0.2576, 0.0455, 0.5152, 0.4848, 0.…
     #> $ SPL_themes  <dbl> 6.6062, 6.9848, 5.6514, 6.6516, 6.0911, 10.1666, 7.8788, 8…
     #> $ RPL_themes  <dbl> 0.2273, 0.2879, 0.0909, 0.2424, 0.1667, 0.9545, 0.5152, 0.…
+
+**To find SVI for custom geographic boundaries:**
+
+``` r
+cz_svi <- find_svi_x(
+  year = 2020,
+  geography = "county",
+  xwalk = cty_cz_2020_xwalk #county-commuting zone crosswalk
+)
+```
+
+…where `xwalk` is supplied by users to define the relationship between a
+Census geography (‘GEOID’) and the custom geographic level (‘GEOID2’).
+The Census geography should be fully nested in the custom geographic
+level of interest. As an example, first 10 rows of the county-commuting
+zone crosswalk are shown below:
+
+``` r
+cty_cz_2020_xwalk %>% head(10)
+#>    GEOID GEOID2
+#> 1  01069      3
+#> 2  01023      9
+#> 3  01005      3
+#> 4  01107      4
+#> 5  01033     10
+#> 6  04012     37
+#> 7  04001     32
+#> 8  05081     55
+#> 9  05121     46
+#> 10 06037     37
+```
+
+With the crosswalk, county-level census data are aggregated to the
+commuting zone-level, and SVI is calculated for each commuting zone.
+Below shows the overall and theme-specific SVI of the first 10 rows,
+with GEOIDs representing the commuting zone IDs.
+
+``` r
+cz_svi %>% 
+  select(GEOID, contains("RPL")) %>%
+  head(10)
+```
+
+    #> # A tibble: 10 × 6
+    #>    GEOID RPL_theme1 RPL_theme2 RPL_theme3 RPL_theme4 RPL_themes
+    #>    <int>      <dbl>      <dbl>      <dbl>      <dbl>      <dbl>
+    #>  1     1      0.778      0.833      0.885     0.730       0.826
+    #>  2     2      0.734      0.436      0.698     0.388       0.625
+    #>  3     3      0.871      0.892      0.703     0.570       0.833
+    #>  4     4      0.881      0.498      0.838     0.947       0.876
+    #>  5     5      0.560      0.675      0.684     0.333       0.606
+    #>  6     6      0.799      0.813      0.605     0.302       0.720
+    #>  7     7      0.821      0.680      0.802     0.875       0.842
+    #>  8     8      0.694      0.888      0.438     0.0842      0.570
+    #>  9     9      0.899      0.969      0.838     0.918       0.962
+    #> 10    10      0.357      0.507      0.589     0.134       0.335

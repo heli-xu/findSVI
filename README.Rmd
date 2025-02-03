@@ -19,13 +19,15 @@ knitr::opts_chunk$set(
 
 [![R-CMD-check](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heli-xu/findSVI/actions/workflows/R-CMD-check.yaml)
 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06525/status.svg)](https://doi.org/10.21105/joss.06525)
+
 <!-- badges: end -->
 
 The goal of findSVI is to calculate regional [CDC/ATSDR Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html) at a geographic level of interest using US census data from American Community Survey.
 
 ## Overview
 
-CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2021) and geographic levels (e.g., ZCTA/places, combining multiple states).
+CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2022) and geographic levels (e.g., ZCTA/places, combining multiple states).
 
 To find SVI for one or multiple year-state pair(s):
 
@@ -48,12 +50,14 @@ install.packages("findSVI")
 
 Alternatively, you can install the development version of findSVI from [GitHub](https://github.com/) with:
 
-``` {r, eval=FALSE}
+```{r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("heli-xu/findSVI")
 ```
 
 ## Usage
+
+**To find county-level SVI for New Jersey (NJ) for 2017, and for Pennsylvania (PA) for 2018:**
 
 ```{r find_svi, eval=FALSE, warning=FALSE}
 library(findSVI)
@@ -79,7 +83,9 @@ summarise_results %>%
   slice_head(n = 5)
 ```
 
-(First 5 rows of results for 2017-NJ and 2018-PA are shown.)
+(First 5 rows of results for 2017-NJ and 2018-PA are shown. 'RPL_themes\` indicates overall SVI, and 'RPL_theme1' to 'RPL_theme4' indicate theme-specific SVIs.)
+
+**To retrieve county-level census data *and then* get SVI for PA for 2020:**
 
 ```{r get_census_data, eval=FALSE}
 data <- get_census_data(2020, "county", "PA")
@@ -95,10 +101,39 @@ pa_cty_raw2020[1:10, 1:10]
 
 ```{r get_svi, eval = FALSE}
 result <- get_svi(2020, data)
-glimpse(restult)
+glimpse(result)
 ```
 
 ```{r svi, echo=FALSE}
 load(system.file("testdata", "pa_cty_result2020.rda", package = "findSVI"))
 glimpse(pa_cty_result2020)
+```
+
+**To find SVI for custom geographic boundaries:**
+
+```{r, eval=FALSE}
+cz_svi <- find_svi_x(
+  year = 2020,
+  geography = "county",
+  xwalk = cty_cz_2020_xwalk #county-commuting zone crosswalk
+)
+```
+
+...where `xwalk` is supplied by users to define the relationship between a Census geography ('GEOID') and the custom geographic level ('GEOID2'). The Census geography should be fully nested in the custom geographic level of interest. As an example, first 10 rows of the county-commuting zone crosswalk are shown below:
+
+```{r}
+cty_cz_2020_xwalk %>% head(10)
+```
+
+With the crosswalk, county-level census data are aggregated to the commuting zone-level, and SVI is calculated for each commuting zone. Below shows the overall and theme-specific SVI of the first 10 rows, with GEOIDs representing the commuting zone IDs.
+
+```{r, eval=FALSE}
+cz_svi %>% 
+  select(GEOID, contains("RPL")) %>%
+  head(10)
+```
+
+```{r, echo=FALSE}
+load(system.file("extdata","cz_svi2020.rda",package = "findSVI"))
+cz_svi2020
 ```
