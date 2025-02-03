@@ -27,29 +27,33 @@ First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lew
 
 CDC/ATSDR releases SVI biannually [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) in both shapefile and csv format, at the counties/census tracts level within an individual state or in the US. While the SVI database is very useful, sometimes we would prefer more up-to-date census data or different geographic levels. For example, if we'd like to address questions about ZCTA-level SVI of Pennsylvania in 2021, or census tract-level SVI within a few counties in Pennsylvania in 2020, we might need to calculate SVI from the census data ourselves.
 
-findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2012-2021) and geographic levels (eg. ZCTA/places, combining multiple states).
+findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2012-2022) and geographic levels (eg. ZCTA/places, combining multiple states).
 
 This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
 
 # Data: census variables
-### Census variables and calculation table
-To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a series of lists and tables containing census variables information are included in the package. 
 
-* census_variables_(2012-2021): Each list contains the year-specific census variables needed for SVI calculation.
-* variable_ep_calculation_(2012-2021): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
+### Census variables and calculation table
+
+To retrieve census data and calculate SVI based on CDC/ATSDR documentation, a series of lists and tables containing census variables information are included in the package.
+
+-   census_variables\_(2012-2022): Each list contains the year-specific census variables needed for SVI calculation.
+-   variable_ep_calculation\_(2012-2022): Each table contains the SVI variable names, their theme group and corresponding census variable(s) and calculation formula.
 
 These datasets are documented in `?census_variables` and `?variable_calculation`.
 
 ### ZCTA-state relationship file (crosswalk)
-Currently, `tidycensus::get_acs()` does not support requests for state-specific ZCTA-level data starting 2019(subject table)/2020(all tables). This is likely due to changes in Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross state boundaries). 
-To obtain state-specific ZCTA-level data, three atasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.    
+
+Currently, `tidycensus::get_acs()` does not support requests for state-specific ZCTA-level data starting 2019(subject table)/2020(all tables). This is likely due to changes in Census API, as ZCTAs are not subgeographies of states (some ZCTAs cross state boundaries). To obtain state-specific ZCTA-level data, three atasets of ZCTA-to-state crosswalks are included to help selecting the ZCTAs in the state(s) of interest after retrieving the ZCTA data at the national level.
 
 These crosswalk files are documented in `?zcta_state_xwalk`.
 
 # Retrieve census data with `get_census_data()`
+
 `get_census_data()` uses `tidycensus::get_acs()` with a pre-defined list of variables to retrieves ACS data for SVI calculation. The list of census variables is built in the function, and changes according to the year of interest. Importantly, a Census API key is required for this function to work, which can be obtained [online](https://api.census.gov/data/key_signup.html) and set up by `tidycensus::census_api_key("YOUR KEY GOES HERE")`. The arguments are largely the same with `tidycensus::get_acs()`, including year, geography and state.
 
 For example, we can retrieve ZCTA-level data for Rhode Island for 2018:
+
 ```{r get_census_data, eval=FALSE}
 data <- get_census_data(2018, "zcta", "RI")
 data[1:10, 1:10]
@@ -59,14 +63,17 @@ data[1:10, 1:10]
 load(system.file("extdata", "ri_zcta_raw2018.rda", package = "findSVI"))
 ri_zcta_raw2018[1:10, 1:10]
 ```
+
 (First 10 rows and columns are shown, with the rest of the columns being other census variables.)
 
 Note that for ZCTA-level after 2018, data retrieving by state is not supported by Census API/tidycensus. For such requests, `get_census_data()` first retrieves ZCTA-level data for the whole country, and then uses the ZCTA-to-state relationship file (crosswalk) to select the ZCTAs in the state(s) of interest. This results in a longer running time for these requests.
 
 # Compute SVI with `get_svi()`
-`get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for each theme and overall SVI. 
+
+`get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for theme-specific and overall SVI.
 
 For example, to obtain ZCTA-level SVI for Rhode Island for 2018:
+
 ```{r get_svi, eval=FALSE}
 result <- get_svi(2018, data)
 glimpse(result)
@@ -76,17 +83,21 @@ glimpse(result)
 load(system.file("extdata", "ri_zcta_svi2018.rda", package = "findSVI"))
 glimpse(ri_zcta_svi2018)
 ```
-Columns include geographic unit information, individual SVI variables ("E_xx" and "EP_xx"), intermediate percentile rankings ("EPL_xx" and "SPL_xx"), and the theme-specific and overall SVIs ("RPL_xx"). 
+
+Columns include geographic unit information, individual SVI variables ("E_xx" and "EP_xx"), intermediate percentile rankings ("EPL_xx" and "SPL_xx"), and the theme-specific and overall SVIs ("RPL_xx").
 
 # Wrapper and more: `find_svi()`
-To retrieve census data and compute SVI in one step, we could use `find_svi()`. While `get_census_data()` only accepts a single year for `year` (and multiple states for `state`) just like `tidycensus::get_acs()`, `find_svi()` accepts pairing vectors of `year` and `state` for the SAME geography level. This allows processing multiple year-state combinations in one function, with separate data retrieval and SVI calculation for every year-state entry and returning a summarised SVI table for all pairs of year-state values. 
+
+To retrieve census data and compute SVI in one step, we could use `find_svi()`. While `get_census_data()` only accepts a single year for `year` (and multiple states for `state`) just like `tidycensus::get_acs()`, `find_svi()` accepts pairing vectors of `year` and `state` for the SAME geography level. This allows processing multiple year-state combinations in one function, with separate data retrieval and SVI calculation for every year-state entry and returning a summarised SVI table for all pairs of year-state values.
 
 One important difference in data retrieval between `find_svi()` and `get_census_data()` is that the year-state combinations will always be evaluated as "one year and one state" -- that is, the option to get census data for multiple states at once (for one year) in `get_census_data()` will be disabled in `find_svi()`. There is an exception to this one-on-one rule, when a single year is supplied into `year`, you can set the `state = NULL` as default to perform nation-level data retrieval and SVI calculation.
 
 For SVI table output, `find_svi()` by default returns a summarised SVI table with only the GEOID, theme-specific SVIs and SVI for all 4 themes for each year-state combination. Alternatively, there's an option to return a full SVI table with every SVI variable and intermediate ranking values (as `get_svi()`) by setting `full.table = TRUE`. For both options, corresponding year and state information will be included as two separate columns in the table.
 
 ### Single year-state entry
+
 Using the same example as above, to obtain ZCTA-level census data and calculate SVI for Rhode Island for 2018 in one step:
+
 ```{r find_svi, eval=FALSE}
 onestep_result <- find_svi(2018, "RI", "zcta")
 onestep_result %>% head(10)
@@ -99,10 +110,13 @@ ri_zcta_svi2018 %>%
     state = "RI") %>% 
   head(10)
 ```
-This is a glimpse of the first 10 rows of the summarised SVI table, with additional columns indicating the year and state information. At default, the summarised table only keeps the GEOID and SVIs. Set `full.table = TRUE` for a more complete SVI table with all the individual SVI variables from census data (like the result from `get_svi()` shown in the previous section).   
+
+This is a glimpse of the first 10 rows of the summarised SVI table, with additional columns indicating the year and state information. At default, the summarised table only keeps the GEOID and SVIs. Set `full.table = TRUE` for a more complete SVI table with all the individual SVI variables from census data (like the result from `get_svi()` shown in the previous section).
 
 ### Multiple year-state entries
-For multiple year-state combinations, we could supply two vectors to `year` and `state` arguments and they'll be treated as pairs. For example, to obtain county-level SVI of New Jersey and Pennsylvania for 2017 and 2018, respectively: 
+
+For multiple year-state combinations, we could supply two vectors to `year` and `state` arguments and they'll be treated as pairs. For example, to obtain county-level SVI of New Jersey and Pennsylvania for 2017 and 2018, respectively:
+
 ```{r find_svi_vector, eval=FALSE}
 summarise_results <- find_svi(
   year = c(2017, 2018),
@@ -114,15 +128,18 @@ summarise_results %>%
   group_by(year, state) %>% 
   slice_head(n = 5)
 ```
+
 ```{r summarise_results_RPL, echo=FALSE}
 load(system.file("extdata", "summarise_results.rda", package = "findSVI"))
 summarise_results %>% 
   group_by(year, state) %>% 
   slice_head(n = 5)
 ```
+
 As a result, we have a table summarising the county-level SVI of New Jersey for 2017 and that of Pennsylvania for 2018, after retrieving census data for these two year-state pairs (first 5 rows of SVI results for each pair are shown above). Again, here data retrieval and SVI calculation (percentile ranking) are performed separately for 2017-NJ and 2018-PA, and the resulting SVIs are combined into a summarised table.
 
 As other R functions that accepts vectors in their arguments, another way to supply `year` and `state` pairs is to extract columns from a table. Suppose we have a table called `info_table` containing the year-state information we'd like to include in the analysis:
+
 ```{r info_table, echo=FALSE}
 year <- c(2017,2018, 2014, 2018, 2013, 2020)
 state <- c("AZ", "FL", "FL", "PA", "MA", "KY")
@@ -131,6 +148,7 @@ info_table
 ```
 
 We could extract specific columns of interest from `info_table` for the `year` and `state` arguments:
+
 ```{r column_find_svi, eval=FALSE}
 all_results <- find_svi(
   year = info_table$year,
@@ -142,8 +160,35 @@ all_results %>%
   group_by(year, state) %>% 
   slice_head(n = 3)
 ```
+
 ```{r, echo=FALSE}
 load(system.file("extdata", "slice_all_results.rda", package = "findSVI"))
 slice_all_results
 ```
-Here, only showing first 3 rows of results for each year-state combination, what we're actually getting is a table with SVIs for all the counties in the 6 year-state pairs from the columns of `info_table`. This will likely make things easier especially there's a long list of year-state combinations to process. 
+
+Here, only showing first 3 rows of results for each year-state combination, what we're actually getting is a table with SVIs for all the counties in the 6 year-state pairs from the columns of `info_table`. This will likely make things easier especially there's a long list of year-state combinations to process.
+
+# Custom Boundaries: `find_svi_x()`
+
+To calculate SVI for custom geographic boundaries, we could use `find_svi_x()` and supply an additional crosswalk (relationship table) between the custom boundaries and a Census geographic level. The census geographic level should be fully nested in the custom geographic boundaries, so that the census data can be aggregated to the custom level for SVI calculation.
+
+As an example and a template, the crosswalk of US counties and commuting zones for 2020 is stored in the package and documented in `?cty_cz_2020_xwalk2020`. Using `find_svi_x()`, we can retrieve the census data at the county level, aggregate the data to the commuting zone level, and calculate the SVI for commuting zones. Below shows the overall and theme-specific SVIs for commuting zones 1-10 (GEOID represents the commuting zone IDs).
+
+```{r, eval=FALSE}
+cz_svi2020 <- find_svi_x(
+  year = 2020,
+  geography = "county",
+  xwalk = cty_cz_2020_xwalk #county-commuting zone crosswalk
+)
+
+cz_svi2020 %>%
+  select(GEOID, contains("RPL")) %>%
+  head(10)
+```
+
+```{r, echo=FALSE}
+load(system.file("extdata","cz_svi2020.rda",package = "findSVI"))
+cz_svi2020
+```
+
+Alternatively, we could also use `get_census_data()` with `exp=TRUE` and `get_svi_x()`. For more details, please see [SVI Calculation for Custom Geographic Boundaries](articles/custom_geo.html).
