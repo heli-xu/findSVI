@@ -23,7 +23,8 @@ library(findSVI)
 library(tidyr)
 library(stringr)
 library(sf)
-library(tmap)
+library(ggplot2)
+library(cowplot)
 ```
 
 
@@ -121,67 +122,57 @@ phl_svi <- phl_ct_svi_2020 %>%
 ```
 # 3 angles of a story
 
-For visualization, we'll create maps on the same color scale (using [tmap](https://r-tmap.github.io/tmap/)).
+For visualization, we'll create maps on the same color scale.
 
 ```{r}
+plot_phl <- function(data, var){
+  ggplot(data)+
+    geom_sf(aes(fill={{var}}), size = 0.1)+
+    coord_sf(crs = st_crs(26915))+
+    scale_fill_distiller(
+      name = "SVI (by tract):",
+      breaks = c(0, 0.25, 0.5, 0.75, 1),
+      limits = c(0, 1),
+      palette = "YlGn",
+      direction = 1
+    )+
+    theme_minimal()+
+    theme(
+      plot.title = element_text(size = 12, hjust = 0.01, vjust = -11),
+      plot.title.position = "panel",
+      legend.title = element_text(size = 9, margin = margin(b=10)),
+      axis.text = element_blank(),
+      panel.grid = element_blank(),
+      legend.position = "inside",
+      legend.position.inside = c(0.8, 0.18),
+      legend.key.size = unit(0.3, "cm"),
+      legend.key.height = unit(0.25, "cm"),
+      legend.ticks = element_blank(),
+      #plot.background = element_rect(color = "black", fill=NA, linewidth = 0.1),
+      panel.border = element_rect(color = "black",fill = NA, linewidth = 0.1),
+      plot.margin = margin(0, 10, 0, 0, unit = "pt")
+    )
+}
+
 nation <- us_svi_phl %>%
   select(GEOID, geometry, RPL_THEMES) %>%
   drop_na() %>%
-  #using NAD83 in tmap
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("RPL_THEMES",
-    palette = c("orange","navy"),
-    style = "cont",
-    breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "Nationwide SVI: \nPhiladelphia subset",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 2)
+  plot_phl(.,RPL_THEMES)+
+  labs(title = "Nationwide SVI: \nPhiladelphia subset")
 
 state <- pa_svi_phl %>%
   select(GEOID, geometry, RPL_THEMES) %>%
   drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("RPL_THEMES",
-    palette = c("orange","navy"),
-    style = "cont",
-    breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "Statewide SVI: \nPhiladelphia subset",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 2)
+  plot_phl(., RPL_THEMES)+
+  labs(title = "Statewide SVI: \nPhiladelphia subset")
 
 county <- phl_svi %>%
   select(GEOID, geometry, RPL_themes) %>%
   drop_na() %>%
-  tm_shape(projection = sf::st_crs(26915))+
-  tm_polygons("RPL_themes",
-    palette = c("orange","navy"),
-    style = "cont",
-    breaks = c(0, 0.25, 0.5, 0.75, 1),
-    title = "SVI (by tract)")+
-  tm_layout(title = "County-specific SVI: \nPhiladelphia",
-    title.size = 1,
-    title.position = c("left", "TOP"),
-    legend.position = c("RIGHT", "bottom"),
-    legend.title.size = 0.9,
-    legend.width = 2)
+  plot_phl(., RPL_themes)+
+  labs(title = "County-specific SVI: \nPhiladelphia")
 
-plots <- list(nation, state, county)
-
-current.mode <- tmap_mode("plot")
-
-tmap_arrange(
-  plots,
-  nrow = 1,
-  width = c(0.34, 0.33, 0.33)
-)
+plot_grid(nation, state, county, nrow = 1)
 
 ```
 
