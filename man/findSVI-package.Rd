@@ -25,6 +25,7 @@ Useful links:
 Other contributors:
 \itemize{
   \item Ran Li \email{rl627@drexel.edu} (\href{https://orcid.org/0000-0002-4699-4755}{ORCID}) [contributor]
+  \item Usama Bilal \email{ub45@drexel.edu} (\href{https://orcid.org/0000-0002-9868-7773}{ORCID}) [contributor]
 }
 
 }
