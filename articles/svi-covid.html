@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SVI and health outcome • findSVI</title>
+<title>SVI and Health Outcome • findSVI</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SVI and health outcome">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SVI and Health Outcome">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -36,7 +36,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/custom_geo.html">SVI Calculation for Custom Geographic Boundaries</a></li>
     <li><a class="dropdown-item" href="../articles/geo_context_of_svi.html">Geographic Context of SVI</a></li>
-    <li><a class="dropdown-item" href="../articles/svi-covid.html">SVI and health outcome</a></li>
+    <li><a class="dropdown-item" href="../articles/svi-covid.html">SVI and Health Outcome</a></li>
     <li><a class="dropdown-item" href="../articles/SVI-mapping.html">Mapping SVI for Spatial Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/svi-validation.html">Validation of SVI results</a></li>
   </ul>
@@ -60,7 +60,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>SVI and health outcome</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>SVI and Health Outcome</h1>
             <h3 data-toc-skip class="subtitle">SVI and COVID-19
 hospitalizations in Philadelphia</h3>
             
@@ -199,11 +199,11 @@ them together by GEOID(ZCTA), keeping the spatial information.</p>
 COVID-19 data in Philadelphia neighborhoods (ZCTAs) directly on
 maps:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="va">phl_svi_covid</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="va">phl_svi_covid</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GEOID</span>, <span class="va">geometry</span>, <span class="va">RPL_themes</span>, <span class="va">hosp_per_100k</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># function for map</span></span>
 <span><span class="va">plot_phl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">var</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span><span class="va">var</span><span class="op">}</span><span class="op">}</span>,</span>
@@ -212,46 +212,63 @@ maps:</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">26915</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>      plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, hjust <span class="op">=</span> <span class="fl">0.05</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>,</span>
-<span>      plot.title.position <span class="op">=</span> <span class="st">"panel"</span>,</span>
-<span>      legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
+<span>      legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>      axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>      panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>      legend.position <span class="op">=</span> <span class="st">"inside"</span>,</span>
-<span>      legend.position.inside <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.15</span><span class="op">)</span>,</span>
+<span>      legend.position.inside <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.82</span>, <span class="fl">0.03</span><span class="op">)</span>,</span>
+<span>      legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>      legend.key.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>      <span class="co">#legend.key.spacing.y = unit(0.01, "mm"),</span></span>
-<span>      legend.box.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>      <span class="co">#plot.background = element_rect(color = "black", fill=NA, size = 0.1),</span></span>
-<span>      panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>,fill <span class="op">=</span> <span class="cn">NA</span>, linewidth <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span>      plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, fill<span class="op">=</span><span class="cn">NA</span>, linewidth <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>      plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># assemble plots</span></span>
+<span><span class="va">svi</span> <span class="op">&lt;-</span> <span class="fu">plot_phl</span><span class="op">(</span><span class="va">plot_data</span>, <span class="va">RPL_themes</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"Overall SVI (2020)"</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0.0 - 0.2"</span>, <span class="st">"0.2 - 0.4"</span>, <span class="st">"0.4 - 0.6"</span>, <span class="st">"0.6 - 0.8"</span>, <span class="st">"0.8 - 1.0"</span><span class="op">)</span>,</span>
+<span>    palette <span class="op">=</span> <span class="st">"Blues"</span></span>
+<span>  <span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Social Vulnerability"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">13</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">covid_hosp</span> <span class="op">&lt;-</span> <span class="fu">plot_phl</span><span class="op">(</span><span class="va">plot_data</span>, <span class="va">hosp_per_100k</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"Hospitalizations/100k"</span>,</span>
-<span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"194 -1,038"</span>, <span class="st">"1,038 -1,336"</span>, <span class="st">"1,336 -1,654"</span>, <span class="st">"1,654 -1,921"</span>, <span class="st">"1,921 -2,913"</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"194 - 1,038"</span>, <span class="st">"1,038 - 1,336"</span>, <span class="st">"1,336 - 1,654"</span>, <span class="st">"1,654 - 1,921"</span>, <span class="st">"1,921 - 2,913"</span><span class="op">)</span>,</span>
 <span>    palette <span class="op">=</span> <span class="st">"YlOrBr"</span></span>
 <span>  <span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"COVID-19 Hospitalizations"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">13</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">svi</span> <span class="op">&lt;-</span> <span class="fu">plot_phl</span><span class="op">(</span><span class="va">plot_data</span>, <span class="va">RPL_themes</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"Overall SVI (2020)"</span>,</span>
-<span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0.0 -0.2"</span>, <span class="st">"0.2 -0.4"</span>, <span class="st">"0.4 -0.6"</span>, <span class="st">"0.6 -0.8"</span>, <span class="st">"0.8 -1.0"</span><span class="op">)</span>,</span>
-<span>    palette <span class="op">=</span> <span class="st">"Blues"</span></span>
-<span>  <span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Social Vulnerability"</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">covid_hosp</span>, <span class="va">svi</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="svi-covid_files/figure-html/unnamed-chunk-7-1.png" alt="SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs). COVID-19 data are cumulative till 8/2022." width="700"><p class="caption">
-SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs).
-COVID-19 data are cumulative till 8/2022.
-</p>
-</div>
+<span><span class="va">maps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">svi</span>, <span class="va">covid_hosp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wilkelab.org/cowplot/reference/ggdraw.html" class="external-link">ggdraw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://wilkelab.org/cowplot/reference/draw_label.html" class="external-link">draw_label</a></span><span class="op">(</span></span>
+<span>    <span class="st">"SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs)"</span>,</span>
+<span>    fontface <span class="op">=</span> <span class="st">'bold'</span>,</span>
+<span>    size <span class="op">=</span> <span class="fl">14</span>,</span>
+<span>    x <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    hjust <span class="op">=</span> <span class="fl">0</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">caption</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wilkelab.org/cowplot/reference/ggdraw.html" class="external-link">ggdraw</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://wilkelab.org/cowplot/reference/draw_label.html" class="external-link">draw_label</a></span><span class="op">(</span></span>
+<span>    <span class="st">"COVID-19 data are cumulative till 8/2022"</span>, </span>
+<span>    size <span class="op">=</span> <span class="fl">9</span>,</span>
+<span>    x <span class="op">=</span> <span class="fl">0.7</span>,</span>
+<span>    hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">7</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span></span>
+<span>  <span class="va">title</span>, <span class="va">maps</span>, <span class="va">caption</span>,</span>
+<span>  ncol <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  rel_heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span>, <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="svi-covid_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="correlation">Correlation<a class="anchor" aria-label="anchor" href="#correlation"></a>
