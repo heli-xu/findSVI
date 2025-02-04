@@ -138,7 +138,7 @@ plot_phl <- function(data, var){
     )+
     theme_minimal()+
     theme(
-      plot.title = element_text(size = 12, hjust = 0.01, vjust = -11),
+      plot.title = element_text(size = 12, hjust = 0.01),
       plot.title.position = "panel",
       legend.title = element_text(size = 9, margin = margin(b=10)),
       axis.text = element_blank(),
@@ -147,10 +147,7 @@ plot_phl <- function(data, var){
       legend.position.inside = c(0.8, 0.18),
       legend.key.size = unit(0.3, "cm"),
       legend.key.height = unit(0.25, "cm"),
-      legend.ticks = element_blank(),
-      #plot.background = element_rect(color = "black", fill=NA, linewidth = 0.1),
-      panel.border = element_rect(color = "black",fill = NA, linewidth = 0.1),
-      plot.margin = margin(0, 10, 0, 0, unit = "pt")
+      legend.ticks = element_blank()
     )
 }
 
