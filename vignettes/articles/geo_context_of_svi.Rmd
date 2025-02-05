@@ -136,6 +136,11 @@ plot_phl <- function(data, var){
       palette = "YlGn",
       direction = 1
     )+
+    guides(
+      fill = guide_colorbar(
+        frame.colour = "grey9",
+        frame.linewidth = 0.05
+    ))+
     theme_minimal()+
     theme(
       plot.title = element_text(size = 12, hjust = 0.01),
