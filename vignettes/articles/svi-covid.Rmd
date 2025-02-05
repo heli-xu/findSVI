@@ -111,7 +111,7 @@ plot_phl <- function(data, var){
       axis.text = element_blank(),
       panel.grid = element_blank(),
       legend.position = "inside",
-      legend.position.inside = c(0.82, 0.03),
+      legend.position.inside = c(0.8, 0.03),
       legend.text = element_text(size = 9),
       legend.key.size = unit(0.4, "cm"),
       plot.background = element_rect(color = "black", fill=NA, linewidth = 0.1),
@@ -142,7 +142,7 @@ maps <- plot_grid(svi, covid_hosp)
 
 title <- ggdraw() + 
   draw_label(
-    "SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods (ZCTAs)",
+    "SVI and COVID-19 hospitalizations in Philadelphia Neighborhoods",
     fontface = 'bold',
     size = 14,
     x = 0,
@@ -154,7 +154,7 @@ caption <- ggdraw()+
   draw_label(
     "COVID-19 data are cumulative till 8/2022", 
     size = 9,
-    x = 0.7,
+    x = 0.6,
     hjust = 0)+
   theme(plot.margin = margin(0, 7, 0, 0))
 
