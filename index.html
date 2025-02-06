@@ -68,15 +68,15 @@
 
 
 <!-- badges: end -->
-<p>The goal of findSVI is to calculate regional <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" class="external-link">CDC/ATSDR Social Vulnerability Index (SVI)</a> at a geographic level of interest using US census data from American Community Survey.</p>
+<p>The goal of findSVI is to calculate regional CDC/ATSDR Social Vulnerability Index (SVI)(<a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" class="external-link uri">https://www.atsdr.cdc.gov/placeandhealth/svi/index.html</a>) at a geographic level of interest using US census data from American Community Survey.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state (which can be downloaded <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">here</a>). findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2022) and geographic levels (e.g., ZCTA/places, combining multiple states).</p>
+<p>CDC/ATSDR releases SVI biannually at the counties/census tracts level for US or an individual state. findSVI aims to support more flexible and specific SVI analysis with additional options for years (2012-2022) and geographic levels (e.g., ZCTA/places, combining multiple states).</p>
 <p>To find SVI for one or multiple year-state pair(s):</p>
 <ul>
 <li>
-<code><a href="reference/find_svi.html">find_svi()</a></code>: retrieves US census data (Census API key required) and calculates SVI based on <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC/ATSDR SVI documentation</a> for each year-state pair at the same geography level.</li>
+<code><a href="reference/find_svi.html">find_svi()</a></code>: retrieves US census data (Census API key required) and calculates SVI based on CDC/ATSDR SVI documentation (www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) for each year-state pair at the same geography level.</li>
 </ul>
 <p>In most cases, <code><a href="reference/find_svi.html">find_svi()</a></code> would be the easiest option. If you’d like to include simple feature geometry or have more customized requests for census data retrieval (e.g., different geography level for each year-state pair, multiple states for one year), you can process individual entry using the following:</p>
 <ul>
@@ -286,7 +286,8 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Heli Xu <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-9792-2727" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>Ran Li <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4699-4755" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Usama Bilal <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9868-7773" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -303,7 +304,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Heli Xu.</p>
+  <p>Developed by Heli Xu, Ran Li, Usama Bilal.</p>
 </div>
 
 <div class="pkgdown-footer-right">
