@@ -22,8 +22,8 @@
 #'   set as `TRUE`, returns a tibble with an additional `geometry` column
 #'   containing simple feature geometry.
 #' @param exp Default as `FALSE` for retrieving `EP_`(percent estimate)
-#'   variables directly from ACS when available (as described in [CDC/ADSTR SVI
-#'   dictionary](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
+#'   variables directly from ACS when available (as described in CDC/ADSTR SVI
+#'   dictionary (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 #'   If set as `TRUE`, uses explicitly defined denominators and retrieves the
 #'   ACS data to calculate the `EP` variables for easier aggregation in
 #'   downstream analysis (e.g. `get_svi_x()`).

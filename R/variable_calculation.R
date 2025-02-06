@@ -29,7 +29,7 @@
 #'   using SVI/census variables. }
 #' }
 #' @source CDC/ATSDR SVI Documentation
-#'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
+#'   https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 "variable_e_ep_calculation_2012"
 
 #' @rdname variable_calculation

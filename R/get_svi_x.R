@@ -1,8 +1,8 @@
 #' Calculate SVI for communities from census data using customized boundaries
 #'
 #' @description `get_svi_x()` calculates and constructs an SVI table for a
-#'   *customized* geographic level of interest based on [CDC/ATSDR SVI
-#'   documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
+#'   *customized* geographic level of interest based on CDC/ATSDR SVI
+#'   documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'   By supplying a crosswalk (relationship table) between a Census geographic
 #'   level and a customized geographic level, census data are summed across the
 #'   customized geographic units, and SVI is calculated accordingly to indicate
@@ -29,8 +29,8 @@
 #'   units (with a column name of `GEOID`), and columns indicating variable
 #'   names (first two columns containing geographic information). For detailed
 #'   description of the variable names (column names), please refer to
-#'   [CDC/ATSDR
-#'   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#'   CDC/ATSDR
+#'   documentation.
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required

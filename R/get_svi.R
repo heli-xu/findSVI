@@ -1,8 +1,8 @@
 #' Calculate SVI for communities in a region from census data
 #'
 #' @description `get_svi()` calculates and constructs an SVI table for a
-#'   geographic level of interest based on [CDC/ATSDR SVI
-#'   documentation](<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>).
+#'   geographic level of interest based on CDC/ATSDR SVI
+#'   documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'   Briefly, by taking into account 4 themes of census variables that represent
 #'   challenges in socioeconomic status, household characteristics, racial and
 #'   ethnic minority status and housing/transportation, SVI uses percentile
@@ -16,8 +16,8 @@
 #' @returns A tibble of SVI with rows representing geographic units, and columns
 #'   indicating variable names (first two columns containing geographic
 #'   information). For detailed description of the variable names (column
-#'   names), please refer to [CDC/ATSDR
-#'   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#'   names), please refer to CDC/ATSDR
+#'   documentation.
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required

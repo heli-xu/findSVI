@@ -27,7 +27,7 @@
 #'   explicitly defined using census variables (adjunct variables are not modified).
 
 #' @source CDC/ATSDR SVI Documentation
-#'   <https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
+#'   https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 "census_variables_2012"
 
 #' @rdname census_variables

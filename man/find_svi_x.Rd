@@ -50,7 +50,8 @@ A tibble of SVI with rows representing the customized geographic
 units (with a column name of \code{GEOID}), and columns indicating variable
 names (first two columns containing geographic information). For detailed
 description of the variable names (column names), please refer to
-\href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
+CDC/ATSDR
+documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 }
 \description{
 \code{find_svi_x()} is like a wrapper for

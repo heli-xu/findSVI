@@ -97,7 +97,7 @@ An object of class \code{list} of length 6.
 }
 \source{
 CDC/ATSDR SVI Documentation
-\url{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}
+https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 }
 \usage{
 census_variables_2012

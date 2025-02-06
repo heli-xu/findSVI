@@ -43,8 +43,8 @@
 #'   units (with a column name of `GEOID`), and columns indicating variable
 #'   names (first two columns containing geographic information). For detailed
 #'   description of the variable names (column names), please refer to
-#'   [CDC/ATSDR
-#'   documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#'   CDC/ATSDR
+#'   documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required

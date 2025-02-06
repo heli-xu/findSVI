@@ -88,7 +88,7 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 }
 \source{
 CDC/ATSDR SVI Documentation
-\url{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}
+https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 }
 \usage{
 variable_e_ep_calculation_2012

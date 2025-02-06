@@ -16,11 +16,13 @@ specified in retrieving census data.}
 A tibble of SVI with rows representing geographic units, and columns
 indicating variable names (first two columns containing geographic
 information). For detailed description of the variable names (column
-names), please refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
+names), please refer to CDC/ATSDR
+documentation.
 }
 \description{
 \code{get_svi()} calculates and constructs an SVI table for a
-geographic level of interest based on \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR SVI documentation}.
+geographic level of interest based on CDC/ATSDR SVI
+documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 Briefly, by taking into account 4 themes of census variables that represent
 challenges in socioeconomic status, household characteristics, racial and
 ethnic minority status and housing/transportation, SVI uses percentile

@@ -37,7 +37,8 @@ set as \code{TRUE}, returns a tibble with an additional \code{geometry} column
 containing simple feature geometry.}
 
 \item{exp}{Default as \code{FALSE} for retrieving \code{EP_}(percent estimate)
-variables directly from ACS when available (as described in \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ADSTR SVI dictionary}).
+variables directly from ACS when available (as described in CDC/ADSTR SVI
+dictionary (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 If set as \code{TRUE}, uses explicitly defined denominators and retrieves the
 ACS data to calculate the \code{EP} variables for easier aggregation in
 downstream analysis (e.g. \code{get_svi_x()}).}

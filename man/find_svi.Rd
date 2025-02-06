@@ -30,7 +30,8 @@ combination (e.g."county", "zcta", "tract").}
 and SVI for each theme and all themes. If set as \code{TRUE}, a full SVI table
 with individual SVI variables and intermediate ranking calculations are
 also included in addition to the theme-related SVIs (similar style to
-tables from \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR database}).}
+tables from CDC/ATSDR
+database(https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).}
 }
 \value{
 A tibble of summarised SVI for one or multiple year-state combination(s)
@@ -38,7 +39,8 @@ of interest. Rows represent the geographic units, and columns represent its
 SVI for each theme and all themes. Additional two columns at the end
 indicate the corresponding state and year information. For \code{full.table = TRUE}, estimated count and percentage values for individual SVI variables
 are also included. For description of variable names (column names), please
-refer to \href{https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html}{CDC/ATSDR documentation}.
+refer to CDC/ATSDR
+documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 }
 \description{
 \code{find_svi()} is like a wrapper for \code{\link[=get_census_data]{get_census_data()}} and

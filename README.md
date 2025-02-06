@@ -11,26 +11,24 @@
 
 <!-- badges: end -->
 
-The goal of findSVI is to calculate regional [CDC/ATSDR Social
+The goal of findSVI is to calculate regional CDC/ATSDR Social
 Vulnerability Index
-(SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html) at a
+(SVI)(<https://www.atsdr.cdc.gov/placeandhealth/svi/index.html>) at a
 geographic level of interest using US census data from American
 Community Survey.
 
 ## Overview
 
 CDC/ATSDR releases SVI biannually at the counties/census tracts level
-for US or an individual state (which can be downloaded
-[here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
-findSVI aims to support more flexible and specific SVI analysis with
-additional options for years (2012-2022) and geographic levels (e.g.,
-ZCTA/places, combining multiple states).
+for US or an individual state. findSVI aims to support more flexible and
+specific SVI analysis with additional options for years (2012-2022) and
+geographic levels (e.g., ZCTA/places, combining multiple states).
 
 To find SVI for one or multiple year-state pair(s):
 
 - `find_svi()`: retrieves US census data (Census API key required) and
-  calculates SVI based on [CDC/ATSDR SVI
-  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)
+  calculates SVI based on CDC/ATSDR SVI documentation
+  (www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)
   for each year-state pair at the same geography level.
 
 In most cases, `find_svi()` would be the easiest option. If you’d like

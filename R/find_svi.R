@@ -27,8 +27,8 @@
 #'   and SVI for each theme and all themes. If set as `TRUE`, a full SVI table
 #'   with individual SVI variables and intermediate ranking calculations are
 #'   also included in addition to the theme-related SVIs (similar style to
-#'   tables from [CDC/ATSDR
-#'   database](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
+#'   tables from CDC/ATSDR
+#'   database(https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html)).
 #'
 #' @returns A tibble of summarised SVI for one or multiple year-state combination(s)
 #'  of interest. Rows represent the geographic units, and columns represent its
@@ -36,8 +36,8 @@
 #'  indicate the corresponding state and year information. For `full.table =
 #'  TRUE`, estimated count and percentage values for individual SVI variables
 #'  are also included. For description of variable names (column names), please
-#'  refer to [CDC/ATSDR
-#'  documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
+#'  refer to CDC/ATSDR
+#'  documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html).
 #'
 #' @examplesIf Sys.getenv("CENSUS_API_KEY") != ""
 #' # Census API key required
