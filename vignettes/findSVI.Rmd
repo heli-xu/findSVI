@@ -1,6 +1,10 @@
 ---
 title: "Introduction to findSVI"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    md_extensions: [ 
+      "-autolink_bare_uris" 
+    ]
 vignette: >
   %\VignetteIndexEntry{Introduction to findSVI}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,11 +25,11 @@ library(dplyr)
 
 # What is SVI
 
-First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level using percentile ranks for each geographic unit within a region. Communities with higher SVI are considered more vulnerable in public health crisis. For more details, please refer to [CDC/ATSDR SVI website](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+First introduced in 2011 (Flanagan BE, Gregory EW, Hallisey EJ, Heitgerd JL, Lewis B.), the CDC/ATSDR Social Vulnerability Index (SVI) serves as a tool to assess the resilience of communities by considering socioeconomic and demographic factors. This valuable information plays a crucial role in preparing for and managing public health emergencies, as it enables effective planning of social services and public assistance. The CDC/ATSDR Social Vulnerability Index (CDC/ATSDR SVI) utilizes 16 U.S. census variables grouped into 4 domains/themes, and obtains a relative vulnerability level using percentile ranks for each geographic unit within a region. Communities with higher SVI are considered more vulnerable in public health crisis. For more details, please refer to CDC/ATSDR SVI website (https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 
 # Why we might need to calculate SVI
 
-CDC/ATSDR releases SVI biannually [here](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) in both shapefile and csv format, at the counties/census tracts level within an individual state or in the US. While the SVI database is very useful, sometimes we would prefer more up-to-date census data or different geographic levels. For example, if we'd like to address questions about ZCTA-level SVI of Pennsylvania in 2021, or census tract-level SVI within a few counties in Pennsylvania in 2020, we might need to calculate SVI from the census data ourselves.
+CDC/ATSDR releases SVI biannually (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) in both shapefile and csv format, at the counties/census tracts level within an individual state or in the US. While the SVI database is very useful, sometimes we would prefer more up-to-date census data or different geographic levels. For example, if we'd like to address questions about ZCTA-level SVI of Pennsylvania in 2021, or census tract-level SVI within a few counties in Pennsylvania in 2020, we might need to calculate SVI from the census data ourselves.
 
 findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2012-2022) and geographic levels (eg. ZCTA/places, combining multiple states).
 
@@ -70,7 +74,7 @@ Note that for ZCTA-level after 2018, data retrieving by state is not supported b
 
 # Compute SVI with `get_svi()`
 
-`get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on [CDC/ATSDR documentation](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for theme-specific and overall SVI.
+`get_svi()` takes the year and census data (retrieved by `get_census_data()`) as arguments, and calculate the SVI based on CDC/ATSDR documentation (https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html). This function uses the built-in `variable_calculation` tables and populate the SVI variables with census variables directly, or basic summation/percentage calculation of census variables. For each SVI variable,a geographic unit is ranked against the others in the selected region, followed by summing up rankings for variables within each theme to perform percentile ranking again as the SVI for theme-specific and overall SVI.
 
 For example, to obtain ZCTA-level SVI for Rhode Island for 2018:
 
