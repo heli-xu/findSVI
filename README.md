@@ -12,10 +12,9 @@
 <!-- badges: end -->
 
 The goal of findSVI is to calculate regional CDC/ATSDR Social
-Vulnerability Index
-(SVI)(<https://www.atsdr.cdc.gov/placeandhealth/svi/index.html>) at a
-geographic level of interest using US census data from American
-Community Survey.
+Vulnerability Index (SVI)(former site:
+www.atsdr.cdc.gov/placeandhealth/svi/index.html) at a geographic level
+of interest using US census data from American Community Survey.
 
 ## Overview
 
