@@ -12,7 +12,7 @@
 <!-- badges: end -->
 
 The goal of findSVI is to calculate regional CDC/ATSDR Social
-Vulnerability Index (SVI)(former site:
+Vulnerability Index (SVI) (former site:
 www.atsdr.cdc.gov/placeandhealth/svi/index.html) at a geographic level
 of interest using US census data from American Community Survey.
 
@@ -53,7 +53,7 @@ install.packages("findSVI")
 ```
 
 Alternatively, you can install the development version of findSVI from
-[GitHub](https://github.com/) with:
+GitHub with:
 
 ``` r
 # install.packages("devtools")
