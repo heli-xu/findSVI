@@ -24,6 +24,8 @@ cty_cz_2020_xwalk
 This table contains GEOIDs for US counties and the commuting zones they are
 nested in. Commuting zones can be used to study regional economy with
 considerations of urban-rural interconnections across state lines. For
-details refer to papers by  \href{\doi{10.1007/s11113-016-9386-0}}{Fowler Jensen and Rhubart (2016)} and \href{\doi{10.17605/OSF.IO/J256U}}{Fowler (2024)}.
+details refer to papers by  Fowler Jensen and Rhubart
+(2016) \url{doi:10.1007/s11113-016-9386-0} and Fowler
+(2024) \url{doi:10.17605/OSF.IO/J256U}.
 }
 \keyword{datasets}
