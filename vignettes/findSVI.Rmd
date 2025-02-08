@@ -33,7 +33,7 @@ CDC/ATSDR releases SVI biannually (https://www.atsdr.cdc.gov/placeandhealth/svi/
 
 findSVI aims to support more flexible and specific SVI analysis in these cases with additional options for years (2012-2022) and geographic levels (eg. ZCTA/places, combining multiple states).
 
-This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation.
+This document introduces you to the datasets and basic tools of findSVI for census data retrieval and SVI calculation. 
 
 # Data: census variables
 
@@ -195,4 +195,6 @@ load(system.file("extdata","cz_svi2020.rda",package = "findSVI"))
 cz_svi2020
 ```
 
-Alternatively, we could also use `get_census_data()` with `exp=TRUE` and `get_svi_x()`. For more details, please see [SVI Calculation for Custom Geographic Boundaries](articles/custom_geo.html).
+Alternatively, we could also use `get_census_data()` with `exp=TRUE` and `get_svi_x()`. 
+
+For more details on spatial analysis, validation, and custom boundaries, please see other vignettes [here](https://heli-xu.github.io/findSVI/index.html).
