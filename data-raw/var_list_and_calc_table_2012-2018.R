@@ -87,7 +87,7 @@ usethis::use_data(variable_e_ep_calculation_2018, overwrite = TRUE)
 usethis::use_data(census_variables_2018, overwrite = TRUE)
 
 
-# Modify for 2017 (same as 2018) ---------------------------------------------
+## Modify for 2017 (same as 2018) ---------------------------------------------
 variable_e_ep_calculation_2017 <- variable_e_ep_calculation_2018 %>%
   rename(x2017_variable_name = x2018_variable_name,
     x2017_table_field_calculation = x2018_table_field_calculation)
@@ -98,7 +98,7 @@ usethis::use_data(variable_e_ep_calculation_2017, overwrite = TRUE)
 usethis::use_data(census_variables_2017, overwrite = TRUE)
 
 
-# Modify for 2016 (based on 2018)----------------------------------------------
+## Modify for 2016 (based on 2018)----------------------------------------------
 variable_e_ep_calculation_2016 <- variable_e_ep_calculation_2018 %>%
   rename(x2016_variable_name = x2018_variable_name,
   x2016_table_field_calculation = x2018_table_field_calculation)
@@ -123,7 +123,7 @@ usethis::use_data(variable_e_ep_calculation_2016, overwrite = TRUE)
 usethis::use_data(census_variables_2016, overwrite = TRUE)
 
 
-# Modify for 2015 (same as 2016)------------------------------------------------
+## Modify for 2015 (same as 2016)------------------------------------------------
 variable_e_ep_calculation_2015 <- variable_e_ep_calculation_2016 %>%
   rename(x2015_variable_name = x2016_variable_name,
     x2015_table_field_calculation = x2016_table_field_calculation)
@@ -134,7 +134,7 @@ usethis::use_data(variable_e_ep_calculation_2015, overwrite = TRUE)
 usethis::use_data(census_variables_2015, overwrite = TRUE)
 
 
-# Modify for 2014 (based on 2016)-----------------------------------------------
+## Modify for 2014 (based on 2016)-----------------------------------------------
 variable_e_ep_calculation_2014 <- variable_e_ep_calculation_2016 %>%
   rename(x2014_variable_name = x2016_variable_name,
     x2014_table_field_calculation = x2016_table_field_calculation)
@@ -163,7 +163,7 @@ usethis::use_data(variable_e_ep_calculation_2014, overwrite = TRUE)
 usethis::use_data(census_variables_2014, overwrite = TRUE)
 
 
-# Modify for 2013 (same as 2014) ------------------------------------------
+## Modify for 2013 (same as 2014) ------------------------------------------
 #after checking for variables between years, 2014 and 2013 the same.
 variable_e_ep_calculation_2013 <- variable_e_ep_calculation_2014 %>%
   rename(x2013_variable_name = x2014_variable_name,
@@ -174,7 +174,7 @@ census_variables_2013 <- census_variables_2014
 usethis::use_data(variable_e_ep_calculation_2013, overwrite = TRUE)
 usethis::use_data(census_variables_2013, overwrite = TRUE)
 
-# Modify for 2012 (same as 2014, no UNINSUR variable in census) -----------
+## Modify for 2012 (same as 2014, no UNINSUR variable in census) -----------
 #checked variables, S2701_C04_001 for uninsured population not include in census
 variable_e_ep_calculation_2012 <- variable_e_ep_calculation_2013 %>%
   rename(x2012_variable_name = x2013_variable_name,
@@ -185,6 +185,30 @@ census_variables_2012 <- census_variables_2013[1:5] # no theme 5
 
 usethis::use_data(variable_e_ep_calculation_2012, overwrite = TRUE)
 usethis::use_data(census_variables_2012, overwrite = TRUE)
+
+## Modify for 2011 (same as 2012, no disability avail in census) -----------
+variable_e_ep_calculation_2011 <- variable_e_ep_calculation_2012 |>
+  rename(x2011_variable_name = x2012_variable_name,
+    x2011_table_field_calculation = x2012_table_field_calculation) |>
+  filter(
+    #theme 5 already excluded
+    !str_detect(x2011_variable_name, "DISABL")
+  )
+
+census_variables_2011 <- map(census_variables_2012, \(x) str_subset(x, pattern = "DP02_0071", negate = TRUE)) #remove disabl var. list cannot operate as string directly
+
+usethis::use_data(variable_e_ep_calculation_2011, overwrite = TRUE)
+usethis::use_data(census_variables_2011, overwrite = TRUE)
+
+## Modify for 2010 (same as 2011)------------------
+variable_e_ep_calculation_2010 <- variable_e_ep_calculation_2011 |>
+  rename(x2010_variable_name = x2011_variable_name,
+    x2010_table_field_calculation = x2011_table_field_calculation)
+
+census_variables_2010 <- census_variables_2011
+
+usethis::use_data(variable_e_ep_calculation_2010, overwrite = TRUE)
+usethis::use_data(census_variables_2010, overwrite = TRUE)
 
 # Modify: Explicit Denominator-------------------
 ## 2018 ------------------
@@ -305,3 +329,24 @@ census_variables_exp_2012 <- census_variables_exp_2013[1:5] # no theme 5
 
 usethis::use_data(variable_cal_exp_2012, overwrite = TRUE)
 usethis::use_data(census_variables_exp_2012, overwrite = TRUE)
+
+## 2011 (same as 2012, no disability)---------------
+variable_cal_exp_2011 <- variable_cal_exp_2012 |>
+  rename(x2011_variable_name = x2012_variable_name,
+    x2011_table_field_calculation = x2012_table_field_calculation) |>
+  filter(!str_detect(x2011_variable_name,"DISABL"))
+
+census_variables_exp_2011 <- map(census_variables_exp_2012, \(x) str_subset(x, pattern = "DP02_0071", negate = TRUE))
+
+usethis::use_data(variable_cal_exp_2011, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2011, overwrite = TRUE)
+
+## 2010 (same as 2011)--------------
+variable_cal_exp_2010 <- variable_cal_exp_2011 |>
+  rename(x2010_variable_name = x2011_variable_name,
+    x2010_table_field_calculation = x2011_table_field_calculation)
+
+census_variables_exp_2010 <- census_variables_exp_2011
+
+usethis::use_data(variable_cal_exp_2010, overwrite = TRUE)
+usethis::use_data(census_variables_exp_2010, overwrite = TRUE)

@@ -11,13 +11,18 @@ check_variable <- function(year1, year2, dataset){
     unname() %>%
     str_sub(1L, -2L)
 
+  suffix_x <- as.character(year1)
+  suffix_y <- as.character(year2)
+
   var1_2 <- var1 %>%
-    filter(name%in%all_of(var_to_check)) %>%
+    filter(name%in%var_to_check) %>%
     select(name, label) %>%
     left_join(
       var2 %>%
+        select(name, label) %>%
         filter(name%in%all_of(var_to_check)),
-      by = "name"
+      by = "name",
+      suffix = c(suffix_x, suffix_y)
     )
 
   return(var1_2)
@@ -27,11 +32,15 @@ var1_2 <- check_variable(2020, 2021, "acs5/profile")
 acs_var_1_2 <- check_variable(2020, 2021, "acs5")
 sub_var_1_2 <- check_variable(2020, 2021, "acs5/subject")
 
-var1_2 <- check_variable(2012, 2009, "acs5/profile")
-acs_var_1_2 <- check_variable(2012, 2009, "acs5")
-sub_var_1_2 <- check_variable(2012, 2009, "acs5/subject")
+var1_2 <- check_variable(2012, 2011, "acs5/profile") |>
+  mutate(matched = if_else(label2012 == label2011, 1, 0))
+acs_var_1_2 <- check_variable(2012, 2011, "acs5") |>
+  mutate(matched = if_else(label2012 == label2011, 1, 0))
+sub_var_1_2 <- check_variable(2012, 2011, "acs5/subject") |>
+  mutate(matched = if_else(label2012 == label2011, 1, 0))
 
-var1_2$label.x == var1_2$label.y
-#sometimes it's format that causes "unequal"
-acs_var_1_2$label.x == acs_var_1_2$label.y
-sub_var_1_2$label.x == sub_var_1_2$label.y
+# disability var not shown different, but not available for 2010 and 2011 (all NA)
+
+
+#sometimes it's format, or year, that causes "unequal"
+
