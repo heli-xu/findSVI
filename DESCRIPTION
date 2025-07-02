@@ -26,7 +26,7 @@ URL: https://github.com/heli-xu/findSVI,
     https://heli-xu.github.io/findSVI/
 BugReports: https://github.com/heli-xu/findSVI/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
 Imports: 
     cli,
     dplyr,
