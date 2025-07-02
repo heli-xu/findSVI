@@ -122,9 +122,9 @@ get_svi <- function(year, data){
     tidyr::pivot_longer(!c("GEOID", "NAME"),   #all but GEOID and NAME - no need to know total columns
       names_to = "svi_var",
       values_to = "value") %>%
-    tidyr::drop_na("value") %>%  # in case there's *some* variables missing in some tracts
+    # tidyr::drop_na("value") %>%  # in case there's *some* variables missing in some tracts
     dplyr::group_by(.data$svi_var) %>%
-    dplyr::mutate(rank =  rank(.data$value, ties.method = "min")) %>%
+    dplyr::mutate(rank =  rank(.data$value, ties.method = "min", na.last = "keep")) %>%
     #check out count() "wt" arg, if NULL, count rows
     dplyr::add_count(.data$svi_var) %>%
     dplyr::mutate(EPL_var = dplyr::case_when(
@@ -155,7 +155,7 @@ get_svi <- function(year, data){
     dplyr::ungroup() %>%
     #RPL_
     dplyr::group_by(.data$theme) %>%
-    dplyr::mutate(rank_theme = rank(.data$SPL_theme, ties.method = "min")) %>%
+    dplyr::mutate(rank_theme = rank(.data$SPL_theme, ties.method = "min", na.last = "keep")) %>%
     dplyr::add_count(.data$theme) %>%  #rows per group, count the group_by param
     dplyr::mutate(RPL_theme = (.data$rank_theme-1)/(.data$n-1),
       RPL_theme = round(.data$RPL_theme, 4)) %>%
@@ -172,7 +172,7 @@ get_svi <- function(year, data){
     dplyr::summarise(SPL_themes = sum(SPL_theme),
       .groups = "drop") %>%
     dplyr::add_count() %>%
-    dplyr::mutate(rank_themes = rank(.data$SPL_themes, ties.method = "min"),
+    dplyr::mutate(rank_themes = rank(.data$SPL_themes, ties.method = "min", na.last = "keep"),
       RPL_themes = (.data$rank_themes-1)/(.data$n-1),
       RPL_themes = round(.data$RPL_themes, 4)) %>%
     dplyr::ungroup()
