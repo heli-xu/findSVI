@@ -3,6 +3,8 @@
 \docType{data}
 \name{variable_calculation}
 \alias{variable_calculation}
+\alias{variable_e_ep_calculation_2010}
+\alias{variable_e_ep_calculation_2011}
 \alias{variable_e_ep_calculation_2012}
 \alias{variable_e_ep_calculation_2013}
 \alias{variable_e_ep_calculation_2014}
@@ -14,6 +16,8 @@
 \alias{variable_e_ep_calculation_2020}
 \alias{variable_e_ep_calculation_2021}
 \alias{variable_e_ep_calculation_2022}
+\alias{variable_cal_exp_2010}
+\alias{variable_cal_exp_2011}
 \alias{variable_cal_exp_2012}
 \alias{variable_cal_exp_2013}
 \alias{variable_cal_exp_2014}
@@ -44,6 +48,10 @@ using SVI/census variables. }
 }
 }
 
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 31 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 33 rows and 3 columns.
+
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 35 rows and 3 columns.
@@ -63,6 +71,10 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 51 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 31 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 31 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 33 rows and 3 columns.
 
@@ -91,6 +103,10 @@ CDC/ATSDR SVI Documentation
 https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 }
 \usage{
+variable_e_ep_calculation_2010
+
+variable_e_ep_calculation_2011
+
 variable_e_ep_calculation_2012
 
 variable_e_ep_calculation_2013
@@ -112,6 +128,10 @@ variable_e_ep_calculation_2020
 variable_e_ep_calculation_2021
 
 variable_e_ep_calculation_2022
+
+variable_cal_exp_2010
+
+variable_cal_exp_2011
 
 variable_cal_exp_2012
 

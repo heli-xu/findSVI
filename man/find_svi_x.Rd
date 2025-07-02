@@ -15,7 +15,7 @@ find_svi_x(
 )
 }
 \arguments{
-\item{year}{A year of interest (available 2012-2022).}
+\item{year}{A year of interest (available 2010-2022).}
 
 \item{geography}{The Census geography level of interest (e.g."county",
 "zcta", "tract").}

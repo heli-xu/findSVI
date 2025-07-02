@@ -28,6 +28,12 @@
 
 #' @source CDC/ATSDR SVI Documentation
 #'   https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
+"census_variables_2010"
+
+#' @rdname census_variables
+"census_variables_2011"
+
+#' @rdname census_variables
 "census_variables_2012"
 
 #' @rdname census_variables
@@ -59,6 +65,12 @@
 
 #' @rdname census_variables
 "census_variables_2022"
+
+#' @rdname census_variables
+"census_variables_exp_2010"
+
+#' @rdname census_variables
+"census_variables_exp_2011"
 
 #' @rdname census_variables
 "census_variables_exp_2012"

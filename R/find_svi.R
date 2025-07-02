@@ -8,7 +8,7 @@
 #'  which can be obtained at <https://api.census.gov/data/key_signup.html> and
 #'  set up using [tidycensus::census_api_key()].
 #'
-#' @param year A vector containing years of interest (available 2012-2022).
+#' @param year A vector containing years of interest (available 2010-2022).
 #'   Length >=1. Acting as pairs with `state`, `year` should be of the same
 #'   length as `state`. The exception is when it's a single year entry (length
 #'   1), other than providing one state of interest, supply `state = NULL` as
@@ -165,11 +165,11 @@ find_svi  <- function(
 
   if (length(year) > 1) {
 
-    year_valid <- 2012:2022
+    year_valid <- 2010:2022
     if (any(!(year %in% year_valid))) {
       cli::cli_abort(c(
         "x" = "One or more elements of {year} is not a valid input for `year`.",
-        "i" = "Years available for census data retrieval: 2012-2022."
+        "i" = "Years available for census data retrieval: 2010-2022."
       ))
     }
 

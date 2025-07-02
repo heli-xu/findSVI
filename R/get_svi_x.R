@@ -8,7 +8,7 @@
 #'   customized geographic units, and SVI is calculated accordingly to indicate
 #'   the relative social vulnerability of the geographic units (communities).
 #'
-#' @param year The year of interest (available 2012-2021), must match the year
+#' @param year The year of interest (available 2010-2021), must match the year
 #'   specified in retrieving census data.
 #' @param data The census data retrieved by `get_census_data()`.
 #' @param xwalk A crosswalk (relationship table) between the Census geographic

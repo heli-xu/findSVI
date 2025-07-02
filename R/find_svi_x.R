@@ -10,7 +10,7 @@
 #'   <https://api.census.gov/data/key_signup.html> and set up using
 #'   [tidycensus::census_api_key()].
 #'
-#' @param year A year of interest (available 2012-2022).
+#' @param year A year of interest (available 2010-2022).
 #' @param geography The Census geography level of interest (e.g."county",
 #'   "zcta", "tract").
 #' @param state (Optional) Specify the state of interest. Default `state = NULL`
@@ -70,16 +70,16 @@ find_svi_x  <- function(
   if (!length(year) == 1) {
     cli::cli_abort(c(
       "x" = "Multiple years are not valid input for `year`.",
-      "i" = "Please supply one year between 2012-2022."
+      "i" = "Please supply one year between 2010-2022."
     ))
   }
 
 
-  year_valid <- 2012:2022
+  year_valid <- 2010:2022
   if (!(year %in% year_valid)) {
     cli::cli_abort(c(
       "x" = "{year} is not a valid input for `year`.",
-      "i" = "Years available for census data retrieval: 2012-2022."
+      "i" = "Years available for census data retrieval: 2010-2022."
     ))
   }
 

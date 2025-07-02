@@ -16,7 +16,7 @@ get_census_data(
 )
 }
 \arguments{
-\item{year}{The year of interest (available 2012-2022).}
+\item{year}{The year of interest (available 2010-2022).}
 
 \item{geography}{The geography of interest (eg. state, county, zcta, tract)}
 

@@ -7,7 +7,7 @@
 get_svi(year, data)
 }
 \arguments{
-\item{year}{The year of interest (available 2012-2021), must match the year
+\item{year}{The year of interest (available 2010-2021), must match the year
 specified in retrieving census data.}
 
 \item{data}{The census data retrieved by \code{get_census_data()}.}

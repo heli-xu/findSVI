@@ -30,6 +30,12 @@
 #' }
 #' @source CDC/ATSDR SVI Documentation
 #'   https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
+"variable_e_ep_calculation_2010"
+
+#' @rdname variable_calculation
+"variable_e_ep_calculation_2011"
+
+#' @rdname variable_calculation
 "variable_e_ep_calculation_2012"
 
 #' @rdname variable_calculation
@@ -61,6 +67,12 @@
 
 #' @rdname variable_calculation
 "variable_e_ep_calculation_2022"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2010"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2011"
 
 #' @rdname variable_calculation
 "variable_cal_exp_2012"

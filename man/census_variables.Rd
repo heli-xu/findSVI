@@ -3,6 +3,8 @@
 \docType{data}
 \name{census_variables}
 \alias{census_variables}
+\alias{census_variables_2010}
+\alias{census_variables_2011}
 \alias{census_variables_2012}
 \alias{census_variables_2013}
 \alias{census_variables_2014}
@@ -14,6 +16,8 @@
 \alias{census_variables_2020}
 \alias{census_variables_2021}
 \alias{census_variables_2022}
+\alias{census_variables_exp_2010}
+\alias{census_variables_exp_2011}
 \alias{census_variables_exp_2012}
 \alias{census_variables_exp_2013}
 \alias{census_variables_exp_2014}
@@ -53,7 +57,9 @@ starting with \code{census_variables_exp_} contains variables corresponding to
 explicitly defined using census variables (adjunct variables are not modified).
 }
 
-An object of class \code{list} of length 6.
+An object of class \code{list} of length 5.
+
+An object of class \code{list} of length 5.
 
 An object of class \code{list} of length 6.
 
@@ -72,6 +78,12 @@ An object of class \code{list} of length 6.
 An object of class \code{list} of length 6.
 
 An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 6.
+
+An object of class \code{list} of length 5.
+
+An object of class \code{list} of length 5.
 
 An object of class \code{list} of length 5.
 
@@ -100,6 +112,10 @@ CDC/ATSDR SVI Documentation
 https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
 }
 \usage{
+census_variables_2010
+
+census_variables_2011
+
 census_variables_2012
 
 census_variables_2013
@@ -121,6 +137,10 @@ census_variables_2020
 census_variables_2021
 
 census_variables_2022
+
+census_variables_exp_2010
+
+census_variables_exp_2011
 
 census_variables_exp_2012
 
