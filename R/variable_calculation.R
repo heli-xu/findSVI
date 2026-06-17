@@ -2,7 +2,7 @@
 #'
 #' Each of these datasets contains a table of SVI variable names, related census
 #' variable names and their corresponding calculation formula for a year between
-#' 2012-2022. This is used to construct SVI results for the variables starting
+#' 2012-2024. This is used to construct SVI results for the variables starting
 #' with "E_"(estimate) and "EP_"(percentage) after obtaining census data.
 #' Sometimes SVI variables are directly linked to census variables, and other
 #' times one or more census variable(s) are included to derive an SVI variable.
@@ -69,6 +69,12 @@
 "variable_e_ep_calculation_2022"
 
 #' @rdname variable_calculation
+"variable_e_ep_calculation_2023"
+
+#' @rdname variable_calculation
+"variable_e_ep_calculation_2024"
+
+#' @rdname variable_calculation
 "variable_cal_exp_2010"
 
 #' @rdname variable_calculation
@@ -106,3 +112,9 @@
 
 #' @rdname variable_calculation
 "variable_cal_exp_2022"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2023"
+
+#' @rdname variable_calculation
+"variable_cal_exp_2024"
