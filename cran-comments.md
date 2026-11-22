@@ -1,6 +1,11 @@
+## Resubmission
+
+This is a patch release (0.2.1) to fix the "re-building of vignette outputs" ERROR
+shown on the CRAN check results for 0.2.0 (r-devel/r-patched/r-release Linux flavors).
+
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 0 notes
 
 ## revdepcheck results
 

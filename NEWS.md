@@ -1,3 +1,8 @@
+# findSVI 0.2.1
+
+* Fixed vignette YAML header that failed to parse with newer pandoc versions (CRAN check ERROR on Linux).
+
+
 # findSVI 0.2.0
 
 * findSVI now supports SVI calculation for 2022 (#20).
